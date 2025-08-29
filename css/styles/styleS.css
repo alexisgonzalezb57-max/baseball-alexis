@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100,200,300,400,500,600,700,800,900&display=swap');
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
+}
+body
+{ 
+    overflow-x: hidden;
+    background: #2e86de;
+}  
+
+
+.foot 
+{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px 0;
+    z-index: 1000;
+}
+
+.foot .circle
+{
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    margin: 5px;
+    cursor: pointer;
+}
+.foot .circle ion-icon
+{
+    position: relative;
+    color: #000;
+    font-size: 1.5em;
+    justify-content: center;
+    margin: 5px;
+
+}
+
+.foot .close
+{
+    position: absolute;
+    right: 15px;
+    bottom: -5px;
+    width: 175px;
+    height: 40px;
+    background: var(--clr);
+    border-radius: 5px;
+}
+.foot .close a
+{
+    position: relative;
+    display: flex;
+    color: #fff;
+    text-decoration: none;
+    margin: 10px;
+}
+
+
+.option
+{
+    width: 95%;
+    height: 60px;
+    background: #f6f6f6;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+    justify-content: center;
+}
+.option h5
+{
+    position: relative;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.card
+{
+    position: relative;
+    margin: 10px;
+    background: #f6f6f6;
+    border: 2px solid #333;
+}
+.addlist .boton
+{
+    position: relative;
+    display: flex;
+    margin: 20px;
+    left: 150px;
+}
+.readlist
+{
+    position: absolute;
+    display: flex;
+    left: -24%;
+    margin: 10px;
+    width: 650px;
+    background: #f9f9f9;
+    border: 2px solid #fff;
+}
+
+.hoja
+{
+    background: #fff;
+    margin: 20px;
+}
+.hoja h4
+{
+    position: relative;
+    display: flex;
+    margin: 10px;
+    background: #f3f3f3;
+}

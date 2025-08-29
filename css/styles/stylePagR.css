@@ -1,0 +1,1474 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100,200,300,400,500,600,700,800,900&display=swap');
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
+}
+body
+{ 
+    overflow-x: hidden;
+    /*background: #1a313a;*/
+}  
+.container
+{
+    position: absolute;
+    left: 150px;
+    top: 0;
+}
+
+.main
+{
+    position: absolute;
+    width: 100%;
+    top: 5px;
+    background: #f5f5f5;
+}
+.user  
+{
+    position: relative;
+    text-align: left;
+    min-width: 300px;
+    width: 500px;
+    height: 30px;
+    font-weight: 500;
+    font-size: 1.4em;
+    text-transform: uppercase;
+    color: #000;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.cardBox
+{ 
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+.cardBox .card 
+{
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    justify-content: space-between;
+    cursor: pointer;
+}
+.cardBox .card .number
+{
+    position: relative;
+    font-size: 2em;
+    font-weight: 500;
+}
+.cardBox .card .cardName
+{
+    color: #000;
+}
+.cardBox .card .iconBox
+{
+    font-size: 3.5em;
+    color: #03a9f4;
+}
+
+.cardList
+{
+    position: relative;
+    top: 140px;
+    width: 100%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    transition: 0.5s;
+}
+.cardList.active
+{
+    top: 140px;
+}
+.cardList .card:hover
+{
+    background: #000;
+}
+.cardList .card a
+{
+    background: #f6f6f6;
+    height: 60px;
+    text-align: center;
+}
+.cardList .card:hover a
+{
+    background: #444;
+}
+.cardList .card 
+{
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    justify-content: space-between;
+    cursor: pointer;
+}
+.cardList .card .number
+{
+    position: relative;
+    font-size: 2em;
+    font-weight: 500;
+}
+.cardList .card .cardName
+{
+    color: #000;
+}
+.cardList .card .iconBox
+{
+    font-size: 3.5em;
+    color: #03a9f4;
+}
+.cardList .card:hover .number,
+.cardList .card:hover .cardName
+{
+    color: #fff;
+}
+.cardList .card:hover .iconBox
+{
+    color: #03a9f4;
+}
+.details
+{
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 2fr 1fr;
+}
+.details .recentAuds
+{
+    position: relative;
+    min-height: 530px;
+    background: #fff;
+    padding: 20px;
+}
+
+.details .recentAuds .cardModule
+{
+    height: 50px;
+    text-align: center;
+    padding-top: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-bottom: 1px solid #000;
+}
+.details .recentAuds .cardModule:hover
+{
+    background: #03a9f4;
+}
+.details .recentAuds .cardModule a 
+{
+    text-decoration: none;
+}
+.details .recentAuds .cardModule:hover a 
+{
+    color: #fff;
+}
+
+
+.organism
+{
+    position: relative;
+    width: 100%;
+    padding: 5px;
+    display: grid;
+    grid-gap: 10px;
+}
+.organism .recentOrgs
+{
+    position: relative;
+    min-height: 740px;
+    background: #fff;
+    padding: 20px;
+}
+.organism .orgscreate
+{
+    position: relative;
+    top: 10px;
+    min-height: 300px;
+    background: #fff;
+    padding: 20px;
+    display: grid;
+}
+.organism .tablecreate
+{
+    position: relative;
+    top: 50px;
+    min-height: 300px;
+    background: #fff;
+    padding: 20px;
+    display: grid;
+}
+.organism .orgscreate label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    text-align: center;
+    margin-left: 0;
+}
+.organism .tablecreate label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    text-align: center;
+    margin-left: 0;
+}
+.input 
+{
+    width: 100%;
+    height: 30px;
+    font-size: 1.2em;
+    padding-left: 15px;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+}
+.input.active
+{
+    width: 100%;
+}
+
+.firstline,
+.secondline
+{
+    position: relative;
+    width: 100%;
+    display: flex;
+    left: 0;
+}
+.firstline .group,
+.secondline .group
+{
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    margin: 10px;
+}
+
+.group label,
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    margin-left: 0;
+    text-align: center;
+}
+.firstline .group input,
+.secondline .group input
+{
+    width: 500px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+}
+#cortos input,
+#cortos input
+{
+    width: 120px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+}
+
+#cortos label,
+#cortos label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    margin-left: 0;
+    text-align: center;
+
+}
+#cortos-mco input,
+#cortos-mco input
+{
+    width: 148px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+}
+
+#cortos-mco label,
+#cortos-mco label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    margin-left: 0;
+    text-align: center;
+
+}
+#cortos-med input,
+#cortos-med input
+{
+    width: 250px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+}
+
+#cortos-med label,
+#cortos-med label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    margin-left: 0;
+    text-align: center;
+
+}
+#medios input,
+#medios select
+{
+    width: 315px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+}
+
+#medios label,
+#medios label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    margin-left: 0;
+    text-align: center;
+
+}
+#medios-mla input,
+#medios-mla select
+{
+    width: 387px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+}
+
+#medios-mla label,
+#medios-mla label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    margin-left: 0;
+    text-align: center;
+
+}
+#medios-lar input,
+#medios-lar select
+{
+    width: 455px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+}
+
+#medios-lar label,
+#medios-lar label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    margin-left: 0;
+    text-align: center;
+
+}
+#largos input,
+#largos select
+{
+    width: 790px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+}
+
+#largos label,
+#largos label
+{
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    margin-left: 0;
+    text-align: center;
+
+}
+
+.firstline .group .inputext,
+.secondline .group .inputext
+{
+    width: 250px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    margin-top: 15px;
+    text-align: center;
+    border: #1C24E3 solid 2px;
+}
+.firstline .group select,
+.secondline .group select
+{
+    width: 250px;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    text-align: center;
+}
+.firstline .group .rade,
+.secondline .group .rade
+{
+    margin-right: 10px;
+    width: 15px;
+    height: 15px;
+    border: #1C24E3 solid 2px;
+}
+
+.textarea
+{
+    width: 100%;
+    height: 270px;
+    font-weight: 500;
+    padding-left: 15px;
+    padding-top: 10px;
+    font-size: 1.2em;
+    transition: 0.5s;
+    border: #1C24E3 solid 2px;
+}
+.textarea.active
+{
+    width: 100%;
+}
+
+#tdoy
+{
+    background: #f6f6f6;
+    height: 50px;
+}
+#tpone
+{
+    display: none;
+    background: #f3f3f3;
+    height: 70px;
+}
+#tpongo
+{
+    display: none;
+    background: #f3f3f3;
+    height: 100px;
+}
+
+#form-group textarea
+{
+    width: 100%;
+    height: 270px;
+    font-weight: 500;
+    padding-left: 15px;
+    padding-top: 10px;
+    font-size: 1.2em;
+    transition: 0.5s;
+    border: #1C24E3 solid 2px;
+}
+#form-group input
+{
+    width: 100%;
+    height: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    border: #1C24E3 solid 2px;
+    padding-left: 5px;
+    margin-bottom: 20px;
+}
+#form-group textarea.active
+{
+    width: 100%;
+}
+#form-group a
+{
+    position: absolute;
+    margin-top: 15px;
+    right: 60px;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 500;
+    background: #000;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 20px;
+    text-align: center;
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+}
+#form-group span
+{   
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    text-align: center;
+    margin-left: 0;
+}
+
+#form-group label
+{   
+    font-size: 0.9em;
+    font-weight: 700;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin: 15px;
+    color: #fff;
+    background: #1C24E3;
+    margin-bottom: -4px;
+    text-align: left;
+    margin-left: 0;
+}
+
+input[type="submit"]
+{
+    position: relative;
+    border: none;
+    outline: none;
+    background: #1C24E3;
+    padding: 11px 25px;
+    width: 100px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+}
+.cardHeader
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.cardHeader h2
+{
+    font-weight: 600;
+}
+.cardHeader .btn
+{
+    position: relative;
+    padding: 5px 10px;
+    background: #03a9f4;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+.details table
+{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.details table thead td
+{
+    font-weight: 700;
+    color: #000;
+}
+.details .recentAuds table tr
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.details .recentAuds table tbody tr:last-child
+{
+    border-bottom: none;
+}
+.details .recentAuds table tbody tr:hover
+{
+    background: #03a9f4;
+    color: #fff;
+}
+.details .recentAuds table tr td
+{
+    padding: 9px 5px;
+}
+.details .recentAuds table tbody tr td:last-child,
+.details .recentAuds table thead tr td:last-child
+{
+    text-align: left;
+}
+.details .recentAuds table tbody tr td:nth-child(2),
+.details .recentAuds table thead tr td:nth-child(2)
+{
+    text-align: left;
+    padding-right: 20px;
+}
+.details .recentAuds table tbody tr td:nth-child(3),
+.details .recentAuds table thead tr td:nth-child(3)
+{
+    text-align: center;
+}
+
+
+.organism table
+{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.organism table thead td
+{
+    font-weight: 700;
+    color: #000;
+}
+.organism .recentOrgs table tr
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.organism .recentOrgs table tbody tr:last-child
+{
+    border-bottom: none;
+}
+.organism .recentOrgs table tr td
+{
+    padding: 9px 5px;
+}
+.organism .recentOrgs table tbody tr td:last-child,
+.organism .recentOrgs table thead tr td:last-child
+{
+    text-align: center;
+}
+.organism .recentOrgs table tbody tr td:nth-child(2),
+.organism .recentOrgs table thead tr td:nth-child(2),
+.organism .recentOrgs table tbody tr td:nth-child(3),
+.organism .recentOrgs table thead tr td:nth-child(3),
+.organism .recentOrgs table tbody tr td:nth-child(5),
+.organism .recentOrgs table thead tr td:nth-child(5)
+{
+    text-align: center;
+    padding-right: 20px;
+}
+.organism .recentOrgs table tbody tr td:nth-child(4),
+.organism .recentOrgs table thead tr td:nth-child(4)
+{
+    text-align: center;
+    padding-right: 20px;
+} 
+.organism .recentOrgs table tbody tr td a.read
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkgreen;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .recentOrgs table tbody tr td a.edit
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkorange;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .recentOrgs table tbody tr td a.delet
+{
+    position: relative;
+    padding: 2px 4px;
+    background: red;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .recentOrgs table tbody tr td a.listen
+{
+    position: relative;
+    padding: 2px 4px;
+    background: #02A8AD;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .recentOrgs table tbody tr td a.agror
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkviolet;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+
+
+
+.organism .tablecreate table tr
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.organism .tablecreate table tbody tr:last-child
+{
+    border-bottom: none;
+}
+.organism .tablecreate table tr td
+{
+    padding: 9px 5px;
+    text-align: center;
+}
+.organism .tablecreate table tbody tr td
+{
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+.organism .tablecreate table tbody tr td li
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    list-style: none;
+    height: 30px;
+}
+.organism .tablecreate table tbody tr td li:nth-child(1)
+{
+    height: 20px;
+}
+.organism .tablecreate table tbody tr td li:last-child
+{
+    border-bottom: 0 solid rgba(0, 0, 0, 0.1);
+    height: 20px;
+}
+.organism .tablecreate table tbody tr td a.read
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkgreen;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .tablecreate table tbody tr td a.edit
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkorange;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .tablecreate table tbody tr td a.delet
+{
+    position: relative;
+    padding: 2px 4px;
+    background: red;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .tablecreate table tbody tr td a.agror
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkviolet;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+
+/*
+*/
+#for,
+#tab,
+#ocultar,
+#fore,
+#tabe,
+#ocultare,
+#fores,
+#tabes,
+#ocultares
+{
+    display: none;
+}
+
+#f1,#f2,#f3,#f4,#f5,#f6,#f7,#f8,#f9,#f10,#f11,#f12,#f13,#f14,#f15,#f16,#f17,#f18,#oc
+{
+    display: none;
+}
+
+
+    .carf
+    {
+        border: 2px solid #f9f9f9; 
+        background: #f1f1f1; 
+        margin-bottom: 5px;
+    }
+    .carf p
+    {
+        color: #000; 
+        text-align: justify; 
+        font-weight: 600; 
+        font-size: 1.1em; 
+        margin: 5px;
+    }
+    .carf .edite
+    {
+        width: 60px; 
+        background: darkorange; 
+        color: #fff; 
+        text-decoration: none;
+    }
+    .carf .delete
+    {
+        width: 60px; 
+        background: red; 
+        color: #fff; 
+        text-decoration: none;
+    }
+
+.banner 
+{
+    position: absolute;
+    top: -128px;
+    left: -615px;
+    scale: 0.42;
+    width: 2120px;
+    overflow: hidden;
+    transition: 0.5s;
+}
+.banner.active
+{
+    top: -120px;
+    width: 2520px;
+    scale: 0.51;
+    left: -618px;
+}
+.Iniciando
+{
+    position: relative;
+    padding: 2px 4px;
+    background: #f00;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+.Por_Realizar
+{
+    position: relative;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    background: blue;
+    color: #fff;
+}
+.Se_Termino
+{
+    position: relative;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    background: darkgreen;
+    color: #fff;
+}
+.En_Proceso
+{
+    position: relative;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    background: orange;
+    color: #fff;
+}
+.Culminado
+{
+    position: relative;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    background: darkgoldenrod;
+    color: #fff;
+}
+.Prorrogado
+{
+    position: relative;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    background: darkviolet;
+    color: #fff;
+}
+
+
+.main main{
+    width: 100%;
+    margin: auto;
+}
+
+#fotos{
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: relative;
+    right: 0;
+    width: 100%; 
+    z-index: 10;
+}
+
+#time
+{
+    gap: 30px;
+}
+#time .circleo
+{
+    left: 45px;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    transition: 0.5s;
+}
+#time .circleo.active
+{
+    left: 75px;
+    transition: 0.5s;
+}
+#time .circleo::before
+{
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 10px solid #1b1a1c;
+    border-radius: 50%;
+}
+#time .circleo::after
+{
+    content: '';
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    background: #2f2e33;
+    border-radius: 50%;
+    border: 15px solid #4d4c51;
+    box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.75),
+    0 -2px 2px rgba(255, 255, 255, 0.5),
+    inset 0 4px 2px rgba(0, 0, 0, 0.25),
+    inset 0 -2px 2px rgba(255, 255, 255, 0.5);
+}
+#time .circleo svg
+{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    transform: rotate(270deg);
+}
+#time .circleo svg circle
+{
+    width: 100%;
+    height: 100%;
+    fill: transparent;
+    stroke-width: 8;
+    stroke: var(--clr);
+    stroke-linecap: round;
+    transform: translate(5px,5px);
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+}
+
+
+#time .circleu
+{
+    left: 45px;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    transition: 0.5s;
+}
+#time .circleu.active
+{
+    left: 75px;
+    transition: 0.5s;
+}
+#time .circleu::before
+{
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 10px solid #1b1a1c;
+    border-radius: 50%;
+}
+#time .circleu::after
+{
+    content: '';
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    background: #2f2e33;
+    border-radius: 50%;
+    border: 15px solid #4d4c51;
+    box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.75),
+    0 -2px 2px rgba(255, 255, 255, 0.5),
+    inset 0 4px 2px rgba(0, 0, 0, 0.25),
+    inset 0 -2px 2px rgba(255, 255, 255, 0.5);
+}
+#time .circleu svg
+{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    transform: rotate(270deg);
+}
+#time .circleu svg circle
+{
+    width: 100%;
+    height: 100%;
+    fill: transparent;
+    stroke-width: 8;
+    stroke: var(--clr);
+    stroke-linecap: round;
+    transform: translate(5px,5px);
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+}
+
+#time .circled
+{
+    left: 45px;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    transition: 0.5s;
+}
+#time .circled.active
+{
+    left: 75px;
+    transition: 0.5s;
+}
+#time .circled::before
+{
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 10px solid #1b1a1c;
+    border-radius: 50%;
+}
+#time .circled::after
+{
+    content: '';
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    background: #2f2e33;
+    border-radius: 50%;
+    border: 15px solid #4d4c51;
+    box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.75),
+    0 -2px 2px rgba(255, 255, 255, 0.5),
+    inset 0 4px 2px rgba(0, 0, 0, 0.25),
+    inset 0 -2px 2px rgba(255, 255, 255, 0.5);
+}
+#time .circled svg
+{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    transform: rotate(270deg);
+}
+#time .circled svg circle
+{
+    width: 100%;
+    height: 100%;
+    fill: transparent;
+    stroke-width: 8;
+    stroke: var(--clr);
+    stroke-linecap: round;
+    transform: translate(5px,5px);
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+}
+
+
+#time .circlet
+{
+    left: 45px;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    transition: 0.5s;
+}
+#time .circlet.active
+{
+    left: 75px;
+    transition: 0.5s;
+}
+#time .circlet::before
+{
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 10px solid #1b1a1c;
+    border-radius: 50%;
+}
+#time .circlet::after
+{
+    content: '';
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    background: #2f2e33;
+    border-radius: 50%;
+    border: 15px solid #4d4c51;
+    box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.75),
+    0 -2px 2px rgba(255, 255, 255, 0.5),
+    inset 0 4px 2px rgba(0, 0, 0, 0.25),
+    inset 0 -2px 2px rgba(255, 255, 255, 0.5);
+}
+#time .circlet svg
+{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    transform: rotate(270deg);
+}
+#time .circlet svg circle
+{
+    width: 100%;
+    height: 100%;
+    fill: transparent;
+    stroke-width: 8;
+    stroke: var(--clr);
+    stroke-linecap: round;
+    transform: translate(5px,5px);
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+}
+#time div
+{
+    position: absolute;
+    text-align: center;
+    font-weight: 500;
+    color: #fff;
+    z-index: 10000;
+    color: var(--clr);
+    font-size: 1.75em;
+    transform: translateY(-5px);
+}
+#time div span
+{
+    position: absolute;
+    transform: translateX(-50%) translateY(-15px);
+    font-size: 0.25em;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+}
+#boton
+{
+    transition: 0.5s ease-in-out;
+}
+#boton.active
+{
+    transform: translateY(20px);
+    transition: 0.5s ease-in-out;
+    width: 100%;
+}
+.dobf
+{
+    transition: 0.5s ease-in-out;
+}
+.dobf.active
+{
+    transition: 0.5s ease-in-out;
+    transition-delay: 2s;
+    width: 100%;
+}
+.fin
+{
+    transition: 0.5s ease-in-out;
+}
+.fin.active
+{
+    transition: 0.5s ease-in-out;
+    width: 100%;
+}
+.fecha
+{
+    transition: 0.5s ease-in-out;
+}
+.fecha.active
+{
+    transition: 0.5s ease-in-out;
+    width: 100%;
+}
+.newYear
+{
+    position: absolute;
+    font-size: 5em;
+    font-family: 500;
+    color: #fff;
+    text-align: center;
+    line-height: 0.6em;
+    z-index: 10000000;
+    display: none;
+}
+.newYear span
+{
+    font-size: 0.37em;
+    font-weight: 300;
+}
+
+#fotos img{
+    height: 150px;
+}
+
+
+.details .recentEntes
+{
+    position: relative;
+    min-height: 530px;
+    background: #fff;
+    padding: 20px;
+}
+.details .recentEntes table tr:hover
+{
+    background: #03a9f4;
+    color: #fff;
+}
+.details .recentEntes table tr td
+{
+    padding: 7px 10px;
+}
+.details .recentEntes table tr td
+{
+    padding: 7px 10px;
+}
+.details .recentEntes table tr td h4
+{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2em;
+}
+/* Ahora hacerlo resposive */
+@media (max-width: 992px)
+{
+    .sidebar
+    {
+        left: -250px;
+    }
+    .sidebar.active
+    {
+        left: 0;
+        width: 250px;
+    }
+    .main
+    {
+        width: 100%;
+        left: 0;
+    }
+    .main.active
+    {
+        width: calc(100% - 250px);
+        left: 250px;
+    }
+    .cardBox
+    {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 768px)
+{
+    .details
+    {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .card-header h2
+    {
+        font-weight: 600;
+        font-size: 18px;
+    }
+}
+@media print {
+  body { font-size: 10pt }
+  footer {page-break-after: always;}
+  .container
+  {
+     page-break-after: always;
+  }
+}
+@media (max-width: 480px)
+{
+    .cardBox
+    {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .details .recentAuds table
+    {
+        width: 600;
+    }
+    .details .recentAuds
+    {
+        overflow-x: auto;
+    }
+    .sidebar
+    {
+        width: 100%;
+        left: -100%;
+        z-index: 1000;
+    }
+    .sidebar.active
+    {
+        width: 100%;
+        left: 0;
+    }
+    .toggle.active
+    {
+        position: fixed;
+        z-index: 10000;
+        color: #fff;
+        right: 0;
+        left: initial;
+    }
+    .main,
+    .main.active
+    {
+        width: 100%;
+        left: 0;
+    }
+
+}

@@ -1,0 +1,442 @@
+
+.organism .recentOrgs .adduserced
+{
+    position: relative;
+    width: 100%; 
+    height: 100%; 
+    background: #f6f6f6; 
+    border: 1px solid #000; 
+    border-radius: 10px; 
+    box-shadow: 10px 15px 5px 0 #000;
+}
+
+.organism .recentOrgs .adduserced .bloqform
+{
+    width: 97%; 
+    height: 94%; 
+    margin: 10px;
+    display: flex;
+}
+
+
+.organism .recentOrgs .adduserced .bloqform .izq
+{
+    width: 48.5%;
+    height: 100%;
+}
+.organism .recentOrgs .adduserced .bloqform .der
+{
+    width: 48.5%;
+    height: 100%;
+}
+
+
+.form
+{
+    position: absolute;
+    inset: 2px;
+    border-radius: 8px;
+    background: transparent;
+    z-index: 10;
+    width: 48.5%;
+    padding-left: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.formb
+{
+    position: absolute;
+    inset: 2px;
+    border-radius: 8px;
+    background: transparent;
+    z-index: 10;
+    width: 55.5%;
+    left: 45%;
+    padding-left: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.formb .v2
+{
+    color:  #000;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.1em;
+    margin-bottom: -10px;
+}
+
+.inputBox
+{
+    position: relative;
+    width: 300px;
+    margin-top: 35px;
+}
+
+.datBox
+{
+    position: relative;
+    width: 290px;
+    margin-top: 35px;
+    left: 100px;
+}
+
+.datvdBox
+{
+    position: relative;
+    width: 430px;
+    margin-top: 35px;
+    left: -40px;
+}
+button
+{
+    background: transparent;
+    border: none;
+    outline: none;
+}
+.iconico
+{
+    position: absolute;
+    left: 270px;
+    top: 10px;
+    font-size: 2em;
+}
+
+.datBox p,
+.datvdBox p
+{
+    position: relative;
+    width: 100%;
+    padding: 20px 10px 10px;
+    background: #fff;
+    border: none;
+    outline: none;
+    color: #000;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+}
+
+.inputBox input
+{
+    position: relative;
+    width: 100%;
+    padding: 20px 10px 0;
+    background: #fff;
+    border: none;
+    outline: none;
+    color: #000;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+}
+
+.datBox input,
+.datvdBox input
+{
+    position: relative;
+    width: 100%;
+    padding: 20px 10px 10px;
+    background: #fff;
+    border: none;
+    outline: none;
+    color: #000;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+}
+
+.datBox select,
+.datvdBox select,
+.inputBox select
+{
+    position: relative;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 0;
+    padding: 14px 10px 10px;
+    background: #fff;
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    outline: none;
+    color: #000;
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    z-index: 10;
+    background: transparent;
+}
+
+.datBox option,
+.datvdBox option,
+.inputBox option
+{
+    position: relative;
+    width: 100%;
+    padding: 20px 10px 10px;
+    background: #fff;
+    border: none;
+    outline: none;
+    color: #000;
+    font-weight: 600;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+    z-index: 10;
+}
+
+.inputBox span
+{
+    position: absolute;
+    left: 2px;
+    padding: 20px 0px 10px;
+    font-size: 1em;
+    color: #000;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.datBox span
+{
+    position: absolute;
+    left: 0;
+    padding: 20px 0px 10px;
+    font-size: 1em;
+    color: #000;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+    text-transform: uppercase;
+    font-weight: 600;
+    transform: translateX(0px) translateY(-34px);
+}
+
+.datvdBox span
+{
+    position: absolute;
+    left: 0;
+    padding: 20px 0px 10px;
+    font-size: 1em;
+    color: #000;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+    text-transform: uppercase;
+    font-weight: 600;
+    transform: translateX(0px) translateY(-34px);
+}
+
+
+.inputBox input:valid ~ span,
+.inputBox input:focus ~ span
+{
+    color: #000;
+    transform: translateX(0px) translateY(-34px);
+    font-size: 1em;
+}
+
+.inputBox select:valid ~ span,
+.inputBox select:focus ~ span
+{
+    color: #000;
+    transform: translateX(0px) translateY(-34px);
+    font-size: 1em;
+}
+
+.datBox i,
+.datvdBox i,
+.inputBox i
+{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: #111;
+    border-radius: 4px;
+    transition: 0.5s;
+    pointer-events: none;
+    z-index: 9;
+}
+
+.bloqImg
+{
+    position: absolute;
+    width: 125px;
+    height: 155px;
+    margin-top: 40px;
+    left: 0;
+    background: #fff;
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+
+.bloqImg img 
+{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.datvdBox .vrd
+{
+    color: #000;
+}
+.datvdBox .vrd thead th 
+{
+    text-align: center;
+    background: #444;
+    color: #fff;
+}
+.datvdBox .vrd tbody tr td:nth-child(1)
+{
+    border-right: 2px solid #444;
+    border-bottom: 2px solid #444;
+}
+.datvdBox .vrd tbody tr td:nth-child(2)
+{
+    border-bottom: 2px solid #444;
+}
+
+
+input[type="submit"]
+{
+    border: none;
+    outline: none;
+    background: #000;
+    padding: 5px 20px;
+    width: 100px;
+    margin-top: -30px;
+    margin-left: 30%;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+input[type="submit"]:active
+{
+    opacity: 0.8;
+}
+input[value="Guardar"]
+{
+    color: #ffffff;
+}
+
+.organism .recentOrgs .adduserced .bloqform .izq form .text-success
+{   display: block; 
+    margin-bottom: -21px; 
+    width: 300px;
+    height: 100%;
+    background: #444;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+
+.organism table
+{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.organism table thead td
+{
+    font-weight: 700;
+    color: #000;
+}
+.organism .listening table tr
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.organism .listening table tbody tr:last-child
+{
+    border-bottom: none;
+}
+.organism .listening table tr td
+{
+    padding: 9px 5px;
+    color: #000;
+}
+.organism .listening table tbody tr td:last-child,
+.organism .listening table thead tr td:last-child
+{
+    text-align: center;
+}
+.organism .listening table tbody tr td:nth-child(1),
+.organism .listening table thead tr td:nth-child(1)
+{
+    text-align: left;
+    padding-right: 20px;
+}
+.organism .listening table tbody tr td:nth-child(2),
+.organism .listening table thead tr td:nth-child(2),
+.organism .listening table tbody tr td:nth-child(3),
+.organism .listening table thead tr td:nth-child(3)
+{
+    text-align: center;
+    padding-right: 20px;
+}
+.organism .listening table tbody tr td:nth-child(4),
+.organism .listening table thead tr td:nth-child(4)
+{
+    text-align: right;
+    padding-right: 20px;
+} 
+.organism .listening table tbody tr td a.read
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkgreen;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .listening table tbody tr td a.edit
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkorange;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .listening table tbody tr td a.delet
+{
+    position: relative;
+    padding: 2px 4px;
+    background: red;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .listening table tbody tr td a.listen
+{
+    position: relative;
+    padding: 2px 4px;
+    background: #02A8AD;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.organism .listening table tbody tr td a.agror
+{
+    position: relative;
+    padding: 2px 4px;
+    background: darkviolet;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+}

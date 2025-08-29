@@ -1,0 +1,969 @@
+@import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'SUSE', sans-serif;
+}
+:root
+{
+    --black: #2f2f2f;
+    --white: #fff;
+    --red: #f83038;
+    --blue: #2e86de;
+    --orange: #FF7518;
+    --ligthgrey: #f6f6f6;
+    --oragred: #FF4433;
+}
+body
+{ 
+    overflow-x: hidden;
+    background: var(--blue);
+}  
+.contenido
+{
+    position: absolute;
+    width: 100%;
+}
+
+.contenido .nav
+{
+    position: fixed;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    white-space: nowrap;
+    background: #000;
+    border-bottom: lightgrey solid 3px;
+    box-shadow: -1px 6px 53px -17px rgba(0,0,0,0.75);
+    z-index: 1000;
+}
+.contenido .nav .inicio
+{
+    margin-left: 20px;
+}
+
+.contenido .nav .logo
+{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.contenido .nav .logo img 
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contenido .nav .rigth
+{
+    position: relative;
+    display: flex;
+}
+
+.contenido .nav .barra
+{
+    position: relative;
+    display: flex;
+}
+.contenido .nav .barra .barrados
+{
+    margin: 4px;
+    width: 400px;
+    height: 30px;
+    border-radius: 50px;
+    padding-left: 10px;
+    font-size: 1.5em;
+    border: none;
+    text-align: center;
+    align-items: center;
+    color: #fff;
+    pointer-events: none;
+}
+
+.contenido .nav .barra .iconico
+{
+    font-size: 2em;
+    font-weight: 500;
+    color: #fff;
+}
+
+.contenido .nav .inicio .text 
+{
+    position: absolute;
+    left: 35px;
+    top: 4px;
+    font-size: 2em;
+    font-weight: 500;
+    padding-left: 5px;
+    color: #fff;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.contenido .nav .inicio a .icon
+{
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    font-size: 2em;
+    overflow: hidden;
+    color: #fff;
+}
+
+.contenido .nav .rigth a 
+{
+    color: #fff;
+} 
+.contenido .nav .rigth .iconico 
+{
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #fff;
+    margin-top: 6px;
+    margin-right: 10px;
+}
+
+.contenido .nav .rigth .iconic .imgBx 
+{
+    position: relative;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+.contenido .nav .rigth .iconic .imgBx img 
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.contenido .navdos
+{
+    position: fixed;
+    top: 37px;
+    left: 0;
+    width: 11%;
+    height: 35px;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    border-top: lightgrey solid 3px;
+    border-bottom: lightgrey solid 3px;
+    border-right: lightgrey solid 3px;
+    border-bottom-right-radius: 50px;
+    box-shadow: -1px 6px 53px -17px rgba(0,0,0,0.75);
+    z-index: 1000;
+}
+
+.contenido .navdos .clock
+{
+    position: relative;
+    left: 65px;
+    width: 11%;
+    height: 35px;
+}
+.contenido .navdos .clock .container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#ampm
+{
+    padding-left: 2px;
+}
+
+.contenido .navtres
+{
+    position: fixed;
+    top: 37px;
+    right: 0;
+    width: 20%;
+    height: 35px;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.contenido .navtres .clock
+{
+    position: relative;
+    right: -67px;
+    width: 20%;
+    height: 35px;
+}
+.contenido .navtres .clock .container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+
+.contenido .navfor
+{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: 35px;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    padding-left: 10px;
+    padding-top: 5px;
+    border-top: lightgrey solid 3px;
+    border-left: lightgrey solid 3px;
+    box-shadow: -1px 6px 53px -17px rgba(0,0,0,0.75);
+    z-index: 1000;
+}
+
+/**/
+
+
+.main
+{
+    position: absolute;
+    width: 100%;
+    top: 40px;
+    height: 95vh;
+    z-index: 1;
+}
+
+
+
+
+.cardList
+{
+    position: absolute;
+    top: 280px;
+    width: 100%;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 20px;
+}
+.cardList .card 
+{
+    position: relative;
+    padding: 20px;
+    display: flex;
+    cursor: pointer;
+    border-radius: 10px;
+    margin: 3px;
+    transition: ease-in-out 0.5s;
+    box-shadow: -7px 10px 0px  rgba(0,0,0,0.75);
+    background: grey;
+    color: #fff;
+    overflow: hidden;
+}
+
+.cardList .card span::before
+{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -55%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.075);
+    transform: skew(25deg);
+}
+.cardList .card  span::after
+{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 45%;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.075);
+    transform: skew(25deg);
+}
+
+.cardList .card:hover
+{
+    transform: translate(1ch, -3mm);
+    z-index: 10;
+    transition: ease-in-out 0.5s;
+}
+
+.cardList .card .icon
+{
+    position: relative;
+    font-size: 3em;
+    font-weight: 500;
+    text-align: center;
+    width: 190px;
+}
+.cardList .card .cardName
+{
+    font-size: 1.7em;
+    text-align: center;
+    width: 190px;
+    color: #fff;
+}
+
+.info
+{
+    position: absolute;
+    top: 30px;
+    width: 97%;
+    height: 230px;
+    margin: 20px;
+}
+.info .p
+{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 5px;
+    border: 2px solid #000;
+    box-shadow: -1px 6px 53px -17px rgba(0,0,0,0.75);
+    overflow: hidden;
+}
+.info .p img
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+
+/**/
+
+
+.fondo
+{
+    position: absolute;
+    top: 0;
+    background: transparent;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+}
+.lamina
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-shadow: 10px -1px 0px 8px rgba(0,0,0,0.75);
+    clip-path: polygon(0 0, 56% 0, 100% 100%, 0 100%);
+}
+.lamina:nth-child(3)
+{
+    background: #006CFF;
+    left: -90%;
+    animation: animatea 5s ease-in-out infinite;
+    animation-delay: 2.5s;
+}
+.lamina:nth-child(2)
+{
+    background: #032AAD;
+    left: -80%;
+    animation: animateb 5s ease-in-out infinite;
+    animation-delay: 1.5s;
+}
+.lamina:nth-child(1)
+{
+    background: #11027E;
+    left: -70%;
+    animation: animatec 5s ease-in-out infinite;
+}
+@keyframes animatea
+{
+    0%,100%
+    {
+        transform: translateX(0);
+    }
+    50%
+    {
+        transform: translateX(75%);
+    }
+    90%
+    {       
+        background: transparent;
+    }
+}
+@keyframes animateb
+{
+    0%,100%
+    {
+        transform: translateX(0);
+    }
+    40%
+    {
+        transform: translateX(65%);
+    }
+    80%
+    {       
+        background: transparent;
+    }
+}
+@keyframes animatec
+{
+    0%,100%
+    {
+        transform: translateX(0);
+    }
+    30%
+    {
+        transform: translateX(55%);
+    }
+    70%
+    {       
+        background: transparent;
+    }
+}
+
+
+.inver
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-shadow: 10px -1px 0px 8px rgba(0,0,0,0.75);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 44% 100%);
+}
+.inver:nth-child(3)
+{
+    background: lightgrey;
+    right: -80%;
+    animation: animated 5s ease-in-out infinite;
+    animation-delay: 2.5s;
+}
+.inver:nth-child(2)
+{
+    background: grey;
+    right: -70%;
+    animation: animatee 5s ease-in-out infinite;
+    animation-delay: 1.5s;
+}
+.inver:nth-child(1)
+{
+    background: darkgrey;
+    right: -60%;
+    animation: animatef 5s ease-in-out infinite;
+}
+@keyframes animated
+{
+    0%,100%
+    {
+        transform: translateX(0);
+    }
+    50%
+    {
+        transform: translateX(-75%);
+    }
+    90%
+    {       
+        background: transparent;
+    }
+}
+@keyframes animatee
+{
+    0%,100%
+    {
+        transform: translateX(0);
+    }
+    40%
+    {
+        transform: translateX(-65%);
+    }
+    80%
+    {       
+        background: transparent;
+    }
+}
+@keyframes animatef
+{
+    0%,100%
+    {
+        transform: translateX(0);
+    }
+    30%
+    {
+        transform: translateX(-55%);
+    }
+    70%
+    {       
+        background: transparent;
+    }
+}
+
+
+
+.head 
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px 0;
+    z-index: 1000;
+}
+
+.head nav 
+{
+    display: flex;
+    gap: 10px;
+}
+.head nav div.home
+{
+    position: absolute;
+    left: 0;
+    text-decoration: none;
+    padding: 12px 20px;
+    color: #fff;
+    font-weight: 500;
+    background: var(--clr);
+    border-bottom-right-radius: 10px;
+    justify-content: space-between;
+}
+.head nav div.reloj 
+{
+    position: fixed;
+    top: 0;
+    left: 40%;
+    text-decoration: none;
+    padding: 12px 20px;
+    color: #fff;
+    font-weight: 500;
+    background: var(--clr);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.head nav div.reloj .clock 
+{
+    position: relative;
+    width: 130px;
+    height: 20px;
+}
+.head nav div.reloj .clock .container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.head nav div.reloj .clock .container h2
+{
+    color: #fff;
+}
+
+.head nav div.data
+{
+    position: absolute;
+    right: 0;
+    text-decoration: none;
+    padding: 12px 20px;
+    color: #fff;
+    font-weight: 500;
+    background: var(--clr);
+    border-bottom-left-radius: 10px;
+    justify-content: space-between;
+}
+
+
+.foot 
+{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px 0;
+    z-index: 1000;
+}
+
+.foot .circle
+{
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    margin: 5px;
+    cursor: pointer;
+}
+.foot .circle ion-icon
+{
+    position: relative;
+    color: #000;
+    font-size: 1.5em;
+    justify-content: center;
+    margin: 5px;
+
+}
+
+.foot .close
+{
+    position: absolute;
+    right: 15px;
+    bottom: -5px;
+    width: 175px;
+    height: 40px;
+    background: var(--clr);
+    border-radius: 5px;
+}
+.foot .close a
+{
+    position: relative;
+    display: flex;
+    color: #fff;
+    text-decoration: none;
+    margin: 10px;
+}
+
+
+.option
+{
+    width: 95%;
+    height: 60px;
+    background: #f6f6f6;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+    justify-content: center;
+}
+.option h5
+{
+    position: relative;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.addlist
+{
+    position: absolute;
+    top: 0;
+    left: 33%;
+    margin: 10px;
+    width: 450px;
+    height: 280px;
+    background: #f6f6f6;
+    border: 2px solid #fff;
+}
+.addlist .boton
+{
+    position: relative;
+    display: flex;
+    margin: 20px;
+    left: 150px;
+}
+.readlist
+{
+    position: absolute;
+    display: flex;
+    left: -24%;
+    margin: 10px;
+    width: 650px;
+    background: #f9f9f9;
+    border: 2px solid #fff;
+}
+
+.hoja
+{
+    background: #fff;
+    margin: 20px;
+}
+.hoja h4
+{
+    position: relative;
+    display: flex;
+    margin: 10px;
+    background: #f3f3f3;
+}
+
+
+.tabla
+{
+    position: relative;
+    top: 10px;
+    left: 10px;
+    width: 400px;
+    height: 414px;
+    background: #f6f6f6;
+}
+.tabla .table
+{
+    color: #000;
+}
+.tabla .table thead th 
+{
+    text-align: center;
+    background: #444;
+    color: #fff;
+    border: 2px solid #444;
+}
+.tabla .table tbody tr td:nth-child(1)
+{
+    border: 2px solid #444;
+    justify-content: center;
+}
+.tabla .table tbody tr td:nth-child(2)
+{
+    border: 2px solid #444;
+    justify-content: center;
+}
+
+.formulario
+{
+    position: absolute;
+    top: 64px;
+    left: 447px;
+    width: 1020px;
+    height: 414px;
+    background: transparent;
+}
+
+.linea
+{
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.listening
+{
+    position: relative;
+    display: flex;
+    top: 25px;
+    left: 40px;
+    justify-content: center;
+    width: 95%;
+    background: #f9f9f9;
+    margin: 5px;
+}
+.listening .resp
+{
+    width: 100%;
+    margin: 10px;
+}
+
+.regi
+{
+    position: relative;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: 700;
+    color: var(--black);
+    background: var(--ligthgrey);
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-bottom: 20px;
+}
+.regi:hover
+{
+
+    letter-spacing: 0.5em;
+}
+
+.control
+{
+    position: relative;
+    display: flex;
+    top: 25px;
+    left: 40px;
+    justify-content: center;
+    max-width: 95%;
+    height: 750px;
+    background: var(--oragred);
+    margin: 5px;
+}
+
+.onefase
+{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: 40px;
+    width: 100%;
+}
+.buscador
+{
+    position: relative;
+    display: flex;
+    width: 450px;
+    left: 30px;
+    justify-content: center;
+}
+.buscador label
+{
+    border: 1px solid var(--red);
+    font-weight: 700;
+    font-size: 1.7em;
+    width: 100px;
+    height: 40px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.buscador input
+{
+    height: 40px;
+    border: 1px solid var(--red);
+    width: auto;
+    font-weight: 700;
+    font-size: 1.3em;
+}
+.buscador button 
+{
+    height: 40px;
+    width: auto;
+    border: 1px solid var(--red);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.buscador button:hover
+{
+    border: 1px solid var(--red);
+    background: var(--oragred);
+}
+.buscador button ion-icon
+{
+    font-size: 1.5em;
+    color: var(--black);
+}
+.notificado
+{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    left: 10px;
+    width: calc(100% - 450px);
+    left: 30px;
+}
+.notificado .alert
+{
+
+    height: 40px;
+}
+
+.formtwo
+{
+    position: relative; 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.formtwo div
+{
+    margin: 5px;
+}
+.formtwo label
+{
+    border: 1px solid var(--red);
+    font-weight: 700;
+    font-size: 1.4em;
+    width: auto;
+    height: 40px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    margin-bottom: -1px;
+}
+.formtwo input,
+.formtwo select
+{
+    border: 1px solid var(--orange);
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--black);
+    background: transparent;
+}
+.informativo
+{
+    position: relative;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--orange);
+    border-radius: 10px;
+}
+.informativo .imagen
+{
+    width: 230px;
+    height: 300px;
+}
+.informativo .imagen img 
+{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+table
+{
+    position: relative;
+    justify-content: center;
+    align-items: center;
+}
+table thead th
+{
+    text-align: center;
+    font-size: 1.2em;
+    color: #000;
+}
+table tbody tr td
+{
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--black);
+    text-align: center;
+    text-transform: uppercase;
+    color: #000;
+}
+/*
+.control label
+{
+    width: auto;
+    font-weight: 600;
+    font-size: 1.3em;
+    background: var(--red);
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}*/

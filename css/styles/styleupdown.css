@@ -1,0 +1,6 @@
+.main
+{
+	position: absolute;
+	background: var(--orange);
+	z-index: 100;
+}

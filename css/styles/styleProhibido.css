@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,600,700,800&display=swap');
+*
+{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+body
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+}
+section
+{
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	background: #111;
+}
+section::before
+{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(transparent, transparent, #0005, #0004);
+	z-index: 10000;
+	pointer-events: none;
+}
+.scroll
+{
+	width: calc(100% + 400px);
+	left: -400px;
+	display: flex;
+	box-shadow: 0 15px 10px rgba(0, 0, 0, 0.5);
+	transform: rotate(calc(var(--d) * 1deg)) translateY(calc(var(--y) * 1px));
+
+}
+.scroll div
+{
+	background: #e9c804;
+	color: #E80202;
+	font-size: 3em;
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+	font-weight: 600;
+	white-space: nowrap;
+	animation: animate 60s linear infinite;
+	animation-delay: -60s;
+}
+.scroll div:nth-child(2)
+{
+	animation: animate-two 60s linear infinite;
+	animation-delay: -30s;
+}
+@keyframes animate
+{
+	0%
+	{
+		transform: translateX(100%);
+	}
+	100%
+	{
+		transform: translateX(-100%);
+	}
+}
+
+@keyframes animate-two
+{
+	0%
+	{
+		transform: translateX(0);
+	}
+	100%
+	{
+		transform: translateX(-200%);
+	}
+}
+:root
+{
+	--x: 45deg;
+}
+a
+{
+	margin-left: 600px;
+	margin-top: -600px;
+	position: relative;
+	width: 200px;
+	height: 55px;
+	display: inline-block;
+	border-radius: 5px;
+}
+a i
+{
+	position: absolute;
+	inset: -2px;
+	display: block;
+	border-radius: 5px;
+}
+a i, a i:nth-child(2)
+{
+	background: linear-gradient(var(--x), #00ccff, #0e1538, #0e1538, #E80202);
+}
+a i:nth-child(2)
+{
+	filter: blur(10px);
+}
+a span
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-transform: uppercase;
+	color: #fff;
+	letter-spacing: 2px;
+	border: 1px solid #040a29;
+	border-radius: 3px;
+	background: rgba(14,21,56,0.65);
+	overflow: hidden;
+}
+a span::before
+{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -50%;
+	width: 100%;
+	height: 100%;
+	background: rgba(255,255,255,0.075);
+	transform: skew(25deg);
+}
+a span::after
+{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 100%;
+	height: 100%;
+	background: rgba(100,100,100,0.075);
+	transform: skew(25deg);
+}
