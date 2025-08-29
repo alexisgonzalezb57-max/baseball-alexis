@@ -393,7 +393,7 @@ $id_team = $dteg['id_team'];
                         </div>
                         <label class="col-sm-2 col-form-label text-end">CA</label>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" name="ca" min="0" value="<?php echo $dteg['ca']; ?>">
+                            <input type="number" style="text-align: center;" class="form-control" name="ca" min="0" value="<?php echo $dteg['ca']; ?>">
                         </div>
                     </div>
 
@@ -404,7 +404,7 @@ $id_team = $dteg['id_team'];
                         </div>
                         <label class="col-sm-2 col-form-label text-end">CI</label>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" name="ci" min="0" value="<?php echo $dteg['ci']; ?>">
+                            <input type="number" style="text-align: center;" class="form-control" name="ci" min="0" value="<?php echo $dteg['ci']; ?>">
                         </div>
                     </div>
 
@@ -426,7 +426,7 @@ $id_team = $dteg['id_team'];
                         </div>
                         <label class="col-sm-2 col-form-label text-end">B</label>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" name="b" min="0" value="<?php echo $dteg['b']; ?>">
+                            <input type="number" style="text-align: center;" class="form-control" name="b" min="0" value="<?php echo $dteg['b']; ?>">
                         </div>
                     </div>
 
@@ -437,25 +437,25 @@ $id_team = $dteg['id_team'];
                         </div>
                         <label class="col-sm-2 col-form-label text-end">AS</label>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control asistencia-input" min="0" max="1" name="a" value="<?php echo $dteg['a']; ?>" id="asistenciaInput">
+                            <input type="number" style="text-align: center;" class="form-control asistencia-input" min="0" max="1" name="a" value="<?php echo $dteg['a']; ?>" id="asistenciaInput">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <label class="col-sm-3 col-form-label text-end">FL</label>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" name="fl" min="0" value="<?php echo $dteg['sf']; ?>">
+                            <input type="number" style="text-align: center;" class="form-control" name="fl" min="0" value="<?php echo $dteg['sf']; ?>">
                         </div>
                         <label class="col-sm-2 col-form-label text-end">BR</label>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" min="0" name="br" value="<?php echo $dteg['br']; ?>">
+                            <input type="number" style="text-align: center;" class="form-control" min="0" name="br" value="<?php echo $dteg['br']; ?>">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <label class="col-sm-3 col-form-label text-end">GP</label>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" name="gp" min="0" value="<?php echo $dteg['gp']; ?>">
+                            <input type="number" style="text-align: center;" class="form-control" name="gp" min="0" value="<?php echo $dteg['gp']; ?>">
                         </div>
                     </div>
 
