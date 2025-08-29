@@ -348,9 +348,9 @@ $id_team = $dteg['id_team'];
                     <li><a href="../equipos/"><i class="fas fa-users"></i> Equipos</a></li>
                     <li><a href="../juego/"><i class="fas fa-calendar-alt"></i> Temporada</a></li>
                     <li><a href="../calendario/"><i class="fas fa-calendar-day"></i> Calendario</a></li>
-                    <li><a href="../homenaje/homenaje.php"><i class="fas fa-award"></i> Homenaje</a></li>
+                    <li><a href="../homenaje/homenaje.php"><i class="fas fa-trophy"></i> Homenaje</a></li>
                     <li><a href="../abonos/"><i class="fas fa-ticket-alt"></i> Abono</a></li>
-                    <li><a href="../reporte/"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                    <li><a href="../reporte/reporte.php"><i class="fas fa-chart-bar"></i> Reportes</a></li>
                 </ul>
                 
                 <div class="clock-container">
