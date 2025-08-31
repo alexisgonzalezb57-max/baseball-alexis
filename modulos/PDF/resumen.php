@@ -113,7 +113,7 @@ $pdf->Cell(12,5,utf8_decode(strtoupper($player['ci'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['k'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['b'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['a'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['fl'])),1,0,'C');
+$pdf->Cell(12,5,utf8_decode(strtoupper($player['sf'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['br'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['tvb'])),1,0,'C');
@@ -134,7 +134,7 @@ SUM(ci)   AS tci,
 SUM(k)    AS tk,
 SUM(b)    AS tb,
 SUM(a)    AS ta,
-SUM(fl)   AS tfl,
+SUM(sf)   AS tfl,
 SUM(br)   AS tbr,
 SUM(gp)   AS tgp,
 SUM(tvb)  AS ttvb,
