@@ -448,7 +448,7 @@ $id_team = $dteg['id_team'];
                             </div>
                             <label class="col-sm-2 col-form-label text-end">BR</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control input-number" name="br" min="0" value="<?php echo $dteg['br']; ?>">
+                                <input type="number" class="form-control input-number" name="br" min="0" value="<?php echo $dteg['ile']; ?>">
                             </div>
                         </div>
                     </div>

@@ -32,7 +32,7 @@ echo $guardar = "UPDATE jugadores_stats SET vb = '$vb',
                                        k  = '$k',
                                        b  = '$b',
                                        a  = '$a',
-                                       fl = '$fl',
+                                       sf = '$fl',
                                        br = '$br',
                                        gp = '$gp' 
                                        WHERE id_js = '$id_js';";

@@ -18,304 +18,107 @@ class PDF extends FPDF
     function Header()
     {
         // Logo
-        $this->Image('../../fondos/pulpo (2).png', 10, 8, 16);
-        $this->Image('../../fondos/pulpov (2).png', 189, 8, 16);
+        $this->Image('../../fondos/pulpo (2).png', 10, 8, 12);
+        $this->Image('../../fondos/pulpov (2).png', 189, 8, 12);
         
-        // Título principal
+        // Título principal (aumentado +2 puntos)
         $this->SetFont('Arial', 'B', 14);
-        $this->Cell(0, 5, utf8_decode('LIGA RECREATIVA SOFTBALL EDUCADORES DEL ESTADO ARAGUA'), 0, 1, 'C');
+        $this->Cell(0, 5, utf8_decode('LIGA RECREATIVA SOFTBALL EDUCADORES ARAGUA'), 0, 1, 'C');
         $this->Ln(2);
-        $this->Cell(0, 5, utf8_decode('HISTORIAL DE JUEGOS - TEMPORADA ' . $GLOBALS['tm']), 0, 1, 'C');
+        $this->Cell(0, 5, utf8_decode('HISTORIAL - TEMPORADA ' . $GLOBALS['tm']), 0, 1, 'C');
         $this->Ln(2);
         $this->Cell(0, 5, utf8_decode('EQUIPO: ' . strtoupper($GLOBALS['name'])), 0, 1, 'C');
-        $this->Ln(5);
+        $this->Ln(4);
         
-        // Fecha
+        // Fecha (aumentado +2 puntos)
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 5, 'FECHA: ' . date('d/m/Y'), 0, 1, 'L');
-        $this->Ln(8);
+        $this->Ln(5);
     }
 
     // Pie de página
     function Footer()
     {
-        $this->SetY(-15);
+        $this->SetY(-12);
         $this->SetFont('Arial', 'I', 8);
-        $this->Cell(0, 10, utf8_decode('Página ') . $this->PageNo() . '/{nb}', 0, 0, 'C');
+        $this->Cell(0, 8, utf8_decode('Página ') . $this->PageNo() . '/{nb}', 0, 0, 'C');
     }
 
-    // Función para crear tabla de información del juego
+    // Función para crear tabla de información del juego con fuentes aumentadas
     function GameInfoTable($fecha, $numJuego, $equipoElegido, $equipoRival, $puntajeElegido, $puntajeRival, $estado, $valido)
     {
-        $this->SetFont('Arial', 'B', 12);
-        $this->Cell(0, 8, utf8_decode("Juego #$numJuego - $fecha"), 0, 1, 'L');
-        $this->Ln(2);
-        
-        // Tabla de información
-        $this->SetFillColor(40, 40, 40);
+        // Encabezado del juego (aumentado +2 puntos)
+        $this->SetFillColor(60, 80, 120);
         $this->SetTextColor(255);
-        $this->SetFont('Arial', 'B', 10);
-        $this->Cell(95, 8, 'INFORMACION', 1, 0, 'C', true);
-        $this->Cell(95, 8, utf8_decode(strtoupper($equipoElegido)) . ' - PARTIDO N° ' . $numJuego, 1, 1, 'C', true);
+        $this->SetFont('Arial', 'B', 11);
+        $this->Cell(0, 7, utf8_decode("Juego #$numJuego - " . date('d/m/Y', strtotime($fecha))), 1, 1, 'C', true);
+        $this->Ln(3);
         
+        // Información de equipos (aumentado +2 puntos)
+        $this->SetFillColor(240, 240, 240);
         $this->SetTextColor(0);
-        $this->SetFont('Arial', '', 10);
-        
-        // Primera fila
-        $this->Cell(47.5, 8, 'JUEGO', 1, 0, 'C');
-        $this->Cell(47.5, 8, $numJuego, 1, 0, 'C');
-        $this->Cell(47.5, 8, 'EQUIPO 1', 1, 0, 'C');
-        $this->Cell(47.5, 8, utf8_decode($equipoElegido), 1, 1, 'C');
-        
-        // Segunda fila
-        $this->Cell(47.5, 8, 'ESTADO', 1, 0, 'C');
-        $this->Cell(47.5, 8, utf8_decode($estado), 1, 0, 'C');
-        $this->Cell(47.5, 8, 'CA', 1, 0, 'C');
-        $this->Cell(47.5, 8, $puntajeElegido, 1, 1, 'C');
-        
-        // Tercera fila
-        $this->Cell(47.5, 8, 'VALIDO', 1, 0, 'C');
-        $this->Cell(47.5, 8, $valido ? 'SI' : 'NO', 1, 0, 'C');
-        $this->Cell(47.5, 8, 'EQUIPO 2', 1, 0, 'C');
-        $this->Cell(47.5, 8, utf8_decode($equipoRival), 1, 1, 'C');
-        
-        // Cuarta fila
-        $this->Cell(47.5, 8, 'FECHA', 1, 0, 'C');
-        $this->Cell(47.5, 8, $fecha, 1, 0, 'C');
-        $this->Cell(47.5, 8, 'CE', 1, 0, 'C');
-        $this->Cell(47.5, 8, $puntajeRival, 1, 1, 'C');
-        
-        $this->Ln(10);
-    }
-
-    // Función para determinar qué columnas mostrar (solo las que tienen al menos un valor >= 1)
-    function getVisibleColumns($data, $columns)
-    {
-        $visibleColumns = [];
-        
-        foreach ($columns as $column => $header) {
-            $showColumn = false;
-            
-            foreach ($data as $row) {
-                if (isset($row[$column]) && $row[$column] >= 1) {
-                    $showColumn = true;
-                    break;
-                }
-            }
-            
-            if ($showColumn) {
-                $visibleColumns[$column] = $header;
-            }
-        }
-        
-        return $visibleColumns;
-    }
-
-    // Función para tabla de jugadores
-    function PlayersTable($players)
-    {
-        if (empty($players)) {
-            $this->SetFont('Arial', 'I', 10);
-            $this->Cell(0, 8, 'No hay jugadores registrados para este juego', 0, 1, 'C');
-            $this->Ln(5);
-            return;
-        }
-
         $this->SetFont('Arial', 'B', 10);
-        $this->Cell(0, 8, 'JUGADORES', 0, 1, 'L');
-        $this->Ln(2);
         
-        // Definir columnas y determinar cuáles mostrar (excepto # y JUGADOR que siempre se muestran)
-        $allColumns = [
-            'vb' => 'VB', 'h' => 'H', 'hr' => 'HR', '2b' => '2B', 
-            '3b' => '3B', 'ca' => 'CA', 'ci' => 'CI', 'k' => 'K', 
-            'b' => 'B', 'a' => 'A', 'sf' => 'FL', 'br' => 'BR', 'gp' => 'GP'
-        ];
+        // Nombres de equipos (abreviados si son muy largos)
+        $equipoLocal = strlen($equipoElegido) > 20 ? substr($equipoElegido, 0, 17) . '...' : $equipoElegido;
+        $equipoVisitante = strlen($equipoRival) > 20 ? substr($equipoRival, 0, 17) . '...' : $equipoRival;
         
-        $visibleColumns = $this->getVisibleColumns($players, $allColumns);
+        $this->Cell(95, 6, 'LOCAL', 1, 0, 'C', true);
+        $this->Cell(95, 6, 'VISITANTE', 1, 1, 'C', true);
         
-        // Siempre mostrar # y JUGADOR
-        $finalColumns = ['#' => '#', 'JUGADOR' => 'JUGADOR'];
-        foreach ($visibleColumns as $key => $header) {
-            $finalColumns[$key] = $header;
+        $this->SetFont('Arial', 'B', 11);
+        $this->Cell(95, 7, utf8_decode($equipoLocal), 1, 0, 'C');
+        $this->Cell(95, 7, utf8_decode($equipoVisitante), 1, 1, 'C');
+        
+        // Marcador (aumentado +3 puntos)
+        $this->SetFont('Arial', 'B', 17);
+        $this->SetFillColor(250, 250, 250);
+        $this->Cell(95, 10, $puntajeElegido, 1, 0, 'C', true);
+        $this->Cell(95, 10, $puntajeRival, 1, 1, 'C', true);
+        
+        $this->Ln(3);
+        
+        // Información adicional (aumentado +2-3 puntos)
+        $this->SetFont('Arial', 'B', 9);
+        $this->SetFillColor(220, 220, 220);
+        
+        // Primera fila de info
+        $this->Cell(47.5, 6, 'ESTADO', 1, 0, 'C', true);
+        $this->SetFont('Arial', '', 9);
+        $this->Cell(47.5, 6, utf8_decode($estado), 1, 0, 'C');
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(47.5, 6, utf8_decode('VÁLIDO'), 1, 0, 'C', true);
+        $this->SetFont('Arial', '', 9);
+        $this->Cell(47.5, 6, $valido ? 'SI' : 'NO', 1, 1, 'C');
+        
+        // Segunda fila de info
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(47.5, 6, 'FECHA', 1, 0, 'C', true);
+        $this->SetFont('Arial', '', 9);
+        $this->Cell(47.5, 6, date('d/m/Y', strtotime($fecha)), 1, 0, 'C');
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(47.5, 6, utf8_decode('N° JUEGO'), 1, 0, 'C', true);
+        $this->SetFont('Arial', '', 9);
+        $this->Cell(47.5, 6, $numJuego, 1, 1, 'C');
+        
+        // Resultado final (aumentado +2 puntos)
+        $this->Ln(3);
+        $this->SetFont('Arial', 'B', 11);
+        
+        if ($puntajeElegido > $puntajeRival) {
+            $this->SetFillColor(220, 255, 220);
+            $resultado = 'VICTORIA';
+        } elseif ($puntajeElegido < $puntajeRival) {
+            $this->SetFillColor(255, 220, 220);
+            $resultado = 'DERROTA';
+        } else {
+            $this->SetFillColor(255, 255, 200);
+            $resultado = 'EMPATE';
         }
         
-        // Definir anchos de columnas
-        $widths = [];
-        $totalWidth = 0;
+        $this->Cell(0, 8, $resultado . ' (' . $puntajeElegido . '-' . $puntajeRival . ')', 1, 1, 'C', true);
         
-        foreach ($finalColumns as $key => $header) {
-            if ($key === '#') {
-                $widths[$key] = 8;
-            } elseif ($key === 'JUGADOR') {
-                $widths[$key] = 35;
-            } else {
-                $widths[$key] = 10;
-            }
-            $totalWidth += $widths[$key];
-        }
-        
-        // Ajustar ancho de la columna JUGADOR si es necesario
-        if ($totalWidth > 190) {
-            $excess = $totalWidth - 190;
-            $widths['JUGADOR'] = max(20, $widths['JUGADOR'] - $excess);
-        }
-        
-        // Cabecera de la tabla
-        $this->SetFillColor(40, 40, 40);
-        $this->SetTextColor(255);
-        $this->SetFont('Arial', 'B', 8);
-        
-        foreach ($finalColumns as $key => $header) {
-            $this->Cell($widths[$key], 6, utf8_decode($header), 1, 0, 'C', true);
-        }
-        $this->Ln();
-        
-        // Datos de jugadores
-        $this->SetTextColor(0);
-        $this->SetFont('Arial', '', 8);
-        $fill = false;
-        $counter = 1;
-        
-        foreach ($players as $player) {
-            if ($this->GetY() > 250) {
-                $this->AddPage();
-                // Volver a dibujar la cabecera
-                $this->SetFillColor(40, 40, 40);
-                $this->SetTextColor(255);
-                $this->SetFont('Arial', 'B', 8);
-                foreach ($finalColumns as $key => $header) {
-                    $this->Cell($widths[$key], 6, utf8_decode($header), 1, 0, 'C', true);
-                }
-                $this->Ln();
-                $this->SetTextColor(0);
-                $this->SetFont('Arial', '', 8);
-            }
-            
-            $this->SetFillColor($fill ? 240 : 255);
-            
-            foreach ($finalColumns as $key => $header) {
-                if ($key === '#') {
-                    $value = $counter;
-                } elseif ($key === 'JUGADOR') {
-                    $value = substr($player['name_jugador'], 0, floor($widths['JUGADOR']/2.5));
-                } else {
-                    $value = isset($player[$key]) ? $player[$key] : 0;
-                }
-                
-                $this->Cell($widths[$key], 6, utf8_decode($value), 1, 0, 'C', $fill);
-            }
-            $this->Ln();
-            
-            $fill = !$fill;
-            $counter++;
-        }
-        
-        $this->Ln(8);
-    }
-
-    // Función para tabla de lanzadores
-    function PitchersTable($pitchers)
-    {
-        if (empty($pitchers)) {
-            $this->SetFont('Arial', 'I', 10);
-            $this->Cell(0, 8, 'No hay lanzadores registrados para este juego', 0, 1, 'C');
-            $this->Ln(5);
-            return;
-        }
-
-        $this->SetFont('Arial', 'B', 10);
-        $this->Cell(0, 8, 'LANZADORES', 0, 1, 'L');
-        $this->Ln(2);
-        
-        // Definir columnas y determinar cuáles mostrar (excepto # y JUGADOR que siempre se muestran)
-        $allColumns = [
-            'jl' => 'JL', 'jg' => 'JG', 'il' => 'IL', 'cp' => 'CP', 
-            'cpl' => 'CPL', 'h' => 'H', '2b' => '2B', '3b' => '3B', 
-            'hr' => 'HR', 'b' => 'B', 'k' => 'K', 'va' => 'VB', 
-            'gp' => 'GP', 'ile' => 'BR'
-        ];
-        
-        $visibleColumns = $this->getVisibleColumns($pitchers, $allColumns);
-        
-        // Siempre mostrar # y JUGADOR
-        $finalColumns = ['#' => '#', 'JUGADOR' => 'JUGADOR'];
-        foreach ($visibleColumns as $key => $header) {
-            $finalColumns[$key] = $header;
-        }
-        
-        // Definir anchos de columnas
-        $widths = [];
-        $totalWidth = 0;
-        
-        foreach ($finalColumns as $key => $header) {
-            if ($key === '#') {
-                $widths[$key] = 8;
-            } elseif ($key === 'JUGADOR') {
-                $widths[$key] = 30;
-            } else {
-                $widths[$key] = 8;
-            }
-            $totalWidth += $widths[$key];
-        }
-        
-        // Ajustar ancho de la columna JUGADOR si es necesario
-        if ($totalWidth > 190) {
-            $excess = $totalWidth - 190;
-            $widths['JUGADOR'] = max(15, $widths['JUGADOR'] - $excess);
-        }
-        
-        // Cabecera de la tabla
-        $this->SetFillColor(40, 40, 40);
-        $this->SetTextColor(255);
-        $this->SetFont('Arial', 'B', 7);
-        
-        foreach ($finalColumns as $key => $header) {
-            $this->Cell($widths[$key], 6, utf8_decode($header), 1, 0, 'C', true);
-        }
-        $this->Ln();
-        
-        // Datos de lanzadores
-        $this->SetTextColor(0);
-        $this->SetFont('Arial', '', 7);
-        $fill = false;
-        $counter = 1;
-        
-        foreach ($pitchers as $pitcher) {
-            if ($this->GetY() > 250) {
-                $this->AddPage();
-                // Volver a dibujar la cabecera
-                $this->SetFillColor(40, 40, 40);
-                $this->SetTextColor(255);
-                $this->SetFont('Arial', 'B', 7);
-                foreach ($finalColumns as $key => $header) {
-                    $this->Cell($widths[$key], 6, utf8_decode($header), 1, 0, 'C', true);
-                }
-                $this->Ln();
-                $this->SetTextColor(0);
-                $this->SetFont('Arial', '', 7);
-            }
-            
-            $this->SetFillColor($fill ? 240 : 255);
-            
-            foreach ($finalColumns as $key => $header) {
-                if ($key === '#') {
-                    $value = $counter;
-                } elseif ($key === 'JUGADOR') {
-                    $value = substr($pitcher['name_lanz'], 0, floor($widths['JUGADOR']/2));
-                } else {
-                    $value = isset($pitcher[$key]) ? $pitcher[$key] : 0;
-                }
-                
-                $this->Cell($widths[$key], 6, utf8_decode($value), 1, 0, 'C', $fill);
-            }
-            $this->Ln();
-            
-            $fill = !$fill;
-            $counter++;
-        }
-        
-        $this->Ln(10);
+        $this->Ln(7);
     }
 }
 
@@ -324,8 +127,12 @@ $pdf = new PDF('P','mm','Letter');
 $pdf->AliasNbPages();
 $pdf->AddPage();
 
+// Configuración con márgenes ajustados
+$pdf->SetMargins(10, 15, 10);
+$pdf->SetAutoPageBreak(true, 12);
+
 // config document
-$pdf->SetTitle(utf8_decode('Historial del Equipo: '.$name));
+$pdf->SetTitle(utf8_decode('Historial: '.$name));
 $pdf->SetAuthor('Arturo');
 $pdf->SetCreator('FPDF Maker');
 
@@ -337,29 +144,10 @@ $result = mysqli_query($con, $sql);
 while ($row = mysqli_fetch_assoc($result)) {
     $ht = $row['team_one'];
     $ft = $row['team_two'];
-    $pl = $row['fech_part'];
 
     $tenemy = "SELECT * FROM equipos WHERE id_team = $ft";
     $vart = mysqli_query($con, $tenemy);
     $nym = mysqli_fetch_array($vart);
-
-    // Obtener jugadores para este juego
-    $players_sql = "SELECT * FROM jugadores_stats 
-                   WHERE id_team = $ht AND id_tab = {$row['id_tab']} AND nj = {$row['nj']} AND categoria LIKE '%$ct%'";
-    $players_result = mysqli_query($con, $players_sql);
-    $players = [];
-    while ($player = mysqli_fetch_assoc($players_result)) {
-        $players[] = $player;
-    }
-
-    // Obtener lanzadores para este juego
-    $pitchers_sql = "SELECT * FROM jugadores_lanz 
-                    WHERE id_team = $ht AND id_tab = {$row['id_tab']} AND nj = {$row['nj']} AND categoria LIKE '%$ct%'";
-    $pitchers_result = mysqli_query($con, $pitchers_sql);
-    $pitchers = [];
-    while ($pitcher = mysqli_fetch_assoc($pitchers_result)) {
-        $pitchers[] = $pitcher;
-    }
 
     $historial[] = [
         'fecha' => $row['fech_part'],
@@ -369,16 +157,15 @@ while ($row = mysqli_fetch_assoc($result)) {
         'puntajeElegido' => (int)$row['ca'],
         'puntajeRival' => (int)$row['ce'],
         'estado' => $row['estado'],
-        'valido' => $row['valido'],
-        'players' => $players,
-        'pitchers' => $pitchers
+        'valido' => $row['valido']
     ];
 }
 
 // Recorrer y agregar info
+$gameCount = 0;
 foreach ($historial as $juego) {
-    // Verificar si necesitamos nueva página
-    if ($pdf->GetY() > 180) {
+    // Verificar si necesitamos nueva página (cada 3 juegos)
+    if ($gameCount % 3 == 0 && $gameCount > 0) {
         $pdf->AddPage();
     }
     
@@ -393,13 +180,15 @@ foreach ($historial as $juego) {
         $juego['valido']
     );
     
-    $pdf->PlayersTable($juego['players']);
-    $pdf->PitchersTable($juego['pitchers']);
+    $gameCount++;
     
-    // Línea separadora entre juegos
-    $pdf->SetDrawColor(200, 200, 200);
-    $pdf->Line(10, $pdf->GetY(), 200, $pdf->GetY());
-    $pdf->Ln(5);
+    // Línea separadora solo entre juegos, no después del último
+    if ($gameCount < count($historial) && $gameCount % 3 != 0) {
+        $pdf->SetDrawColor(200, 200, 200);
+        $pdf->SetLineWidth(0.2);
+        $pdf->Line(15, $pdf->GetY() - 4, 195, $pdf->GetY() - 4);
+        $pdf->Ln(5);
+    }
 }
 
 $pdf->Output();

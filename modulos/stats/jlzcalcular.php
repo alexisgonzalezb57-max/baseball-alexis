@@ -24,7 +24,7 @@ SUM(b)    AS tb,
 SUM(k)    AS tk,
 SUM(va)   AS tva,
 SUM(gp)   AS tgp,
-SUM(br)   AS tbr
+SUM(ile)   AS tbr
 FROM jugadores_lanz WHERE id_tab    = $id_tab 
                     AND   id_team   = $id_team 
                     AND   id_player = $id_player;";
@@ -93,7 +93,7 @@ $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
                                         k    = '$tk',
                                         va   = '$tva',
                                         gp   = '$tgp',
-                                        br   = '$tbr'  
+                                        ile   = '$tbr'  
                                         WHERE id_tab    = $id_tab 
                                         AND   id_team   = $id_team 
                                         AND   id_player = $id_player; ";

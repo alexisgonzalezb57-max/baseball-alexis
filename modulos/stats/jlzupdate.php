@@ -36,7 +36,7 @@ $guardar = "UPDATE jugadores_lanz SET jl  = '$jl',
                                       k   = '$k',
                                       va  = '$va',
                                       gp  = '$gp',
-                                      br  = '$br' 
+                                      ile  = '$br' 
                                       WHERE id_lanz = '$id_lanz';";
 $resaves = mysqli_query($con, $guardar);
 

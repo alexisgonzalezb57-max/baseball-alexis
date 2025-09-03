@@ -242,7 +242,7 @@ $pdf->Cell(12,5,utf8_decode(strtoupper($player['hr'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['b'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['k'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['br'])),1,0,'C');
+$pdf->Cell(12,5,utf8_decode(strtoupper($player['ile'])),1,0,'C');
 $pdf->Cell(12,5,utf8_decode(strtoupper($player['va'])),1,1,'C');
 
     }
