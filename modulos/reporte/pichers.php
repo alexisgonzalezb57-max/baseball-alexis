@@ -449,7 +449,7 @@ if (!$con) {
                                 
                                 <div class="info-card">
                                     <h6><i class="fas fa-info-circle"></i> Información</h6>
-                                    <p class="mb-0">Este valor define el máximo total de juegos jugados (JJ) que se considerarán para el cálculo del índice de efectividad (IL) de los pichers.</p>
+                                    <p class="mb-0">Este valor define el máximo total de juegos jugados (JJ), que se considerarán para el cálculo del índice de efectividad (IL) de los pichers.</p>
                                 </div>
                             </div>
                         </div>
