@@ -80,7 +80,7 @@ $pdf->Cell(75,5,utf8_decode(strtoupper('Equipo')),1,1,'C');
 
 if ($valorval > 0) {
 
-$covl = "SELECT rs.*
+$covl = "SELECT rs.*, MAX(rs.a) as max_asistencias
 FROM resumen_stats rs
 JOIN (
     SELECT id_team, SUM(a) AS total_asistencias
@@ -90,11 +90,12 @@ JOIN (
 ) AS team_totals ON rs.id_team = team_totals.id_team
 WHERE rs.id_temp = $temporada
   AND rs.a >= $valorval 
-ORDER BY team_totals.total_asistencias DESC, rs.id_team ASC, rs.a DESC;";
+GROUP BY rs.name_jgstats
+ORDER BY team_totals.total_asistencias DESC, rs.id_team ASC, max_asistencias DESC;";
 
 } else {
 
-$covl = "SELECT rs.*
+$covl = "SELECT rs.*, MAX(rs.a) as max_asistencias
 FROM resumen_stats rs
 JOIN (
     SELECT id_team, SUM(a) AS total_asistencias
@@ -103,8 +104,8 @@ JOIN (
     GROUP BY id_team
 ) AS team_totals ON rs.id_team = team_totals.id_team
 WHERE rs.id_temp = $temporada
-ORDER BY team_totals.total_asistencias DESC, rs.id_team ASC, rs.a DESC;
-;";
+GROUP BY rs.name_jgstats
+ORDER BY team_totals.total_asistencias DESC, rs.id_team ASC, max_asistencias DESC;";
 
 }
 
@@ -146,7 +147,7 @@ if ($asnm >= 1) {
         $pdf->Cell(12.5);
         $pdf->Cell(10,3.5,utf8_decode(strtoupper($jg)),1,0,'C');
         $pdf->Cell(75,3.5,utf8_decode($player['name_jgstats']),1,0,'C');
-        $pdf->Cell(12,3.5,utf8_decode(strtoupper($player['a'])),1,0,'C');
+        $pdf->Cell(12,3.5,utf8_decode(strtoupper($player['max_asistencias'])),1,0,'C');
 
         $tabla = "SELECT * FROM tab_clasf WHERE id_team = $id_team";
         $dteg = mysqli_query($con, $tabla);
@@ -185,7 +186,7 @@ $pdf->Cell(75,6,utf8_decode(strtoupper('Equipo')),1,1,'C');
 
 if ($valorval > 0) {
 
-$covl = "SELECT rs.*
+$covl = "SELECT rs.*, MAX(rs.a) as max_asistencias
 FROM resumen_stats rs
 JOIN (
     SELECT id_team, SUM(a) AS total_asistencias
@@ -195,12 +196,12 @@ JOIN (
 ) AS t ON rs.id_team = t.id_team
 WHERE rs.id_team = $equipo
   AND rs.a >= $valorval
-ORDER BY t.total_asistencias DESC, rs.a DESC, rs.id_team DESC;
-";
+GROUP BY rs.name_jgstats
+ORDER BY max_asistencias DESC, rs.id_team DESC;";
 
 } else {
 
-$covl = "SELECT rs.*
+$covl = "SELECT rs.*, MAX(rs.a) as max_asistencias
 FROM resumen_stats rs
 JOIN (
     SELECT id_team, SUM(a) AS total_asistencias
@@ -209,8 +210,8 @@ JOIN (
     GROUP BY id_team
 ) t ON rs.id_team = t.id_team
 WHERE rs.id_team = $equipo
-ORDER BY t.total_asistencias DESC, rs.a DESC, rs.id_team DESC;
-";
+GROUP BY rs.name_jgstats
+ORDER BY max_asistencias DESC, rs.id_team DESC;";
 
 }
 
@@ -226,7 +227,7 @@ $pdf->SetFont('Arial','B',9);
 $pdf->Cell(12.5);
 $pdf->Cell(10,6,utf8_decode(strtoupper($jg)),1,0,'C');
 $pdf->Cell(75,6,utf8_decode($player['name_jgstats']),1,0,'C');
-$pdf->Cell(12,6,utf8_decode(strtoupper($player['a'])),1,0,'C');
+$pdf->Cell(12,6,utf8_decode(strtoupper($player['max_asistencias'])),1,0,'C');
 
 $tabla = "SELECT * FROM tab_clasf WHERE id_team = $id_team";
 $dteg = mysqli_query($con, $tabla);

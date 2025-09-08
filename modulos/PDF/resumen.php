@@ -71,26 +71,26 @@ $pdf->Cell(0,5,'FECHA: '.$timeday,0,1,'L');
 
 
 
-$pdf->SetFont('Arial','B',12);
+$pdf->SetFont('Arial','B',11);
 
-$pdf->Cell(5,5,utf8_decode(strtoupper('#')),1,0,'C');
-$pdf->Cell(60,5,utf8_decode(strtoupper('jugador')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('vb')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('h')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('hr')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('2b')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('3b')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('CA')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('Ci')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('k')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('b')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('as')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('fl')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('br')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('gp')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('vb')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('th')),1,0,'C');
-$pdf->Cell(20,5,utf8_decode(strtoupper('avg')),1,1,'C');
+$pdf->Cell(5,4.5,utf8_decode(strtoupper('#')),1,0,'C');
+$pdf->Cell(60,4.5,utf8_decode(strtoupper('jugador')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('vb')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('h')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('hr')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('2b')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('3b')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('CA')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('Ci')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('k')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('b')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('as')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('fl')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('br')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('gp')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('vb')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('th')),1,0,'C');
+$pdf->Cell(20,4.5,utf8_decode(strtoupper('avg')),1,1,'C');
 
 $cons = "SELECT * FROM resumen_stats WHERE id_team = $id_team AND id_tab =$id_tab";
 $dteg = mysqli_query($con, $cons);
@@ -99,26 +99,26 @@ if ($nums >= 1) {
 for ($jg=1; $jg <= $nums ; $jg++) { 
 $player = mysqli_fetch_array($dteg);
 
-$pdf->SetFont('Arial','',11.5);
+$pdf->SetFont('Arial','',10);
 
-$pdf->Cell(5,5,utf8_decode(strtoupper($jg)),1,0,'C');
-$pdf->Cell(60,5,utf8_decode($player['name_jgstats']),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['vb'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['h'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['hr'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['2b'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['3b'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['ca'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['ci'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['k'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['b'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['a'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['sf'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['br'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['tvb'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['th'])),1,0,'C');
-$pdf->Cell(20,5,utf8_decode(strtoupper($player['avg'])),1,1,'C');
+$pdf->Cell(5,4.5,utf8_decode(strtoupper($jg)),1,0,'C');
+$pdf->Cell(60,4.5,utf8_decode($player['name_jgstats']),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['vb'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['h'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['hr'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['2b'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['3b'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ca'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ci'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['k'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['b'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['a'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['sf'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['br'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tvb'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['th'])),1,0,'C');
+$pdf->Cell(20,4.5,utf8_decode(strtoupper($player['avg'])),1,1,'C');
 
     }
 }
@@ -173,25 +173,25 @@ if ($on_th = $tw_th) {
     $avg = ($dth * 1000) / $dtvb;
     $ravg = round($avg);
 
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Arial','B',10);
 
-$pdf->Cell(65,5,utf8_decode(strtoupper('TOTAL')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['tvb'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['th'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['thr'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['t2b'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['t3b'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['tca'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['tci'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['tk'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['tb'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['ta'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['tfl'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['tbr'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($gapa['tgp'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($dtvb)),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($dth)),1,0,'C');
-$pdf->Cell(20,5,utf8_decode(strtoupper($ravg)),1,1,'C');
+$pdf->Cell(65,4.5,utf8_decode(strtoupper('TOTAL')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tvb'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['th'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['thr'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['t2b'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['t3b'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tca'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tci'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tk'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tb'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['ta'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tfl'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tbr'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tgp'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($dtvb)),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($dth)),1,0,'C');
+$pdf->Cell(20,4.5,utf8_decode(strtoupper($ravg)),1,1,'C');
 
 } }
 
@@ -200,24 +200,24 @@ $pdf->Ln(4);
 $pdf->Cell(0,5,utf8_decode(strtoupper('pichers')),0,1,'C');
 
 
-$pdf->SetFont('Arial','B',11.5);
-$pdf->Cell(5,5,utf8_decode(strtoupper('#')),1,0,'C');
-$pdf->Cell(60,5,utf8_decode(strtoupper('jugador')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('tjl')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('tjg')),1,0,'C');
-$pdf->Cell(15,5,utf8_decode(strtoupper('avg')),1,0,'C');
-$pdf->Cell(15,5,utf8_decode(strtoupper('til')),1,0,'C');
-$pdf->Cell(15,5,utf8_decode(strtoupper('tcpl')),1,0,'C');
-$pdf->Cell(15,5,utf8_decode(strtoupper('efec')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('h')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('2b')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('3b')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('hr')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('b')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('k')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('gp')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('br')),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper('va')),1,1,'C');
+$pdf->SetFont('Arial','B',10);
+$pdf->Cell(5,4.5,utf8_decode(strtoupper('#')),1,0,'C');
+$pdf->Cell(60,4.5,utf8_decode(strtoupper('jugador')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('tjl')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('tjg')),1,0,'C');
+$pdf->Cell(15,4.5,utf8_decode(strtoupper('avg')),1,0,'C');
+$pdf->Cell(15,4.5,utf8_decode(strtoupper('til')),1,0,'C');
+$pdf->Cell(15,4.5,utf8_decode(strtoupper('tcpl')),1,0,'C');
+$pdf->Cell(15,4.5,utf8_decode(strtoupper('efec')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('h')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('2b')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('3b')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('hr')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('b')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('k')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('gp')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('br')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('va')),1,1,'C');
 
 $cons = "SELECT * FROM resumen_lanz WHERE id_team = $id_team AND id_tab =$id_tab";
 $dteg = mysqli_query($con, $cons);
@@ -226,24 +226,24 @@ if ($nums >= 1) {
 for ($jg=1; $jg <= $nums ; $jg++) { 
 $player = mysqli_fetch_array($dteg);
 
-$pdf->SetFont('Arial','',11);
-$pdf->Cell(5,5,utf8_decode(strtoupper($jg)),1,0,'C');
-$pdf->Cell(60,5,utf8_decode($player['name_jglz']),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['tjl'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['tjg'])),1,0,'C');
-$pdf->Cell(15,5,utf8_decode(strtoupper($player['avg'])),1,0,'C');
-$pdf->Cell(15,5,utf8_decode(strtoupper($player['til'])),1,0,'C');
-$pdf->Cell(15,5,utf8_decode(strtoupper($player['tcpl'])),1,0,'C');
-$pdf->Cell(15,5,utf8_decode(strtoupper($player['efec'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['h'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['2b'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['3b'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['hr'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['b'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['k'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['ile'])),1,0,'C');
-$pdf->Cell(12,5,utf8_decode(strtoupper($player['va'])),1,1,'C');
+$pdf->SetFont('Arial','',9.5);
+$pdf->Cell(5,4.5,utf8_decode(strtoupper($jg)),1,0,'C');
+$pdf->Cell(60,4.5,utf8_decode($player['name_jglz']),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tjl'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tjg'])),1,0,'C');
+$pdf->Cell(15,4.5,utf8_decode(strtoupper($player['avg'])),1,0,'C');
+$pdf->Cell(15,4.5,utf8_decode(strtoupper($player['til'])),1,0,'C');
+$pdf->Cell(15,4.5,utf8_decode(strtoupper($player['tcpl'])),1,0,'C');
+$pdf->Cell(15,4.5,utf8_decode(strtoupper($player['efec'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['h'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['2b'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['3b'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['hr'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['b'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['k'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ile'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['va'])),1,1,'C');
 
     }
 }
