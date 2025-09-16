@@ -630,6 +630,42 @@ $ddtt = mysqli_fetch_assoc($result);
                             </a>
                         </div>
                     </div>
+
+                    <!-- Baja Asistencia -->
+                    <div class="report-card">
+                        <div class="report-header">
+                            <div class="report-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <h3 class="report-title">Baja Asistencia</h3>
+                        </div>
+                        <p class="report-description">
+                            Reporte histórico de los equipos con poca asistencia en la temporada.
+                        </p>
+                        <div class="report-action">
+                            <a href="baja_asistencia.php" class="btn-report">
+                                <i class="fas fa-arrow-right me-2"></i>Generar Reporte
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Lideres -->
+                    <div class="report-card">
+                        <div class="report-header">
+                            <div class="report-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <h3 class="report-title">Lideres</h3>
+                        </div>
+                        <p class="report-description">
+                            Reporte de los tres mejores jugadores en cada parte de la temporada.
+                        </p>
+                        <div class="report-action">
+                            <a href="lideres.php" class="btn-report">
+                                <i class="fas fa-arrow-right me-2"></i>Generar Reporte
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

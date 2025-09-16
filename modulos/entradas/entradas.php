@@ -344,7 +344,7 @@ $cat     = $data['categoria'];
                     <li><a href="../calendario/"><i class="fas fa-calendar-day"></i> Calendario</a></li>
                     <li><a href="../homenaje/"><i class="fas fa-trophy"></i> Homenaje</a></li>
                     <li><a href="../abonos/"><i class="fas fa-ticket-alt"></i> Abono</a></li>
-                    <li><a href="../reporte/"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                    <li><a href="../reporte/reporte.php"><i class="fas fa-chart-bar"></i> Reportes</a></li>
                 </ul>
                 
                 <div class="clock-container">
