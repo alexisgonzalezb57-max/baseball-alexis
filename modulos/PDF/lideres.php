@@ -75,6 +75,7 @@ class PDF extends FPDF
             $this->Cell($colWidths[$i], 6, utf8_decode(strtoupper($headers[$i])), 1, 0, $aligns[$i], true);
         }
         $this->Ln();
+        $this->cell(30);
         
         // Imprimir datos
         $this->SetFont('Arial', '', 8);
@@ -86,6 +87,7 @@ class PDF extends FPDF
                 $this->Cell($colWidths[$i], $height, utf8_decode($row[$i]), 1, 0, $aligns[$i]);
             }
             $this->Ln();
+        $this->cell(30);
         }
         $this->Ln(4);
     }
@@ -106,119 +108,38 @@ $pdf->AddPage();
 // =============================================================================
 // 1. LÍDERES EN CARRERAS ANOTADAS Y EMPUJADAS (de lidcaci.php)
 // =============================================================================
+
+
+// Líderes en carreras empujadas
 $pdf->SectionTitle('LÍDERES EN CARRERAS ANOTADAS');
 
-// Consulta para carreras anotadas
-$query_ca = "SELECT rs.name_jgstats, rs.ca, tc.name_team 
-             FROM resumen_stats rs 
-             INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
-             WHERE rs.id_temp = $temporada 
-             ORDER BY rs.ca DESC 
-             LIMIT 3";
+$query_ca = "SELECT DISTINCT rs.*, tc.name_team 
+            FROM resumen_stats rs
+            LEFT JOIN tab_clasf tc ON rs.id_team = tc.id_team
+            WHERE rs.id_temp = $temporada 
+            ORDER BY rs.ca DESC 
+            LIMIT 3";
 
 $result_ca = mysqli_query($con, $query_ca);
 $data_ca = [];
 
 while ($row = mysqli_fetch_array($result_ca)) {
     $data_ca[] = [
-        $pdf->PageNo() > 1 ? count($data_ca) + 1 : count($data_ca) + 1,
+        count($data_ca) + 1,
         $row['name_jgstats'],
         $row['ca'],
         $row['name_team']
     ];
 }
 
+$pdf->Cell(30);
 $pdf->AddTable(
     ['POS', 'NOMBRE', 'CA', 'EQUIPO'],
     $data_ca,
     [12, 60, 12, 45]
 );
 
-// Líderes en carreras empujadas
-$pdf->SectionTitle('LÍDERES EN CARRERAS EMPUJADAS');
 
-$query_ci = "SELECT rs.name_jgstats, rs.ci, tc.name_team 
-             FROM resumen_stats rs 
-             INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
-             WHERE rs.id_temp = $temporada 
-             ORDER BY rs.ci DESC 
-             LIMIT 3";
-
-$result_ci = mysqli_query($con, $query_ci);
-$data_ci = [];
-
-while ($row = mysqli_fetch_array($result_ci)) {
-    $data_ci[] = [
-        count($data_ci) + 1,
-        $row['name_jgstats'],
-        $row['ci'],
-        $row['name_team']
-    ];
-}
-
-$pdf->AddTable(
-    ['POS', 'NOMBRE', 'CI', 'EQUIPO'],
-    $data_ci,
-    [12, 60, 12, 45]
-);
-
-// =============================================================================
-// 2. LÍDERES EN PONCHES Y BOLETOS (de lidkobo.php)
-// =============================================================================
-$pdf->SectionTitle('LÍDERES EN PONCHES');
-
-$query_k = "SELECT rs.name_jgstats, rs.k, tc.name_team 
-            FROM resumen_stats rs 
-            INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
-            WHERE rs.id_temp = $temporada 
-            ORDER BY rs.k DESC 
-            LIMIT 3";
-
-$result_k = mysqli_query($con, $query_k);
-$data_k = [];
-
-while ($row = mysqli_fetch_array($result_k)) {
-    $data_k[] = [
-        count($data_k) + 1,
-        $row['name_jgstats'],
-        $row['k'],
-        $row['name_team']
-    ];
-}
-
-$pdf->AddTable(
-    ['POS', 'NOMBRE', 'K', 'EQUIPO'],
-    $data_k,
-    [12, 60, 12, 45]
-);
-
-// Líderes en boletos
-$pdf->SectionTitle('LÍDERES EN BOLETOS');
-
-$query_b = "SELECT rs.name_jgstats, rs.b, tc.name_team 
-            FROM resumen_stats rs 
-            INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
-            WHERE rs.id_temp = $temporada 
-            ORDER BY rs.b DESC 
-            LIMIT 3";
-
-$result_b = mysqli_query($con, $query_b);
-$data_b = [];
-
-while ($row = mysqli_fetch_array($result_b)) {
-    $data_b[] = [
-        count($data_b) + 1,
-        $row['name_jgstats'],
-        $row['b'],
-        $row['name_team']
-    ];
-}
-
-$pdf->AddTable(
-    ['POS', 'NOMBRE', 'B', 'EQUIPO'],
-    $data_b,
-    [12, 60, 12, 45]
-);
 
 // =============================================================================
 // 3. LÍDERES EN BATEO Y JONRONES (de lidvbhr.php)
@@ -228,12 +149,13 @@ $pdf->SectionTitle('LÍDERES EN BATEO');
 // VALOR CONFIGURABLE PARA CAMPEONES DE BATEO
 $valor_campeon_bateo = 20; // <-- VALOR MODIFICABLE PARA CAMPEONES DE BATEO
 
-$query_avg = "SELECT rs.name_jgstats, rs.tvb, rs.th, rs.avg, tc.name_team 
-              FROM resumen_stats rs 
-              INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
-              WHERE rs.id_temp = $temporada 
-              ORDER BY (rs.tvb >= $valor_campeon_bateo) DESC, rs.avg DESC, rs.cb DESC 
-              LIMIT 3";
+$query_avg = "SELECT rs.name_jgstats, MAX(rs.tvb) as tvb, MAX(rs.th) as th, MAX(rs.avg) as avg, tc.name_team 
+FROM resumen_stats rs 
+INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
+WHERE rs.id_temp = $temporada 
+GROUP BY rs.name_jgstats, tc.name_team
+ORDER BY (MAX(rs.tvb) >= $valor_campeon_bateo) DESC, MAX(rs.avg) DESC, MAX(rs.cb) DESC 
+LIMIT 3";
 
 $result_avg = mysqli_query($con, $query_avg);
 $data_avg = [];
@@ -249,6 +171,7 @@ while ($row = mysqli_fetch_array($result_avg)) {
     ];
 }
 
+$pdf->Cell(30);
 $pdf->AddTable(
     ['POS', 'NOMBRE', 'VB', 'H', 'AVG', 'EQUIPO'],
     $data_avg,
@@ -258,12 +181,12 @@ $pdf->AddTable(
 // Líderes en jonrones
 $pdf->SectionTitle('LÍDERES EN JONRONES');
 
-$query_hr = "SELECT rs.name_jgstats, rs.hr, tc.name_team 
-             FROM resumen_stats rs 
-             INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
-             WHERE rs.id_temp = $temporada 
-             ORDER BY rs.hr DESC 
-             LIMIT 3";
+$query_hr = "SELECT DISTINCT rs.name_jgstats, rs.hr, tc.name_team 
+FROM resumen_stats rs 
+INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
+WHERE rs.id_temp = $temporada 
+ORDER BY rs.hr DESC 
+LIMIT 3";
 
 $result_hr = mysqli_query($con, $query_hr);
 $data_hr = [];
@@ -277,6 +200,7 @@ while ($row = mysqli_fetch_array($result_hr)) {
     ];
 }
 
+$pdf->Cell(30);
 $pdf->AddTable(
     ['POS', 'NOMBRE', 'HR', 'EQUIPO'],
     $data_hr,
@@ -288,7 +212,7 @@ $pdf->AddTable(
 // =============================================================================
 $pdf->SectionTitle('PICHERS GANADORES');
 
-$query_pichers_gan = "SELECT rl.name_jglz, rl.tjl, rl.tjg, 
+$query_pichers_gan = "SELECT DISTINCT rl.name_jglz, rl.tjl, rl.tjg, 
                       (rl.tjl - rl.tjg) as tjp, rl.avg, tc.name_team 
                       FROM resumen_lanz rl 
                       INNER JOIN tab_clasf tc ON rl.id_team = tc.id_team 
@@ -311,99 +235,14 @@ while ($row = mysqli_fetch_array($result_pichers_gan)) {
     ];
 }
 
+$pdf->Cell(30);
 $pdf->AddTable(
     ['POS', 'NOMBRE', 'JL', 'JG', 'JP', 'AVG', 'EQUIPO'],
     $data_pichers_gan,
     [10, 40, 10, 10, 10, 15, 35]
 );
 
-// Picher efectividad
-$pdf->SectionTitle('PICHERS POR EFECTIVIDAD');
 
-$query_pichers_efec = "SELECT rl.name_jglz, rl.til, rl.tcpl, rl.efec, tc.name_team 
-                       FROM resumen_lanz rl 
-                       INNER JOIN tab_clasf tc ON rl.id_team = tc.id_team 
-                       WHERE rl.id_temp = $temporada 
-                       ORDER BY (rl.til >= $valor_pichers) DESC, rl.efec ASC 
-                       LIMIT 3";
-
-$result_pichers_efec = mysqli_query($con, $query_pichers_efec);
-$data_pichers_efec = [];
-
-while ($row = mysqli_fetch_array($result_pichers_efec)) {
-    $data_pichers_efec[] = [
-        count($data_pichers_efec) + 1,
-        $row['name_jglz'],
-        $row['til'],
-        $row['tcpl'],
-        $row['efec'],
-        $row['name_team']
-    ];
-}
-
-$pdf->AddTable(
-    ['POS', 'NOMBRE', 'IL', 'CPL', 'EFEC', 'EQUIPO'],
-    $data_pichers_efec,
-    [10, 40, 10, 10, 15, 35]
-);
-
-// =============================================================================
-// 5. LÍDERES EN DOBLES Y TRIPLES (de lid2b3b.php)
-// =============================================================================
-$pdf->SectionTitle('LÍDERES EN DOBLES');
-
-$query_2b = "SELECT rs.name_jgstats, rs.2b, tc.name_team 
-             FROM resumen_stats rs 
-             INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
-             WHERE rs.id_temp = $temporada 
-             ORDER BY rs.2b DESC 
-             LIMIT 3";
-
-$result_2b = mysqli_query($con, $query_2b);
-$data_2b = [];
-
-while ($row = mysqli_fetch_array($result_2b)) {
-    $data_2b[] = [
-        count($data_2b) + 1,
-        $row['name_jgstats'],
-        $row['2b'],
-        $row['name_team']
-    ];
-}
-
-$pdf->AddTable(
-    ['POS', 'NOMBRE', '2B', 'EQUIPO'],
-    $data_2b,
-    [12, 60, 12, 45]
-);
-
-// Líderes en triples
-$pdf->SectionTitle('LÍDERES EN TRIPLES');
-
-$query_3b = "SELECT rs.name_jgstats, rs.3b, tc.name_team 
-             FROM resumen_stats rs 
-             INNER JOIN tab_clasf tc ON rs.id_team = tc.id_team 
-             WHERE rs.id_temp = $temporada 
-             ORDER BY rs.3b DESC 
-             LIMIT 3";
-
-$result_3b = mysqli_query($con, $query_3b);
-$data_3b = [];
-
-while ($row = mysqli_fetch_array($result_3b)) {
-    $data_3b[] = [
-        count($data_3b) + 1,
-        $row['name_jgstats'],
-        $row['3b'],
-        $row['name_team']
-    ];
-}
-
-$pdf->AddTable(
-    ['POS', 'NOMBRE', '3B', 'EQUIPO'],
-    $data_3b,
-    [12, 60, 12, 45]
-);
 
 // =============================================================================
 // GENERAR EL PDF
