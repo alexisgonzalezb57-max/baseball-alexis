@@ -59,7 +59,7 @@ if ($equipo < 1) {
     $pdf->Ln(1);
     $pdf->Cell(0,5,utf8_decode(strtoupper('CATEGORIA " '.$categoria.' "')),0,1,'C');
     $pdf->Ln(1);
-    $pdf->Cell(0,5,utf8_decode(strtoupper('ASISTENCIA - EQUIPOS CLASIFICADOS')),0,1,'C');
+    $pdf->Cell(0,5,utf8_decode(strtoupper('BAJA ASISTENCIA - EQUIPOS CLASIFICADOS')),0,1,'C');
     $pdf->SetFont('Arial','B',12);
     $pdf->Cell(0,5,'FECHA: '.$timeday,0,1,'L');
     $pdf->Ln(1);
@@ -67,9 +67,10 @@ if ($equipo < 1) {
     $pdf->SetFont('Arial','B',10);
     $pdf->Cell(12.5);
     $pdf->Cell(10,5,utf8_decode(strtoupper('pos')),1,0,'C');
-    $pdf->Cell(75,5,utf8_decode(strtoupper('Nombre')),1,0,'C');
+    $pdf->Cell(50,5,utf8_decode(strtoupper('Nombre')),1,0,'C');
     $pdf->Cell(12,5,utf8_decode(strtoupper('as')),1,0,'C');
-    $pdf->Cell(75,5,utf8_decode(strtoupper('Equipo')),1,1,'C');
+    $pdf->Cell(50,5,utf8_decode(strtoupper('Equipo')),1,0,'C');
+    $pdf->Cell(50,5,utf8_decode(strtoupper('ESTADO')),1,1,'C');
 
     // Consulta modificada para evitar duplicidad
     if ($valorval > 0) {
@@ -120,12 +121,13 @@ if ($equipo < 1) {
             }
 
             // Imprimir fila de jugador
-            $pdf->SetFont('Arial','B',7);
+            $pdf->SetFont('Arial','B',9);
             $pdf->Cell(12.5);
-            $pdf->Cell(10,3.5,utf8_decode(strtoupper($posicion)),1,0,'C');
-            $pdf->Cell(75,3.5,utf8_decode($player['name_jgstats']),1,0,'C');
-            $pdf->Cell(12,3.5,utf8_decode(strtoupper($player['total_asistencias'])),1,0,'C');
-            $pdf->Cell(75,3.5,utf8_decode(strtoupper($name_team)),1,1,'C');
+            $pdf->Cell(10,5,utf8_decode(strtoupper($posicion)),1,0,'C');
+            $pdf->Cell(50,5,utf8_decode($player['name_jgstats']),1,0,'C');
+            $pdf->Cell(12,5,utf8_decode(strtoupper($player['total_asistencias'])),1,0,'C');
+            $pdf->Cell(50,5,utf8_decode(strtoupper($name_team)),1,0,'C');
+            $pdf->Cell(50,5,utf8_decode(strtoupper('NO PARTICIPA')),1,1,'C');
             
             $posicion++;
         }
@@ -143,7 +145,7 @@ if ($equipo < 1) {
     $pdf->Ln(1);
     $pdf->Cell(0,5,utf8_decode(strtoupper('CATEGORIA " '.$categoria.' "')),0,1,'C');
     $pdf->Ln(1);
-    $pdf->Cell(0,5,utf8_decode(strtoupper('ASISTENCIA - EQUIPO ESPECÍFICO')),0,1,'C');
+    $pdf->Cell(0,5,utf8_decode(strtoupper('ASISTENCIA BAJA - EQUIPO ESPECÍFICO CLASIFICADO')),0,1,'C');
     $pdf->SetFont('Arial','B',12);
     $pdf->Cell(0,5,'FECHA: '.$timeday,0,1,'L');
     $pdf->Ln(1);
@@ -157,9 +159,10 @@ if ($equipo < 1) {
     $pdf->SetFont('Arial','B',10);
     $pdf->Cell(12.5);
     $pdf->Cell(10,5,utf8_decode(strtoupper('pos')),1,0,'C');
-    $pdf->Cell(75,5,utf8_decode(strtoupper('Nombre')),1,0,'C');
+    $pdf->Cell(50,5,utf8_decode(strtoupper('Nombre')),1,0,'C');
     $pdf->Cell(12,5,utf8_decode(strtoupper('as')),1,0,'C');
-    $pdf->Cell(75,5,utf8_decode(strtoupper('Equipo')),1,1,'C');
+    $pdf->Cell(50,5,utf8_decode(strtoupper('Equipo')),1,0,'C');
+    $pdf->Cell(50,5,utf8_decode(strtoupper('ESTADO')),1,1,'C');
 
     // Consulta para un equipo específico - corregida para evitar duplicidad
     if ($valorval > 0) {
@@ -167,7 +170,7 @@ if ($equipo < 1) {
                 FROM resumen_stats rs
                 WHERE rs.id_temp = $temporada
                 AND rs.id_team = $equipo
-                AND rs.a >= $valorval 
+                AND rs.a <= $valorval 
                 GROUP BY rs.id_player, rs.name_jgstats
                 ORDER BY total_asistencias DESC";
     } else {
@@ -186,12 +189,13 @@ if ($equipo < 1) {
         $posicion = 1;
         while ($player = mysqli_fetch_array($vais)) {
             // Imprimir fila de jugador
-            $pdf->SetFont('Arial','B',7);
+            $pdf->SetFont('Arial','B',9);
             $pdf->Cell(12.5);
-            $pdf->Cell(10,3.5,utf8_decode(strtoupper($posicion)),1,0,'C');
-            $pdf->Cell(75,3.5,utf8_decode($player['name_jgstats']),1,0,'C');
-            $pdf->Cell(12,3.5,utf8_decode(strtoupper($player['total_asistencias'])),1,0,'C');
-            $pdf->Cell(75,3.5,utf8_decode(strtoupper($nombre_equipo)),1,1,'C');
+            $pdf->Cell(10,5,utf8_decode(strtoupper($posicion)),1,0,'C');
+            $pdf->Cell(75,5,utf8_decode($player['name_jgstats']),1,0,'C');
+            $pdf->Cell(12,5,utf8_decode(strtoupper($player['total_asistencias'])),1,0,'C');
+            $pdf->Cell(75,5,utf8_decode(strtoupper($nombre_equipo)),1,0,'C');
+            $pdf->Cell(75,5,utf8_decode(strtoupper('NO PARTICIPA')),1,1,'C');
             
             $posicion++;
         }
