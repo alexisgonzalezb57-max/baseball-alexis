@@ -227,6 +227,18 @@ if (!$con) {
             transition: all 0.3s;
         }
         
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color) 0%, #0a58ca 100%);
+            border: none;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #0a58ca 0%, #084298 100%);
+            transform: translateY(-2px);
+            color: white;
+        }
+        
         .btn-success {
             background: linear-gradient(90deg, var(--success-color) 0%, #157347 100%);
             border: none;
@@ -329,6 +341,44 @@ if (!$con) {
         .stats-badge i {
             margin-right: 0.25rem;
         }
+
+        /* Nuevos estilos para selección de líderes */
+        .leaders-section {
+            background: linear-gradient(90deg, #fff3cd 0%, #ffeaa7 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .leader-category {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .leader-category h6 {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .leader-category h6 i {
+            margin-right: 8px;
+            color: var(--warning-color);
+        }
+        
+        .player-select {
+            margin-bottom: 0.5rem;
+        }
+        
+        .player-select .form-select {
+            font-size: 0.9rem;
+        }
         
         @media (max-width: 768px) {
             .navigation {
@@ -400,21 +450,21 @@ if (!$con) {
         <div class="container">
             <div class="content-container">
                 <div class="header-actions">
-                    <h1 class="page-title">🏃‍♂️ Reportes de Líderes en Carreras</h1>
+                    <h1 class="page-title">🏆 Reporte Consolidado de Líderes</h1>
                     <a href="reporte.php" class="btn btn-info">
                         <i class="fas fa-arrow-left me-2"></i>Volver a Reportes
                     </a>
                 </div>
                 
-                <p class="text-center text-muted mb-4">Seleccione los parámetros para generar el reporte de líderes en carreras anotadas y empujadas</p>
+                <p class="text-center text-muted mb-4">Seleccione los parámetros y elija manualmente los líderes para generar el reporte consolidado</p>
 
-                <form method="POST" target="_blank" action="../PDF/lideres.php" id="lideresForm">
+                <form id="formLideres" method="POST" target="_blank" action="../PDF/generar_lideres.php">
                     <!-- Sección de Filtros Básicos -->
                     <div class="form-section">
                         <h5 class="section-title">
                             <i class="fas fa-filter"></i> Filtros de Búsqueda
                             <span class="stats-badge">
-                                <i class="fas fa-flag"></i> Anotadas | Empujadas
+                                <i class="fas fa-star"></i> Selección Manual
                             </span>
                         </h5>
                         
@@ -425,9 +475,9 @@ if (!$con) {
                                     <span class="input-group-text"><i class="fas fa-tag"></i></span>
                                     <select class="form-select" id="categoria" name="categoria" required>
                                         <option value="">Seleccione una categoría...</option>
-                                        <option value="b">Categoría B</option>
-                                        <option value="c">Categoría C</option>
-                                        <option value="d">Categoría D</option>
+                                        <option value="B">Categoría B</option>
+                                        <option value="C">Categoría C</option>
+                                        <option value="D">Categoría D</option>
                                     </select>
                                 </div>
                             </div>
@@ -436,28 +486,138 @@ if (!$con) {
                                 <label class="form-label required-field">Temporada</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                                    <select class="form-select" id="tempo" name="temporada" required disabled>
+                                    <select class="form-select" id="temporada" name="temporada" required disabled>
                                         <option value="">Primero seleccione una categoría</option>
                                     </select>
                                     <div class="loading-spinner" id="tempoLoading"></div>
                                 </div>
                             </div>
                             
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label required-field">Equipo</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-users"></i></span>
-                                    <select class="form-select" id="equipone" name="equipo" required disabled>
-                                        <option value="">Primero seleccione una temporada</option>
+                            <div class="col-md-4 mb-3 d-flex align-items-end">
+                                <button type="button" id="btnCargar" class="btn btn-primary w-100" disabled>
+                                    <i class="fas fa-users me-2"></i>Cargar Jugadores
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Selección de Líderes -->
+                    <div class="leaders-section" id="seccionLideres" style="display: none;">
+                        <h5 class="section-title">
+                            <i class="fas fa-users"></i> Selección Manual de Líderes
+                            <span class="stats-badge">
+                                <i class="fas fa-edit"></i> Personalizar
+                            </span>
+                        </h5>
+                        
+                        <div class="info-card">
+                            <h6><i class="fas fa-info-circle"></i> Información</h6>
+                            <p class="mb-0">Seleccione manualmente hasta 3 jugadores para cada categoría de líderes. Los datos se cargarán automáticamente según los filtros seleccionados.</p>
+                        </div>
+
+                        <!-- Líderes en Carreras Empujadas -->
+                        <div class="leader-category">
+                            <h6><i class="fas fa-running"></i> Líderes en Carreras Empujadas (CI)</h6>
+                            <div class="row">
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">1er Lugar</label>
+                                    <select class="form-select" name="lider_ci_1" id="lider_ci_1">
+                                        <option value="">Seleccione un jugador...</option>
                                     </select>
-                                    <div class="loading-spinner" id="equipoLoading"></div>
+                                </div>
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">2do Lugar</label>
+                                    <select class="form-select" name="lider_ci_2" id="lider_ci_2">
+                                        <option value="">Seleccione un jugador...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">3er Lugar</label>
+                                    <select class="form-select" name="lider_ci_3" id="lider_ci_3">
+                                        <option value="">Seleccione un jugador...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Líderes en Bateo -->
+                        <div class="leader-category">
+                            <h6><i class="fas fa-baseball-ball"></i> Líderes en Bateo (AVG)</h6>
+                            <div class="row">
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">1er Lugar</label>
+                                    <select class="form-select" name="lider_avg_1" id="lider_avg_1">
+                                        <option value="">Seleccione un jugador...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">2do Lugar</label>
+                                    <select class="form-select" name="lider_avg_2" id="lider_avg_2">
+                                        <option value="">Seleccione un jugador...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">3er Lugar</label>
+                                    <select class="form-select" name="lider_avg_3" id="lider_avg_3">
+                                        <option value="">Seleccione un jugador...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Líderes en Jonrones -->
+                        <div class="leader-category">
+                            <h6><i class="fas fa-bullseye"></i> Líderes en Jonrones (HR)</h6>
+                            <div class="row">
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">1er Lugar</label>
+                                    <select class="form-select" name="lider_hr_1" id="lider_hr_1">
+                                        <option value="">Seleccione un jugador...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">2do Lugar</label>
+                                    <select class="form-select" name="lider_hr_2" id="lider_hr_2">
+                                        <option value="">Seleccione un jugador...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">3er Lugar</label>
+                                    <select class="form-select" name="lider_hr_3" id="lider_hr_3">
+                                        <option value="">Seleccione un jugador...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pichers Ganadores -->
+                        <div class="leader-category">
+                            <h6><i class="fas fa-baseball-ball"></i> Pichers Ganadores</h6>
+                            <div class="row">
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">1er Lugar</label>
+                                    <select class="form-select" name="lider_picher_1" id="lider_picher_1">
+                                        <option value="">Seleccione un pitcher...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">2do Lugar</label>
+                                    <select class="form-select" name="lider_picher_2" id="lider_picher_2">
+                                        <option value="">Seleccione un pitcher...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 player-select">
+                                    <label class="form-label">3er Lugar</label>
+                                    <select class="form-select" name="lider_picher_3" id="lider_picher_3">
+                                        <option value="">Seleccione un pitcher...</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="btn-container">
-                        <button type="submit" class="btn btn-success" id="submitBtn">
+                        <button type="submit" class="btn btn-success" id="btnEnviar" disabled>
                             <i class="fas fa-file-pdf me-2"></i>Generar Reporte PDF
                         </button>
                     </div>
@@ -497,93 +657,126 @@ if (!$con) {
         updateClock();
         setInterval(updateClock, 1000);
         
-        // Cargar temporadas según categoría seleccionada
-        $(document).ready(function(){
-            $("#categoria").change(function(){
-                const categoria = $("#categoria").val();
-                const tempoSelect = $("#tempo");
-                const equipoSelect = $("#equipone");
-                
-                if (categoria) {
-                    // Mostrar loading y deshabilitar selects
-                    $("#tempoLoading").show();
-                    tempoSelect.prop('disabled', true);
-                    equipoSelect.prop('disabled', true).html('<option value="">Primero seleccione una temporada</option>');
-                    
-                    $.get("../calendario/categoria.php", "categoria=" + categoria, function(data){
-                        $("#tempoLoading").hide();
-                        tempoSelect.html(data).prop('disabled', false);
-                    }).fail(function() {
-                        $("#tempoLoading").hide();
-                        tempoSelect.html('<option value="">Error al cargar temporadas</option>');
+        $(document).ready(function() {
+            // Deshabilitar botones al inicio
+            $('#btnCargar').prop('disabled', true);
+            $('#btnEnviar').prop('disabled', true);
+
+            // Al cambiar categoría, cargar temporadas relacionadas
+            $('#categoria').change(function() {
+                let categoria = $(this).val();
+                $('#temporada').prop('disabled', true).html('<option>Cargando...</option>');
+                $('#seccionLideres').hide();
+                $('#btnCargar').prop('disabled', true);
+                $('#btnEnviar').prop('disabled', true);
+
+                if(categoria) {
+                    $('#tempoLoading').show();
+                    $.ajax({
+                        url: 'get_temporadas.php',
+                        type: 'GET',
+                        data: { categoria: categoria },
+                        success: function(data) {
+                            $('#tempoLoading').hide();
+                            $('#temporada').html(data).prop('disabled', false);
+                        },
+                        error: function() {
+                            $('#tempoLoading').hide();
+                            $('#temporada').html('<option>Error cargando temporadas</option>').prop('disabled', true);
+                        }
                     });
                 } else {
-                    tempoSelect.prop('disabled', true).html('<option value="">Primero seleccione una categoría</option>');
-                    equipoSelect.prop('disabled', true).html('<option value="">Primero seleccione una temporada</option>');
+                    $('#temporada').html('<option>Seleccione categoría primero</option>').prop('disabled', true);
                 }
             });
-            
-            // Cargar equipos según temporada seleccionada
-            $("#tempo").change(function(){
-                const tempo = $("#tempo").val();
-                const equipoSelect = $("#equipone");
+
+            // Al cambiar temporada, habilitar botón de cargar
+            $('#temporada').change(function() {
+                $('#btnCargar').prop('disabled', !$(this).val());
+                $('#seccionLideres').hide();
+                $('#btnEnviar').prop('disabled', true);
+            });
+
+            // Cargar jugadores para selección de líderes
+            $('#btnCargar').click(function() {
+                let categoria = $('#categoria').val();
+                let temporada = $('#temporada').val();
+
+                if (!categoria || !temporada) {
+                    showAlert('Seleccione categoría y temporada primero.', 'warning');
+                    return;
+                }
+
+                // Mostrar loading en todos los selects
+                $('select[name^="lider_"]').html('<option value="">Cargando jugadores...</option>');
+                $('#seccionLideres').show();
+                $('#btnEnviar').prop('disabled', true);
+
+                // Cargar jugadores bateadores
+                $.ajax({
+                    url: 'get_jugadores_lideres.php',
+                    type: 'GET',
+                    data: { 
+                        categoria: categoria, 
+                        temporada: temporada,
+                        tipo: 'bateadores'
+                    },
+                    success: function(data) {
+                        // Cargar opciones en selects de bateadores
+                        const options = '<option value="">Seleccione un jugador...</option>' + data;
+                        $('#lider_ci_1, #lider_ci_2, #lider_ci_3, #lider_avg_1, #lider_avg_2, #lider_avg_3, #lider_hr_1, #lider_hr_2, #lider_hr_3').html(options);
+                        
+                        // Cargar pitchers
+                        cargarPitchers(categoria, temporada);
+                    },
+                    error: function() {
+                        showAlert('Error cargando jugadores. Intente nuevamente.', 'danger');
+                        $('#btnEnviar').prop('disabled', true);
+                    }
+                });
+            });
+
+            // Validar envío del formulario
+            $('#formLideres').submit(function(e) {
+                let hasSelection = false;
                 
-                if (tempo) {
-                    $("#equipoLoading").show();
-                    equipoSelect.prop('disabled', true);
-                    
-                    $.get("tempo.php", "tempo=" + tempo, function(data){
-                        $("#equipoLoading").hide();
-                        equipoSelect.html(data).prop('disabled', false);
-                    }).fail(function() {
-                        $("#equipoLoading").hide();
-                        equipoSelect.html('<option value="">Error al cargar equipos</option>');
-                    });
-                } else {
-                    equipoSelect.prop('disabled', true).html('<option value="">Primero seleccione una temporada</option>');
+                // Verificar si hay al menos un líder seleccionado en alguna categoría
+                $('select[name^="lider_"]').each(function() {
+                    if ($(this).val()) {
+                        hasSelection = true;
+                        return false; // break loop
+                    }
+                });
+
+                if (!hasSelection) {
+                    e.preventDefault();
+                    showAlert('Debe seleccionar al menos un líder en alguna categoría.', 'warning');
                 }
             });
+
+            // Función para cargar pitchers
+            function cargarPitchers(categoria, temporada) {
+                $.ajax({
+                    url: 'get_jugadores_lideres.php',
+                    type: 'GET',
+                    data: { 
+                        categoria: categoria, 
+                        temporada: temporada,
+                        tipo: 'pitchers'
+                    },
+                    success: function(data) {
+                        const options = '<option value="">Seleccione un pitcher...</option>' + data;
+                        $('#lider_picher_1, #lider_picher_2, #lider_picher_3').html(options);
+                        $('#btnEnviar').prop('disabled', false);
+                    },
+                    error: function() {
+                        $('#lider_picher_1, #lider_picher_2, #lider_picher_3').html('<option value="">Error cargando pitchers</option>');
+                        $('#btnEnviar').prop('disabled', false);
+                    }
+                });
+            }
         });
-        
-        // Validación del formulario
-        document.getElementById('lideresForm').addEventListener('submit', function(e) {
-            const categoria = document.getElementById('categoria');
-            const tempo = document.getElementById('tempo');
-            const equipo = document.getElementById('equipone');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            if (!categoria.value) {
-                e.preventDefault();
-                showAlert('Por favor, seleccione una categoría', 'warning');
-                categoria.focus();
-                return;
-            }
-            
-            if (!tempo.value) {
-                e.preventDefault();
-                showAlert('Por favor, seleccione una temporada', 'warning');
-                tempo.focus();
-                return;
-            }
-            
-            if (!equipo.value) {
-                e.preventDefault();
-                showAlert('Por favor, seleccione un equipo', 'warning');
-                equipo.focus();
-                return;
-            }
-            
-            // Mostrar estado de carga
-            submitBtn.innerHTML = '<div class="loading-spinner"></div> Generando...';
-            submitBtn.disabled = true;
-            
-            // Restaurar después de 5 segundos (por si falla la descarga)
-            setTimeout(() => {
-                submitBtn.innerHTML = '<i class="fas fa-file-pdf me-2"></i>Generar Reporte PDF';
-                submitBtn.disabled = false;
-            }, 5000);
-        });
-        
+
         function showAlert(message, type) {
             // Crear alerta temporal
             const alert = document.createElement('div');
