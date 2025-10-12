@@ -246,7 +246,7 @@ foreach ($lideres_avg as $pos => $player_id) {
         if ($result && mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_array($result);
             // Convertir avg a formato decimal
-            $avg_decimal = number_format($row['avg'] / 1000, 3);
+            $avg_decimal = $row['avg'];
             $data_avg[] = [
                 $posiciones[$pos-1],
                 $row['name_jgstats'],
