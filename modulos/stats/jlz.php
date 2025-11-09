@@ -386,7 +386,28 @@ $id_team = $dteg['id_team'];
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label text-end">IL (usar .)</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control input-number" name="il" min="0" step="0.01" value="<?php echo $dteg['il']; ?>">
+                                <select class="form-select" name="il">
+                                    <?php
+                                    $current_il = $dteg['il'];
+                                    $options = [];
+                                    
+                                    // Generar las opciones desde 0 hasta 10 con incrementos específicos
+                                    for ($i = 0; $i <= 10; $i++) {
+                                        // Para cada número entero, agregamos 3 opciones: el entero, entero+0.33, entero+0.66
+                                        $options[] = $i;           // 0, 1, 2, etc.
+                                        if ($i < 10) {
+                                            $options[] = $i + 0.33; // 0.33, 1.33, 2.33, etc.
+                                            $options[] = $i + 0.66; // 0.66, 1.66, 2.66, etc.
+                                        }
+                                    }
+                                    
+                                    // Generar las opciones del select
+                                    foreach ($options as $value) {
+                                        $selected = ($value == $current_il) ? 'selected' : '';
+                                        echo "<option value=\"$value\" $selected>$value</option>";
+                                    }
+                                    ?>
+                                </select>
                             </div>
                             <label class="col-sm-2 col-form-label text-end">CP</label>
                             <div class="col-sm-3">
