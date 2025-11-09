@@ -416,13 +416,13 @@ $id_team = $dteg['id_team'];
                         </div>
 
                         <div class="row mb-3">
-                            <label class="col-sm-3 col-form-label text-end">CPL</label>
-                            <div class="col-sm-3">
-                                <input type="number" class="form-control input-number" name="cpl" min="0" value="<?php echo $dteg['cpl']; ?>">
-                            </div>
-                            <label class="col-sm-2 col-form-label text-end">VA</label>
+                            <label class="col-sm-3 col-form-label text-end">VA</label>
                             <div class="col-sm-3">
                                 <input type="number" class="form-control input-number" name="va" min="0" value="<?php echo $dteg['va']; ?>">
+                            </div>
+                            <label class="col-sm-2 col-form-label text-end">CPL</label>
+                            <div class="col-sm-3">
+                                <input type="number" class="form-control input-number" name="cpl" min="0" value="<?php echo $dteg['cpl']; ?>">
                             </div>
                         </div>
                     </div>
