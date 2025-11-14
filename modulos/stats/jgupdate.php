@@ -36,10 +36,10 @@ echo $guardar = "UPDATE jugadores_stats SET vb = '$vb',
                                        br = '$br',
                                        gp = '$gp' 
                                        WHERE id_js = '$id_js';";
-$resaves = mysqli_query($con, $guardar);
+/*$resaves = mysqli_query($con, $guardar);
 
 
 Header("Location: jgcalcular.php?id_tab=$id_tab&id_team=$id_team&id_player=$id_player&cedula=$cedula&nj=$nj");
-
+*/
 
 ?>

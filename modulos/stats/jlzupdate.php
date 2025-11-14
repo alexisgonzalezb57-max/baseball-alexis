@@ -23,7 +23,7 @@ $va      = $_POST['va'];
 $gp      = $_POST['gp'];
 $br      = $_POST['br'];
 
-$guardar = "UPDATE jugadores_lanz SET jl  = '$jl',
+echo $guardar = "UPDATE jugadores_lanz SET jl  = '$jl',
                                       jg  = '$jg',
                                       il  = '$il',
                                       cp  = '$cp',

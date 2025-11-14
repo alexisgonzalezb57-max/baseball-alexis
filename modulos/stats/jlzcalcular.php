@@ -78,6 +78,12 @@ if ($efectividad === 0) {
 $defec = round($efec, 2);
 
 
+$constastar = "SELECT * FROM resumen_lanz WHERE id_player = $id_player";
+$confkj = mysqli_query($con, $constastar);
+$vjt = mysqli_num_rows($confkj);
+if ($vjt >= 1) {
+
+
 $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
                                         tjl  = '$tjl',
                                         tjg  = '$tjg',
@@ -97,9 +103,106 @@ $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
                                         WHERE id_tab    = $id_tab 
                                         AND   id_team   = $id_team 
                                         AND   id_player = $id_player; ";
+    
+    $resav = mysqli_query($con, $configurar);
+    Header("Location: ../entradas/datos.php?id_tab=$id_tab&nj=$id_nj");
 
-$resav = mysqli_query($con, $configurar);
+} elseif ($vjt < 1) {
+    
+$vb        = 0;
+$h         = 0;
+$hr        = 0;
+$dosb      = 0;
+$tresb     = 0;
+$ca        = 0;
+$ci        = 0;
+$k         = 0;
+$b         = 0;
+$a         = 0;
+$jjg       = 0;
+$tvb       = 0;
+$cp        = 0;
+$cpl       = 0;
+$il        = 0;
+$th        = 0;
+$avg       = 0;
+$efec      = 0;
+$cb        = 0;
+$va        = 0;
+$sf        = 0;
+$br        = 0;
+$gp        = 0;
+$ile       = 0;
 
-Header("Location: ../entradas/datos.php?id_tab=$id_tab&nj=$id_nj");
+
+    $lanza = "SELECT * FROM jugadores WHERE id_player = $id_player;";
+    $lzquy = mysqli_query($con, $lanza);
+    $nomns = mysqli_num_rows($lzquy);
+
+      if ($nomns >= 1) {
+        for ($lz=1; $lz <= $nomns ; $lz++) { 
+          $lzplay      = mysqli_fetch_array($lzquy);
+          $nombrelz    = $lzplay['nombre'];
+          $apellidolz  = $lzplay['apellido'];
+          $cedula      = $lzplay['cedula'];
+          $id_player   = $lzplay['id_player'];
+
+          $name_lanz   = $nombrelz." ".$apellidolz;
+
+          $guardarlanz = "INSERT INTO resumen_lanz    SET id_tab   = '$id_tab',
+                                                      id_temp      = '$id_temp',
+                                                      id_team      = '$id_team',
+                                                      id_player    = '$id_player',
+                                                      cedula       = '$cedula',
+                                                      name_jglz    = '$name_lanz',
+                                                      tnj          = '$nj',
+                                                      categoria    = '$categoria',
+                                                      tjl          = '$jl',
+                                                      tjg          = '$jjg',
+                                                      avg          = '$avg',
+                                                      til          = '$il',
+                                                      tcp          = '$cp',
+                                                      tcpl         = '$cpl',
+                                                      efec         = '$efec',
+                                                      h            = '$h',
+                                                      2b           = '$dosb',
+                                                      3b           = '$tresb',
+                                                      hr           = '$hr',
+                                                      b            = '$b',
+                                                      k            = '$k',
+                                                      va           = '$va',
+                                                      gp           = '$gp',
+                                                      ile          = '$ile';";
+          $lzsaves = mysqli_query($con, $guardarlanz);
+        }
+      }
+
+      
+$configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
+                                        tjl  = '$tjl',
+                                        tjg  = '$tjg',
+                                        avg  = '$avg',
+                                        til  = '$til',
+                                        tcpl = '$tcpl',
+                                        efec = '$defec',
+                                        h    = '$th',
+                                        2b   = '$t2b',
+                                        3b   = '$t3b',
+                                        hr   = '$thr',
+                                        b    = '$tb',
+                                        k    = '$tk',
+                                        va   = '$tva',
+                                        gp   = '$tgp',
+                                        ile   = '$tbr'  
+                                        WHERE id_tab    = $id_tab 
+                                        AND   id_team   = $id_team 
+                                        AND   id_player = $id_player; ";
+    
+    $resav = mysqli_query($con, $configurar);
+    Header("Location: ../entradas/datos.php?id_tab=$id_tab&nj=$id_nj");
+
+}
+
+/**/
 
 ?>
