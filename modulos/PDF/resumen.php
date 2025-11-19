@@ -85,14 +85,14 @@ $pdf->Cell(12,4.5,utf8_decode(strtoupper('Ci')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('k')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('b')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('as')),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper('fl')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('sf')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('br')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('gp')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('vb')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('th')),1,0,'C');
 $pdf->Cell(20,4.5,utf8_decode(strtoupper('avg')),1,1,'C');
 
-$cons = "SELECT * FROM resumen_stats WHERE id_team = $id_team AND id_tab =$id_tab";
+$cons = "SELECT * FROM resumen_stats WHERE id_team = $id_team AND id_tab =$id_tab AND id_temp = $id_tp AND categoria LIKE '%$cat%' ";
 $dteg = mysqli_query($con, $cons);
 $nums = mysqli_num_rows($dteg);
 if ($nums >= 1) {
@@ -140,7 +140,7 @@ SUM(gp)   AS tgp,
 SUM(tvb)  AS ttvb,
 SUM(th)   AS tthh 
 FROM resumen_stats 
-WHERE id_team = $id_team AND id_tab =$id_tab";
+WHERE id_team = $id_team AND id_tab =$id_tab AND categoria LIKE '%$cat%'  AND id_temp = $id_tp";
 $vtvt = mysqli_query($con, $ftor);
 $dust = mysqli_num_rows($vtvt);
 if ($dust >= 1) {
@@ -196,7 +196,7 @@ $pdf->Cell(20,4.5,utf8_decode(strtoupper($ravg)),1,1,'C');
 } }
 
 $pdf->SetFont('Arial','B',12);
-$pdf->Ln(4);
+$pdf->Ln(1);
 $pdf->Cell(0,5,utf8_decode(strtoupper('pichers')),0,1,'C');
 
 
@@ -206,6 +206,7 @@ $pdf->Cell(60,4.5,utf8_decode(strtoupper('jugador')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('tjl')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('tjg')),1,0,'C');
 $pdf->Cell(15,4.5,utf8_decode(strtoupper('avg')),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('vb')),1,0,'C');
 $pdf->Cell(15,4.5,utf8_decode(strtoupper('til')),1,0,'C');
 $pdf->Cell(15,4.5,utf8_decode(strtoupper('tcpl')),1,0,'C');
 $pdf->Cell(15,4.5,utf8_decode(strtoupper('efec')),1,0,'C');
@@ -216,10 +217,9 @@ $pdf->Cell(12,4.5,utf8_decode(strtoupper('hr')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('b')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('k')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('gp')),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper('br')),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper('va')),1,1,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper('br')),1,1,'C');
 
-$cons = "SELECT * FROM resumen_lanz WHERE id_team = $id_team AND id_tab =$id_tab";
+$cons = "SELECT * FROM resumen_lanz WHERE id_team = $id_team AND id_tab =$id_tab AND categoria LIKE '%$cat%'  AND id_temp = $id_tp";
 $dteg = mysqli_query($con, $cons);
 $nums = mysqli_num_rows($dteg);
 if ($nums >= 1) {
@@ -232,6 +232,7 @@ $pdf->Cell(60,4.5,utf8_decode($player['name_jglz']),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tjl'])),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tjg'])),1,0,'C');
 $pdf->Cell(15,4.5,utf8_decode(strtoupper($player['avg'])),1,0,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['va'])),1,0,'C');
 $pdf->Cell(15,4.5,utf8_decode(strtoupper($player['til'])),1,0,'C');
 $pdf->Cell(15,4.5,utf8_decode(strtoupper($player['tcpl'])),1,0,'C');
 $pdf->Cell(15,4.5,utf8_decode(strtoupper($player['efec'])),1,0,'C');
@@ -242,8 +243,7 @@ $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['hr'])),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['b'])),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['k'])),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ile'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['va'])),1,1,'C');
+$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ile'])),1,1,'C');
 
     }
 }

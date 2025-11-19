@@ -140,12 +140,12 @@ $pdf->Cell(15,6.5,utf8_decode(strtoupper('efec')),1,0,'C');
 $pdf->Cell(60,6.5,utf8_decode(strtoupper('Equipo')),1,1,'C');
 
 
-$idtp = "SELECT * FROM temporada WHERE id_temp = $temporada";
+$idtp = "SELECT * FROM temporada WHERE id_temp = $temporada AND categoria LIKE '%$categoria%'";
 $vatp = mysqli_query($con, $idtp);
 $dtpp = mysqli_fetch_array($vatp);
 
     
-$covl = "SELECT * FROM resumen_lanz WHERE id_temp = $temporada ORDER BY (til >= $chmp) DESC, efec ASC";
+$covl = "SELECT * FROM resumen_lanz WHERE id_temp = $temporada AND categoria LIKE '%$categoria%' ORDER BY (til >= $chmp) DESC, efec ASC";
 $vais = mysqli_query($con, $covl);
 $asnm = mysqli_num_rows($vais);
 
@@ -163,7 +163,7 @@ $pdf->Cell(10,6.5,utf8_decode($player['til']),1,0,'C');
 $pdf->Cell(10,6.5,utf8_decode($player['tcpl']),1,0,'C');
 $pdf->Cell(15,6.5,utf8_decode($player['efec']),1,0,'C');
 
-$tabla = "SELECT * FROM tab_clasf WHERE id_team = $id_team AND id_temp = $temporada";
+$tabla = "SELECT * FROM tab_clasf WHERE id_team = $id_team AND id_temp = $temporada AND categoria LIKE '%$categoria%'";
 $dteg = mysqli_query($con, $tabla);
 $datu = mysqli_fetch_array($dteg);
 
@@ -203,9 +203,7 @@ $dtpps = mysqli_fetch_array($vatps);
 
 $partidoss = $dtpps['partidas'];
     
-$covls = "SELECT resumen_lanz.*, tab_clasf.* FROM resumen_lanz 
-INNER JOIN tab_clasf ON resumen_lanz.id_team = tab_clasf.id_team 
-WHERE tab_clasf.id_team = $equipo AND tab_clasf.id_temp = $temporada ORDER BY resumen_lanz.avg DESC";
+$covls = "SELECT * FROM resumen_lanz WHERE id_temp = $temporada AND id_team = $equipo AND categoria LIKE '%$categoria%' ORDER BY resumen_lanz.avg DESC";
 $vaiss = mysqli_query($con, $covls);
 $asnms = mysqli_num_rows($vaiss);
 
@@ -215,7 +213,7 @@ $players = mysqli_fetch_array($vaiss);
 
 $tjl = $players['tjl'];
 $tjg = $players['tjg'];
-$tjp = $partidoss - $tjg;
+$tjp = $tjl - $tjg;
 
 $pdf->SetFont('Arial','B',9);
 $pdf->Cell(12.5);
@@ -225,7 +223,11 @@ $pdf->Cell(10,6.5,utf8_decode($tjl),1,0,'C');
 $pdf->Cell(10,6.5,utf8_decode($tjg),1,0,'C');
 $pdf->Cell(10,6.5,utf8_decode($tjp),1,0,'C');
 $pdf->Cell(15,6.5,utf8_decode($players['avg']),1,0,'C');
-$pdf->Cell(60,6.5,utf8_decode(strtoupper($players['name_team'])),1,1,'C');
+
+$tabla = "SELECT * FROM tab_clasf WHERE id_team = $equipo AND id_temp = $temporada AND categoria LIKE '%$categoria%'";
+$dteg = mysqli_query($con, $tabla);
+$datu = mysqli_fetch_array($dteg);
+$pdf->Cell(60,6.5,utf8_decode(strtoupper($datu['name_team'])),1,1,'C');
 
 } }
 
@@ -252,9 +254,7 @@ $vatp = mysqli_query($con, $idtp);
 $dtpp = mysqli_fetch_array($vatp);
 
     
-$covl = "SELECT resumen_lanz.*, tab_clasf.* FROM resumen_lanz 
-INNER JOIN tab_clasf ON resumen_lanz.id_team = tab_clasf.id_team 
-WHERE tab_clasf.id_team = $equipo AND tab_clasf.id_temp = $temporada ORDER BY (resumen_lanz.til > $chmp) DESC, resumen_lanz.efec ASC";
+$covl = "SELECT * FROM resumen_lanz WHERE id_temp = $temporada AND id_team = $equipo AND categoria LIKE '%$categoria%' ORDER BY (resumen_lanz.til > $chmp) DESC, resumen_lanz.efec ASC";
 $vais = mysqli_query($con, $covl);
 $asnm = mysqli_num_rows($vais);
 
@@ -270,7 +270,11 @@ $pdf->Cell(60,6.5,utf8_decode($player['name_jglz']),1,0,'C');
 $pdf->Cell(10,6.5,utf8_decode($player['til']),1,0,'C');
 $pdf->Cell(10,6.5,utf8_decode($player['tcpl']),1,0,'C');
 $pdf->Cell(15,6.5,utf8_decode($player['efec']),1,0,'C');
-$pdf->Cell(60,6.5,utf8_decode(strtoupper($player['name_team'])),1,1,'C');
+
+$tabla = "SELECT * FROM tab_clasf WHERE id_team = $equipo AND id_temp = $temporada AND categoria LIKE '%$categoria%'";
+$dteg = mysqli_query($con, $tabla);
+$datu = mysqli_fetch_array($dteg);
+$pdf->Cell(60,6.5,utf8_decode(strtoupper($datu['name_team'])),1,1,'C');
 
 } 
 
