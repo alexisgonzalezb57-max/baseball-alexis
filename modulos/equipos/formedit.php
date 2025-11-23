@@ -2,6 +2,17 @@
 include("../../config/conexion.php");
 $con = conectar();
 
+// AGREGAR CAMPOS NUEVOS A LA TABLA EQUIPOS
+$sql_alter = "ALTER TABLE `equipos` 
+              ADD COLUMN IF NOT EXISTS `manager` VARCHAR(100) NULL AFTER `categoria`,
+              ADD COLUMN IF NOT EXISTS `delegado` VARCHAR(100) NULL AFTER `manager`,
+              ADD COLUMN IF NOT EXISTS `subdelegado` VARCHAR(100) NULL AFTER `delegado`";
+
+if ($con->query($sql_alter) !== TRUE) {
+    // Solo registrar error, no detener ejecución
+    error_log("Nota: No se pudieron agregar campos a la tabla equipos: " . $con->error);
+}
+
 // Validar y sanitizar la entrada
 $cat = isset($_REQUEST['cat']) ? mysqli_real_escape_string($con, $_REQUEST['cat']) : '';
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -307,6 +318,26 @@ if (!$data) {
                             <input type="text" class="form-control" id="n_team" name="n_team" 
                                    value="<?php echo htmlspecialchars($data['nom_team']); ?>" 
                                    placeholder="Ingrese el nombre del equipo" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="mb-3">
+                            <label for="manager" class="form-label">Manager</label>
+                            <input type="text" class="form-control" id="manager" name="manager" 
+                                   value="<?php echo htmlspecialchars($data['manager']); ?>" placeholder="Ingrese el nombre del Manager del equipo" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="mb-3">
+                            <label for="delegado" class="form-label">Delegado</label>
+                            <input type="text" class="form-control" id="delegado" name="delegado" 
+                                   value="<?php echo htmlspecialchars($data['delegado']); ?>"placeholder="Ingrese el nombre del Delegado del equipo" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="mb-3">
+                            <label for="subdelegado" class="form-label">Sub-Delegado</label>
+                            <input type="text" class="form-control" id="subdelegado" name="subdelegado" value="<?php echo htmlspecialchars($data['subdelegado']); ?>"placeholder="Ingrese el nombre del Sub-Delegado del equipo" required>
                         </div>
                     </div>
                     

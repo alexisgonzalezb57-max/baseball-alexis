@@ -295,6 +295,9 @@ if (!$con) {
                                     <th scope="col">#</th>
                                     <th scope="col">Equipos</th>
                                     <th scope="col">N° de Jugadores</th>
+                                    <th scope="col">Manager</th>
+                                    <th scope="col">Delegado</th>
+                                    <th scope="col">Sub-Delegado</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
@@ -320,6 +323,9 @@ if (!$con) {
                                                         <?php echo htmlspecialchars($data['n_jugadores']); ?>
                                                     </span>
                                                 </td>
+                                                <td class="fw-bold"><?php echo htmlspecialchars($data['manager']); ?></td>
+                                                <td class="fw-bold"><?php echo htmlspecialchars($data['delegado']); ?></td>
+                                                <td class="fw-bold"><?php echo htmlspecialchars($data['subdelegado']); ?></td>
                                                 <td>
                                                     <a href="../jugadores/list.php?id=<?php echo $data['id_team']; ?>&cat=<?php echo urlencode($cat); ?>" class="btn btn-info btn-action" data-bs-toggle="tooltip" title="Lista de Jugadores">
                                                         <i class="fas fa-list"></i>
