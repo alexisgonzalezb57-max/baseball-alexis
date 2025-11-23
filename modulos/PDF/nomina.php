@@ -136,7 +136,7 @@ $pdf->Cell(15,4,'',1,1,'C');
 } } 
 
 
-$pdf->Ln();
+$pdf->Ln(15);
 $pdf->SetFont('Arial','B',12);
 // Sección de la liga en el lado derecho
 $pdf->Cell(($ancho_valor+$ancho_etiqueta),5,"",0,0,'L');
