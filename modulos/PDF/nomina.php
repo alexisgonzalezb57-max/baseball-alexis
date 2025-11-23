@@ -76,31 +76,8 @@ $ancho_etiqueta = 45;
 $ancho_valor = 50;
 
 // Líneas principales
-$pdf->Cell($ancho_etiqueta,5,'FECHA:',0,0,'L');
-$pdf->Cell($ancho_valor,5,$timeday,0,0,'L');
-
-// Sección de la liga en el lado derecho
-$pdf->SetX(140); // O usar SetX(-60) para posición relativa al margen derecho
-$pdf->Cell(0,5,'Por la liga de Educadores',0,1,'L');
-
-$pdf->Cell($ancho_etiqueta,5,'MANAGER:',0,0,'L');
-$pdf->Cell($ancho_valor,5,$ttmm['manager'],0,0,'L');
-$pdf->SetX(140);
-$pdf->Cell(0,5,'Nombre: _________________________',0,1,'L');
-
-$pdf->Cell($ancho_etiqueta,5,'DELEGADO:',0,0,'L');
-$pdf->Cell($ancho_valor,5,$ttmm['delegado'],0,0,'L');
-$pdf->SetX(140);
-$pdf->Cell(0,5,'',0,1,'L'); // Línea en blanco
-
-$pdf->Cell($ancho_etiqueta,5,'SUB-DELEGADO:',0,0,'L');
-$pdf->Cell($ancho_valor,5,$ttmm['subdelegado'],0,0,'L');
-$pdf->SetX(140);
-$pdf->Cell(0,5,'Firma y Sello',0,1,'L');
-$pdf->SetFont('Arial','B',14);
-$pdf->Ln(2);
-
-
+$pdf->Cell(0,5,'FECHA: '.$timeday,0,1,'L');
+$pdf->Ln();
 
 $pdf->SetFont('Arial','B',10);
 
@@ -157,6 +134,31 @@ $pdf->Cell(15,4,'',1,0,'C');
 $pdf->Cell(15,4,'',1,1,'C');
 }
 } } 
+
+
+$pdf->Ln();
+$pdf->SetFont('Arial','B',12);
+// Sección de la liga en el lado derecho
+$pdf->Cell(($ancho_valor+$ancho_etiqueta),5,"",0,0,'L');
+$pdf->SetX(140); // O usar SetX(-60) para posición relativa al margen derecho
+$pdf->Cell(0,5,'Por la liga de Educadores',0,1,'L');
+
+$pdf->Cell($ancho_etiqueta,5,'MANAGER:',0,0,'L');
+$pdf->Cell($ancho_valor,5,$ttmm['manager'],0,0,'L');
+$pdf->SetX(140);
+$pdf->Cell(0,5,'Nombre: _______________________',0,1,'L');
+
+$pdf->Cell($ancho_etiqueta,5,'DELEGADO:',0,0,'L');
+$pdf->Cell($ancho_valor,5,$ttmm['delegado'],0,0,'L');
+$pdf->SetX(140);
+$pdf->Cell(0,5,'',0,1,'L'); // Línea en blanco
+
+$pdf->Cell($ancho_etiqueta,5,'SUB-DELEGADO:',0,0,'L');
+$pdf->Cell($ancho_valor,5,$ttmm['subdelegado'],0,0,'L');
+$pdf->SetX(140);
+$pdf->Cell(0,5,'Firma y Sello',0,1,'L');
+$pdf->SetFont('Arial','B',14);
+
 
 
 
