@@ -69,7 +69,7 @@ $pdf->Cell(0,5,'NOMINA  '.$ttmm['nom_team'],0,1,'C');
  } elseif (!empty($sust)) {
 $pdf->Cell(0,5, utf8_decode('NOMINA DE SUSTITUCIÓN '.$ttmm['nom_team']),0,1,'C');
 }
-$pdf->SetFont('Arial','B',12);
+$pdf->SetFont('Arial','B',13);
 // Ancho fijo para las etiquetas
 // Configurar anchos
 $ancho_etiqueta = 45;
@@ -79,14 +79,14 @@ $ancho_valor = 50;
 $pdf->Cell(0,5,'FECHA: '.$timeday,0,1,'L');
 $pdf->Ln();
 
-$pdf->SetFont('Arial','B',10);
+$pdf->SetFont('Arial','B',13);
 
-$pdf->Cell(8,4,utf8_decode('N°'),1,0,'C');
-$pdf->Cell(30,4,utf8_decode(strtoupper('Cedula')),1,0,'C');
-$pdf->Cell(80,4,utf8_decode(strtoupper('Nombre y Apellido')),1,0,'C');
-$pdf->Cell(35,4,utf8_decode(strtoupper('Fecha Nac')),1,0,'C');
-$pdf->Cell(20,4,utf8_decode(strtoupper('Edad')),1,0,'C');
-$pdf->Cell(20,4,utf8_decode(strtoupper('Picher')),1,1,'C');
+$pdf->Cell(8,6,utf8_decode('N°'),1,0,'C');
+$pdf->Cell(30,6,utf8_decode(strtoupper('Cedula')),1,0,'C');
+$pdf->Cell(80,6,utf8_decode(strtoupper('Nombre y Apellido')),1,0,'C');
+$pdf->Cell(35,6,utf8_decode(strtoupper('Fecha Nac')),1,0,'C');
+$pdf->Cell(20,6,utf8_decode(strtoupper('Edad')),1,0,'C');
+$pdf->Cell(20,6,utf8_decode(strtoupper('Picher')),1,1,'C');
 
 
     
@@ -108,44 +108,44 @@ $mes_trg = date("m", $entero_trg);
 $dia_trg = date("d", $entero_trg);
 $desde_reorder=$dia_trg.'-'.$mes_trg.'-'.$ano_trg;
 
-$pdf->SetFont('Arial','B',9);
-$pdf->Cell(8,4,utf8_decode(strtoupper($jg)),1,0,'C');
-$pdf->Cell(30,4,utf8_decode($player['cedula']),1,0,'C');
-$pdf->Cell(80,4,utf8_decode($player['nombre']." ".$player['apellido']),1,0,'C');
+$pdf->SetFont('Arial','B',13);
+$pdf->Cell(8,6,utf8_decode(strtoupper($jg)),1,0,'C');
+$pdf->Cell(30,6,utf8_decode($player['cedula']),1,0,'C');
+$pdf->Cell(80,6,utf8_decode($player['nombre']." ".$player['apellido']),1,0,'C');
 
 if (!empty($player['cedula'])){
-    $pdf->Cell(35,4,utf8_decode($desde_reorder),1,0,'C');
+    $pdf->Cell(35,6,utf8_decode($desde_reorder),1,0,'C');
 } elseif (empty($player['cedula'])) { 
-    $pdf->Cell(35,4,"",1,0,'C');
+    $pdf->Cell(35,6,"",1,0,'C');
 } 
 
-//$pdf->Cell(30,4,utf8_decode($desde_reorder),1,0,'C');
-$pdf->Cell(20,4,utf8_decode($player['edad']),1,0,'C');
+//$pdf->Cell(30,6,utf8_decode($desde_reorder),1,0,'C');
+$pdf->Cell(20,6,utf8_decode($player['edad']),1,0,'C');
 
 if (!empty($player['cedula'])){
     if (!empty($lan)){
-        $pdf->Cell(20,4,utf8_decode('SI'),1,1,'C');
+        $pdf->Cell(20,6,utf8_decode('SI'),1,1,'C');
     } elseif (empty($lan)) { 
-        $pdf->Cell(20,4,utf8_decode('NO'),1,1,'C');
+        $pdf->Cell(20,6,utf8_decode('NO'),1,1,'C');
     } 
 } elseif (empty($player['cedula'])) { 
-    $pdf->Cell(20,4,"",1,1,'C');
+    $pdf->Cell(20,6,"",1,1,'C');
 } 
 
 
  if (empty($sust)) { } elseif (!empty($sust)) {
-$pdf->Cell(8,4,'',1,0,'C');
-$pdf->Cell(30,4,'',1,0,'C');
-$pdf->Cell(80,4,'',1,0,'C');
-$pdf->Cell(35,4,'',1,0,'C');
-$pdf->Cell(20,4,'',1,0,'C');
-$pdf->Cell(20,4,'',1,1,'C');
+$pdf->Cell(8,6,'',1,0,'C');
+$pdf->Cell(30,6,'',1,0,'C');
+$pdf->Cell(80,6,'',1,0,'C');
+$pdf->Cell(35,6,'',1,0,'C');
+$pdf->Cell(20,6,'',1,0,'C');
+$pdf->Cell(20,6,'',1,1,'C');
 }
 } } 
 
 
 $pdf->Ln(10);
-$pdf->SetFont('Arial','B',10);
+$pdf->SetFont('Arial','B',12);
 // Sección de la liga en el lado derecho
 $pdf->Cell(($ancho_valor+$ancho_etiqueta),5,"",0,0,'L');
 $pdf->SetX(140); // O usar SetX(-60) para posición relativa al margen derecho
