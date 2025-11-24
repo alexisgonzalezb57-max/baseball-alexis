@@ -136,8 +136,8 @@ $pdf->Cell(15,4,'',1,1,'C');
 } } 
 
 
-$pdf->Ln(15);
-$pdf->SetFont('Arial','B',12);
+$pdf->Ln(10);
+$pdf->SetFont('Arial','B',10);
 // Sección de la liga en el lado derecho
 $pdf->Cell(($ancho_valor+$ancho_etiqueta),5,"",0,0,'L');
 $pdf->SetX(140); // O usar SetX(-60) para posición relativa al margen derecho
