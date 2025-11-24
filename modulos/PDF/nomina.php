@@ -81,13 +81,12 @@ $pdf->Ln();
 
 $pdf->SetFont('Arial','B',10);
 
-$pdf->Cell(20);
 $pdf->Cell(8,4,utf8_decode('N°'),1,0,'C');
-$pdf->Cell(25,4,utf8_decode(strtoupper('Cedula')),1,0,'C');
-$pdf->Cell(60,4,utf8_decode(strtoupper('Nombre')),1,0,'C');
-$pdf->Cell(30,4,utf8_decode(strtoupper('Fecha Nac')),1,0,'C');
-$pdf->Cell(15,4,utf8_decode(strtoupper('Edad')),1,0,'C');
-$pdf->Cell(15,4,utf8_decode(strtoupper('Picher')),1,1,'C');
+$pdf->Cell(30,4,utf8_decode(strtoupper('Cedula')),1,0,'C');
+$pdf->Cell(80,4,utf8_decode(strtoupper('Nombre y Apellido')),1,0,'C');
+$pdf->Cell(35,4,utf8_decode(strtoupper('Fecha Nac')),1,0,'C');
+$pdf->Cell(20,4,utf8_decode(strtoupper('Edad')),1,0,'C');
+$pdf->Cell(20,4,utf8_decode(strtoupper('Picher')),1,1,'C');
 
 
     
@@ -97,7 +96,7 @@ $asnm = mysqli_num_rows($vais);
 
 
 if ($asnm >= 1) {
-for ($jg=1; $jg <= $asnm ; $jg++) { 
+for ($jg=1; $jg <= 26 ; $jg++) { 
 $player = mysqli_fetch_array($vais);
 $id_team = $player['id_team'];
 $lan = $player['lanzador'];
@@ -110,28 +109,37 @@ $dia_trg = date("d", $entero_trg);
 $desde_reorder=$dia_trg.'-'.$mes_trg.'-'.$ano_trg;
 
 $pdf->SetFont('Arial','B',9);
-$pdf->Cell(20);
 $pdf->Cell(8,4,utf8_decode(strtoupper($jg)),1,0,'C');
-$pdf->Cell(25,4,utf8_decode($player['cedula']),1,0,'C');
-$pdf->Cell(60,4,utf8_decode($player['nombre']." ".$player['apellido']),1,0,'C');
-$pdf->Cell(30,4,utf8_decode($desde_reorder),1,0,'C');
-$pdf->Cell(15,4,utf8_decode($player['edad']),1,0,'C');
+$pdf->Cell(30,4,utf8_decode($player['cedula']),1,0,'C');
+$pdf->Cell(80,4,utf8_decode($player['nombre']." ".$player['apellido']),1,0,'C');
 
-if (!empty($lan)){
-    $pdf->Cell(15,4,utf8_decode('SI'),1,1,'C');
-} elseif (empty($lan)) { 
-    $pdf->Cell(15,4,utf8_decode('NO'),1,1,'C');
- } 
+if (!empty($player['cedula'])){
+    $pdf->Cell(35,4,utf8_decode($desde_reorder),1,0,'C');
+} elseif (empty($player['cedula'])) { 
+    $pdf->Cell(35,4,"",1,0,'C');
+} 
+
+//$pdf->Cell(30,4,utf8_decode($desde_reorder),1,0,'C');
+$pdf->Cell(20,4,utf8_decode($player['edad']),1,0,'C');
+
+if (!empty($player['cedula'])){
+    if (!empty($lan)){
+        $pdf->Cell(20,4,utf8_decode('SI'),1,1,'C');
+    } elseif (empty($lan)) { 
+        $pdf->Cell(20,4,utf8_decode('NO'),1,1,'C');
+    } 
+} elseif (empty($player['cedula'])) { 
+    $pdf->Cell(20,4,"",1,1,'C');
+} 
 
 
  if (empty($sust)) { } elseif (!empty($sust)) {
-$pdf->Cell(20);
 $pdf->Cell(8,4,'',1,0,'C');
-$pdf->Cell(25,4,'',1,0,'C');
-$pdf->Cell(60,4,'',1,0,'C');
 $pdf->Cell(30,4,'',1,0,'C');
-$pdf->Cell(15,4,'',1,0,'C');
-$pdf->Cell(15,4,'',1,1,'C');
+$pdf->Cell(80,4,'',1,0,'C');
+$pdf->Cell(35,4,'',1,0,'C');
+$pdf->Cell(20,4,'',1,0,'C');
+$pdf->Cell(20,4,'',1,1,'C');
 }
 } } 
 
