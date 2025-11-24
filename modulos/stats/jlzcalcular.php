@@ -6,6 +6,8 @@ $id_tab    = $_REQUEST['id_tab'];
 $id_team   = $_REQUEST['id_team'];
 $id_player = $_REQUEST['id_player'];
 $cedula    = $_REQUEST['cedula'];
+$temp      = $_REQUEST['temp'];
+$cat       = $_REQUEST['cat'];
 $id_nj     = $_REQUEST['nj'];
 
 
@@ -99,7 +101,9 @@ $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
                                         k    = '$tk',
                                         va   = '$tva',
                                         gp   = '$tgp',
-                                        ile   = '$tbr'  
+                                        ile   = '$tbr', 
+                                        categoria  = '$cat',
+                                        id_temp  = '$temp'   
                                         WHERE id_tab    = $id_tab 
                                         AND   id_team   = $id_team 
                                         AND   id_player = $id_player; ";
@@ -150,13 +154,13 @@ $ile       = 0;
           $name_lanz   = $nombrelz." ".$apellidolz;
 
           $guardarlanz = "INSERT INTO resumen_lanz    SET id_tab   = '$id_tab',
-                                                      id_temp      = '$id_temp',
+                                                      id_temp      = '$temp',
                                                       id_team      = '$id_team',
                                                       id_player    = '$id_player',
                                                       cedula       = '$cedula',
                                                       name_jglz    = '$name_lanz',
                                                       tnj          = '$nj',
-                                                      categoria    = '$categoria',
+                                                      categoria    = '$cat',
                                                       tjl          = '$jl',
                                                       tjg          = '$jjg',
                                                       avg          = '$avg',

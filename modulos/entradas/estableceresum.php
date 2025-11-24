@@ -1,7 +1,6 @@
 <?php  include("../../config/conexion.php");
 $con       = conectar();
 
-
 $id_tab    = $_REQUEST['id_tab'];
 $nj        = $_REQUEST['nj'];
 

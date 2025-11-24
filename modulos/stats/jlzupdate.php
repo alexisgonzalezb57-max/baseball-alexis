@@ -5,6 +5,8 @@ $id_team   = $_POST['id_team'];
 $id_tab    = $_POST['id_tab'];
 $cedula    = $_POST['cedula'];
 $id_lanz   = $_POST['id_lanz'];
+$temp      = $_POST['temp'];
+$cat       = $_POST['cat'];
 $nj        = $_POST['nj'];
 
 
@@ -36,11 +38,13 @@ echo $guardar = "UPDATE jugadores_lanz SET jl  = '$jl',
                                       k   = '$k',
                                       va  = '$va',
                                       gp  = '$gp',
-                                      ile  = '$br' 
+                                      ile = '$br',
+                                      categoria  = '$cat',
+                                      id_temp  = '$temp' 
                                       WHERE id_lanz = '$id_lanz';";
 $resaves = mysqli_query($con, $guardar);
 
-Header("Location: jlzcalcular.php?id_tab=$id_tab&id_team=$id_team&id_player=$id_player&cedula=$cedula&nj=$nj");
+Header("Location: jlzcalcular.php?id_tab=$id_tab&id_team=$id_team&id_player=$id_player&cedula=$cedula&nj=$nj&cat=$cat&temp=$temp");
 
 
 ?>

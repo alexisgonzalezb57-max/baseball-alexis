@@ -116,7 +116,7 @@ $nomns = mysqli_num_rows($lzquy);
 
 
 
-$revisar   = "SELECT *  FROM resumen_stats 
+$revisar   = "SELECT * FROM resumen_stats 
             WHERE id_tab=$id_tab AND id_team=$id_team";
 $query     = mysqli_query($con,$revisar);
 $datada    = mysqli_num_rows($query);
