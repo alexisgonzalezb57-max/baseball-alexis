@@ -419,7 +419,7 @@ if (!$con) {
                                 <select class="form-select" id="categoria" name="categoria" required>
                                     <option value="">Seleccione una categoría...</option>
                                     <?php 
-                                    $select = "SELECT * FROM categorias"; 
+                                    $select = "SELECT * FROM categorias ORDER BY categoria"; 
                                     $querye = mysqli_query($con, $select); 
                                     $num = mysqli_num_rows($querye); 
                                     if ($num >= 1) {
@@ -441,8 +441,21 @@ if (!$con) {
                                 <label class="form-label required-field">Cantidad de Abonos</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-ticket-alt"></i></span>
-                                    <input type="number" name="ncantidad" class="form-control" required min="0" placeholder="0">
+                                    <input type="number" name="ncantidad" class="form-control" required min="1" placeholder="Ej: 6" value="6">
                                 </div>
+                                <div class="form-text">Número total de abonos para esta temporada</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label required-field">Estado del Abono</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-toggle-on"></i></span>
+                                    <select class="form-select" name="activo" required>
+                                        <option value="1" selected>Activo</option>
+                                        <option value="0">Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="form-text">Los abonos inactivos irán a la sección de inactivos</div>
                             </div>
                         </div>
                     </div>
@@ -464,8 +477,11 @@ if (!$con) {
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="text" class="form-control" name="cant_once" value="0" required>
+                                    <label class="form-label">Cantidad ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <input type="text" class="form-control" name="cant_once" value="0" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -483,8 +499,11 @@ if (!$con) {
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="text" class="form-control" name="cant_second" value="0" required>
+                                    <label class="form-label">Cantidad ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <input type="text" class="form-control" name="cant_second" value="0" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -502,8 +521,11 @@ if (!$con) {
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="text" class="form-control" name="cant_third" value="0" required>
+                                    <label class="form-label">Cantidad ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <input type="text" class="form-control" name="cant_third" value="0" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -521,8 +543,11 @@ if (!$con) {
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="text" class="form-control" name="cant_four" value="0" required>
+                                    <label class="form-label">Cantidad ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <input type="text" class="form-control" name="cant_four" value="0" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -547,9 +572,22 @@ if (!$con) {
         // Cargar temporadas según categoría seleccionada
         $(document).ready(function(){
             $("#categoria").change(function(){
-                $.get("../calendario/categoria.php", "categoria=" + $("#categoria").val(), function(data){
-                    $("#tempo").html(data);
-                });
+                var categoria = $(this).val();
+                if(categoria) {
+                    $.ajax({
+                        url: "../calendario/categoria.php",
+                        type: "GET",
+                        data: {categoria: categoria},
+                        success: function(data){
+                            $("#tempo").html(data);
+                        },
+                        error: function(){
+                            $("#tempo").html('<option value="">Error al cargar temporadas</option>');
+                        }
+                    });
+                } else {
+                    $("#tempo").html('<option value="">Primero seleccione una categoría</option>');
+                }
             });
         });
 
@@ -584,6 +622,18 @@ if (!$con) {
         // Inicializar tooltips de Bootstrap
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        
+        // Validar formulario antes de enviar
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const categoria = document.getElementById('categoria').value;
+            const temporada = document.getElementById('tempo').value;
+            const ncantidad = document.querySelector('input[name="ncantidad"]').value;
+            
+            if (!categoria || !temporada || !ncantidad) {
+                e.preventDefault();
+                alert('Por favor, complete todos los campos requeridos');
+            }
+        });
     </script>
 </body>
 </html>

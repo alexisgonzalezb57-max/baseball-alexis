@@ -6,6 +6,28 @@ $con = conectar();
 if (!$con) {
     die("Error de conexión: " . mysqli_connect_error());
 }
+
+// VERIFICAR Y CREAR EL CAMPO 'activo' SI NO EXISTE
+$check_field_query = "SHOW COLUMNS FROM abonos LIKE 'activo'";
+$field_result = mysqli_query($con, $check_field_query);
+
+if (mysqli_num_rows($field_result) == 0) {
+    // El campo 'activo' no existe, crearlo
+    $alter_query = "ALTER TABLE abonos ADD activo TINYINT(1) DEFAULT 1 AFTER cant_third";
+    
+    if (mysqli_query($con, $alter_query)) {
+        // Actualizar todos los registros existentes para que estén activos por defecto
+        $update_query = "UPDATE abonos SET activo = 1 WHERE activo IS NULL OR activo = ''";
+        mysqli_query($con, $update_query);
+        
+        // Mensaje de éxito
+        $field_created = true;
+    }
+}
+
+// También verificar que el campo tenga valores por defecto (por si acaso)
+$fix_null_query = "UPDATE abonos SET activo = 1 WHERE activo IS NULL OR activo = ''";
+mysqli_query($con, $fix_null_query);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -241,6 +263,10 @@ if (!$con) {
             text-align: center;
         }
         
+        .inactive-header {
+            background: linear-gradient(90deg, #6c757d 0%, #495057 100%) !important;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
@@ -284,11 +310,6 @@ if (!$con) {
             text-transform: uppercase;
         }
         
-        .categoria-a {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-        
         .categoria-b {
             background-color: #d4edda;
             color: #155724;
@@ -297,6 +318,11 @@ if (!$con) {
         .categoria-c {
             background-color: #fff3cd;
             color: #856404;
+        }
+        
+        .categoria-d {
+            background-color: #e2d9f3;
+            color: #4a3b6d;
         }
         
         .status-badge {
@@ -319,6 +345,16 @@ if (!$con) {
         .status-no {
             background-color: #f8d7da;
             color: #721c24;
+        }
+        
+        .status-active {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        
+        .status-inactive {
+            background-color: #e2e3e5;
+            color: #41464b;
         }
         
         .action-buttons {
@@ -362,6 +398,40 @@ if (!$con) {
             background-color: var(--primary-color);
             color: white;
             min-width: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-title i {
+            color: var(--primary-color);
+        }
+        
+        .inactive-section .section-title i {
+            color: #6c757d;
+        }
+        
+        .toggle-section {
+            background: none;
+            border: none;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-left: auto;
+            cursor: pointer;
+        }
+        
+        .toggle-section:hover {
+            color: var(--dark-color);
         }
         
         @media (max-width: 768px) {
@@ -443,6 +513,14 @@ if (!$con) {
     <main class="main-content">
         <div class="container">
             <div class="content-container">
+                <?php if(isset($field_created) && $field_created): ?>
+                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>¡Campo creado exitosamente!</strong> El campo <code>activo</code> ha sido agregado a la tabla <code>abonos</code> y todos los registros existentes han sido marcados como activos.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php endif; ?>
+                
                 <h1 class="page-title">💰 Listado de Temporadas para Abonar</h1>
                 
                 <div class="text-center">
@@ -453,81 +531,200 @@ if (!$con) {
                     </a>
                 </div>
 
-                <div class="table-container">
-                    <div class="table-header">
-                        <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Temporadas con Abonos Definidos</h5>
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Nombre de la Temporada</th>
-                                    <th>Categoría</th>
-                                    <th>N° de Abonos</th>
-                                    <th>¿Cuarto Premio?</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $obtener = "SELECT temporada.*, abonos.* FROM temporada INNER JOIN abonos 
-                                ON temporada.id_temp = abonos.id_temp ORDER BY abonos.categoria DESC";
-                                $query = mysqli_query($con, $obtener);
-                                $num = mysqli_num_rows($query);
-                                
-                                if ($num >= 1) {
-                                    while ($data = mysqli_fetch_array($query)) {
-                                        $categoria_class = 'categoria-' . strtolower($data['categoria'][0]);
-                                        $status_class = empty($data['prize_four']) ? 'status-no' : 'status-yes';
-                                        $status_text = empty($data['prize_four']) ? 'NO' : 'SI';
-                                ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($data['name_temp']); ?></td>
-                                    <td>
-                                        <span class="categoria-badge <?php echo $categoria_class; ?>">
-                                            <?php echo $data['categoria']; ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="count-badge">
-                                            <?php echo $data['ncantidad']; ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="status-badge <?php echo $status_class; ?>">
-                                            <?php echo $status_text; ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="list.php?idn=<?php echo $data['id_abn']; ?>&id=<?php echo $data['id_temp']; ?>&cat=<?php echo $data['categoria']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Ingresar Abonos">
-                                                <button type="button" class="buto btn btn-info">
-                                                    <i class="fas fa-cash-register"></i>
-                                                </button>
-                                            </a>
+                <!-- Sección de Abonos Activos -->
+                <div class="active-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-check-circle"></i>Abonos Activos
+                    </h3>
 
-                                            <a href="formedit.php?id=<?php echo $data['id_abn']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
-                                                <button type="button" class="buto btn btn-warning">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                            </a>
-                                            <a href="delet.php?id=<?php echo $data['id_abn']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este abono?')">
-                                                <button type="button" class="buto btn btn-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <?php 
-                                    } 
-                                } else {
-                                    echo '<tr><td colspan="5" class="empty-state"><i class="fas fa-receipt"></i><br>No hay abonos definidos para temporadas</td></tr>';
-                                }
-                                ?>
-                            </tbody>
-                        </table>
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Temporadas con Abonos Activos</h5>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Nombre de la Temporada</th>
+                                        <th>Categoría</th>
+                                        <th>N° de Abonos</th>
+                                        <th>¿Cuarto Premio?</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    // CONSULTA 1: Abonos activos (activo = 1)
+                                    $obtener_activos = "SELECT temporada.*, abonos.* 
+                                    FROM temporada 
+                                    INNER JOIN abonos ON temporada.id_temp = abonos.id_temp 
+                                    WHERE abonos.activo = 1 
+                                    ORDER BY abonos.categoria, temporada.name_temp";
+                                    
+                                    $query_activos = mysqli_query($con, $obtener_activos);
+                                    $num_activos = mysqli_num_rows($query_activos);
+                                    
+                                    if ($num_activos >= 1) {
+                                        while ($data = mysqli_fetch_array($query_activos)) {
+                                            $categoria_class = 'categoria-' . strtolower($data['categoria']);
+                                            $status_class = empty($data['prize_four']) || $data['prize_four'] == '0' ? 'status-no' : 'status-yes';
+                                            $status_text = empty($data['prize_four']) || $data['prize_four'] == '0' ? 'NO' : 'SI';
+                                            $activo = isset($data['activo']) ? $data['activo'] : 1;
+                                    ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($data['name_temp']); ?></td>
+                                        <td>
+                                            <span class="categoria-badge <?php echo $categoria_class; ?>">
+                                                <?php echo $data['categoria']; ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="count-badge">
+                                                <?php echo $data['ncantidad']; ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge <?php echo $status_class; ?>">
+                                                <?php echo $status_text; ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge status-active">
+                                                <i class="fas fa-check-circle me-1"></i>Activo
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="list.php?idn=<?php echo $data['id_abn']; ?>&id=<?php echo $data['id_temp']; ?>&cat=<?php echo $data['categoria']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Ingresar Abonos">
+                                                    <button type="button" class="buto btn btn-info">
+                                                        <i class="fas fa-cash-register"></i>
+                                                    </button>
+                                                </a>
+
+                                                <a href="formedit.php?id=<?php echo $data['id_abn']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                                    <button type="button" class="buto btn btn-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </a>
+                                                <a href="delet.php?id=<?php echo $data['id_abn']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este abono?')">
+                                                    <button type="button" class="buto btn btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?php 
+                                        } 
+                                    } else {
+                                        echo '<tr><td colspan="6" class="empty-state"><i class="fas fa-receipt"></i><br>No hay abonos activos definidos para temporadas</td></tr>';
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Abonos Inactivos -->
+                <div class="inactive-section" id="inactiveSection">
+                    <h3 class="section-title">
+                        <i class="fas fa-times-circle"></i>Abonos Inactivos
+                        <button class="toggle-section" type="button" onclick="toggleInactiveSection()">
+                            <i class="fas fa-chevron-down" id="toggleIcon"></i>
+                        </button>
+                    </h3>
+
+                    <div class="table-container" id="inactiveTable" style="display: none;">
+                        <div class="table-header inactive-header">
+                            <h5 class="mb-0"><i class="fas fa-archive me-2"></i>Temporadas con Abonos Inactivos</h5>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Nombre de la Temporada</th>
+                                        <th>Categoría</th>
+                                        <th>N° de Abonos</th>
+                                        <th>¿Cuarto Premio?</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    // CONSULTA 2: Abonos inactivos (activo = 0)
+                                    $obtener_inactivos = "SELECT temporada.*, abonos.* 
+                                    FROM temporada 
+                                    INNER JOIN abonos ON temporada.id_temp = abonos.id_temp 
+                                    WHERE abonos.activo = 0 
+                                    ORDER BY abonos.categoria, temporada.name_temp";
+                                    
+                                    $query_inactivos = mysqli_query($con, $obtener_inactivos);
+                                    $num_inactivos = mysqli_num_rows($query_inactivos);
+                                    
+                                    if ($num_inactivos >= 1) {
+                                        while ($data = mysqli_fetch_array($query_inactivos)) {
+                                            $categoria_class = 'categoria-' . strtolower($data['categoria']);
+                                            $status_class = empty($data['prize_four']) || $data['prize_four'] == '0' ? 'status-no' : 'status-yes';
+                                            $status_text = empty($data['prize_four']) || $data['prize_four'] == '0' ? 'NO' : 'SI';
+                                            $activo = isset($data['activo']) ? $data['activo'] : 0;
+                                    ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($data['name_temp']); ?></td>
+                                        <td>
+                                            <span class="categoria-badge <?php echo $categoria_class; ?>">
+                                                <?php echo $data['categoria']; ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="count-badge">
+                                                <?php echo $data['ncantidad']; ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge <?php echo $status_class; ?>">
+                                                <?php echo $status_text; ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge status-inactive">
+                                                <i class="fas fa-times-circle me-1"></i>Inactivo
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="list.php?idn=<?php echo $data['id_abn']; ?>&id=<?php echo $data['id_temp']; ?>&cat=<?php echo $data['categoria']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Abonos">
+                                                    <button type="button" class="buto btn btn-info">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </a>
+
+                                                <a href="formedit.php?id=<?php echo $data['id_abn']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar y Reactivar">
+                                                    <button type="button" class="buto btn btn-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </a>
+                                                <a href="delet.php?id=<?php echo $data['id_abn']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este abono?')">
+                                                    <button type="button" class="buto btn btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?php 
+                                        } 
+                                    } else {
+                                        echo '<tr><td colspan="6" class="empty-state"><i class="fas fa-archive"></i><br>No hay abonos inactivos definidos para temporadas</td></tr>';
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -568,6 +765,26 @@ if (!$con) {
         // Inicializar tooltips de Bootstrap
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        
+        // Función para mostrar/ocultar la sección inactiva
+        let inactiveVisible = false;
+        
+        function toggleInactiveSection() {
+            const inactiveTable = document.getElementById('inactiveTable');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (inactiveVisible) {
+                inactiveTable.style.display = 'none';
+                toggleIcon.classList.remove('fa-chevron-up');
+                toggleIcon.classList.add('fa-chevron-down');
+            } else {
+                inactiveTable.style.display = 'block';
+                toggleIcon.classList.remove('fa-chevron-down');
+                toggleIcon.classList.add('fa-chevron-up');
+            }
+            
+            inactiveVisible = !inactiveVisible;
+        }
     </script>
 </body>
 </html>

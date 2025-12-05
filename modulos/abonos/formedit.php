@@ -13,24 +13,44 @@ if ($id <= 0) {
     die("ID de abono no válido");
 }
 
+// CONSULTA CORREGIDA: Obtener datos del abono específico
 $revisar = "SELECT * FROM abonos WHERE id_abn = $id";
 $query = mysqli_query($con, $revisar);
+
+if (!$query) {
+    die("Error en la consulta: " . mysqli_error($con));
+}
+
 $data = mysqli_fetch_array($query);
 
 if (!$data) {
     die("Abono no encontrado");
 }
 
-$cat = $data['categoria'];
-$temp = $data['id_temp'];
-$four = $data['prize_four'];
-$cfour = $data['cant_four'];
-$once = $data['prize_once'];
-$conce = $data['cant_once'];
-$second = $data['prize_second'];
-$csecond = $data['cant_second'];
-$third = $data['prize_third'];
-$cthird = $data['cant_third'];
+// Obtener los valores del abono
+$cat = isset($data['categoria']) ? $data['categoria'] : '';
+$temp = isset($data['id_temp']) ? $data['id_temp'] : 0;
+$four = isset($data['prize_four']) ? $data['prize_four'] : 0;
+$cfour = isset($data['cant_four']) ? $data['cant_four'] : 0;
+$once = isset($data['prize_once']) ? $data['prize_once'] : 0;
+$conce = isset($data['cant_once']) ? $data['cant_once'] : 0;
+$second = isset($data['prize_second']) ? $data['prize_second'] : 0;
+$csecond = isset($data['cant_second']) ? $data['cant_second'] : 0;
+$third = isset($data['prize_third']) ? $data['prize_third'] : 0;
+$cthird = isset($data['cant_third']) ? $data['cant_third'] : 0;
+$activo = isset($data['activo']) ? $data['activo'] : 1;
+$ncantidad = isset($data['ncantidad']) ? $data['ncantidad'] : 0;
+
+// Obtener información de la temporada asociada
+$nombre_temporada = 'No encontrada';
+if ($temp > 0) {
+    $revisar_temp = "SELECT name_temp FROM temporada WHERE id_temp = $temp";
+    $query_temp = mysqli_query($con, $revisar_temp);
+    if ($query_temp && mysqli_num_rows($query_temp) > 0) {
+        $temp_data = mysqli_fetch_array($query_temp);
+        $nombre_temporada = $temp_data['name_temp'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,6 +68,7 @@ $cthird = $data['cant_third'];
     <!-- jQuery (necesario para la funcionalidad AJAX) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
+    <!-- Estilos personalizados -->
     <!-- Estilos personalizados -->
     <style>
         :root {
@@ -432,7 +453,15 @@ $cthird = $data['cant_third'];
                 <div class="alert-info">
                     <i class="fas fa-info-circle me-2"></i>
                     <strong>Editando abono ID:</strong> <?php echo $data['id_abn']; ?> 
-                    | <strong>Categoría actual:</strong> <?php echo htmlspecialchars($data['categoria']); ?>
+                    | <strong>Temporada actual:</strong> <?php echo htmlspecialchars($nombre_temporada); ?>
+                    | <strong>Categoría actual:</strong> <?php echo htmlspecialchars($cat); ?>
+                    | <strong>N° de Abonos:</strong> <?php echo $ncantidad; ?>
+                    | <strong>Estado actual:</strong> 
+                    <?php if ($activo == 1): ?>
+                        <span class="badge bg-success">Activo</span>
+                    <?php else: ?>
+                        <span class="badge bg-secondary">Inactivo</span>
+                    <?php endif; ?>
                 </div>
                 
                 <form method="POST" action="update.php">
@@ -448,46 +477,48 @@ $cthird = $data['cant_third'];
                                 <select class="form-select" id="categoria" name="categoria" required>
                                     <option value="">Seleccione una categoría...</option>
                                     <?php 
-                                    $select = "SELECT * FROM categorias"; 
+                                    $select = "SELECT * FROM categorias ORDER BY categoria"; 
                                     $querye = mysqli_query($con, $select); 
-                                    $num = mysqli_num_rows($querye); 
-                                    if ($num >= 1) {
+                                    if ($querye && mysqli_num_rows($querye) > 0) {
                                         while ($det = mysqli_fetch_array($querye)) {
                                             $selected = ($det['categoria'] == $cat) ? 'selected' : '';
                                     ?>
-                                    <option value="<?php echo $det['categoria']; ?>" <?php echo $selected; ?>>
-                                        <?php echo $det['categoria']; ?>
+                                    <option value="<?php echo htmlspecialchars($det['categoria']); ?>" <?php echo $selected; ?>>
+                                        <?php echo htmlspecialchars($det['categoria']); ?>
                                     </option>
-                                    <?php } } ?>
+                                    <?php } 
+                                    } ?>
                                 </select>
                             </div>
                             
                             <div class="col-md-6 mb-3">
                                 <label class="form-label required-field">Temporada</label>
                                 <select class="form-select" id="tempo" name="temporada" required>
-                                    <?php 
-                                    $selectd = "SELECT * FROM temporada WHERE activo = 1 AND categoria LIKE '%$cat%'"; 
-                                    $queryed = mysqli_query($con, $selectd); 
-                                    $numd = mysqli_num_rows($queryed); 
-                                    if ($numd >= 1) {
-                                        while ($detd = mysqli_fetch_array($queryed)) {
-                                            $selected = ($detd['id_temp'] == $temp) ? 'selected' : '';
-                                    ?>
-                                    <option value="<?php echo $detd['id_temp']; ?>" <?php echo $selected; ?>>
-                                        <?php echo $detd['name_temp']; ?>
+                                    <option value="<?php echo $temp; ?>" selected>
+                                        <?php echo htmlspecialchars($nombre_temporada); ?> (Actual)
                                     </option>
-                                    <?php } } else { ?>
-                                    <option value="">No hay temporadas disponibles</option>
-                                    <?php } ?>
                                 </select>
+                                <input type="hidden" name="temporada" value="<?php echo $temp; ?>">
                             </div>
                             
                             <div class="col-md-6">
                                 <label class="form-label required-field">Cantidad de Abonos</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-ticket-alt"></i></span>
-                                    <input type="number" name="ncantidad" class="form-control" required min="0" value="<?php echo htmlspecialchars($data['ncantidad']); ?>">
+                                    <input type="number" name="ncantidad" class="form-control" required min="1" value="<?php echo htmlspecialchars($ncantidad); ?>">
                                 </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label required-field">Estado del Abono</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-toggle-on"></i></span>
+                                    <select class="form-select" name="activo" required>
+                                        <option value="1" <?php echo ($activo == 1) ? 'selected' : ''; ?>>Activo</option>
+                                        <option value="0" <?php echo ($activo == 0) ? 'selected' : ''; ?>>Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="form-text">Los abonos inactivos se moverán a la sección inactiva</div>
                             </div>
                         </div>
                     </div>
@@ -509,8 +540,11 @@ $cthird = $data['cant_third'];
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="text" class="form-control" name="cant_once" value="<?php echo htmlspecialchars($conce); ?>" required>
+                                    <label class="form-label">Cantidad ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <input type="text" class="form-control" name="cant_once" value="<?php echo htmlspecialchars($conce); ?>" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -528,8 +562,11 @@ $cthird = $data['cant_third'];
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="text" class="form-control" name="cant_second" value="<?php echo htmlspecialchars($csecond); ?>" required>
+                                    <label class="form-label">Cantidad ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <input type="text" class="form-control" name="cant_second" value="<?php echo htmlspecialchars($csecond); ?>" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -547,8 +584,11 @@ $cthird = $data['cant_third'];
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="text" class="form-control" name="cant_third" value="<?php echo htmlspecialchars($cthird); ?>" required>
+                                    <label class="form-label">Cantidad ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <input type="text" class="form-control" name="cant_third" value="<?php echo htmlspecialchars($cthird); ?>" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -566,8 +606,11 @@ $cthird = $data['cant_third'];
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="text" class="form-control" name="cant_four" value="<?php echo htmlspecialchars($cfour); ?>" required>
+                                    <label class="form-label">Cantidad ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <input type="text" class="form-control" name="cant_four" value="<?php echo htmlspecialchars($cfour); ?>" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -620,6 +663,36 @@ $cthird = $data['cant_third'];
         // Inicializar tooltips de Bootstrap
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        
+        // Cargar temporadas según categoría seleccionada
+        $(document).ready(function(){
+            var categoriaActual = "<?php echo $cat; ?>";
+            var tempActual = "<?php echo $temp; ?>";
+            
+            // Establecer la categoría
+            $("#categoria").val(categoriaActual);
+            
+            // Cargar temporadas para esta categoría (opcional)
+            $("#categoria").change(function(){
+                var categoria = $(this).val();
+                if(categoria) {
+                    $.ajax({
+                        url: "../calendario/categoria.php",
+                        type: "GET",
+                        data: {categoria: categoria},
+                        success: function(data){
+                            // Solo actualizar si se cambia la categoría
+                            if(categoria != categoriaActual) {
+                                $("#tempo").html('<option value="">Seleccione temporada...</option>' + data);
+                            }
+                        },
+                        error: function(){
+                            $("#tempo").html('<option value="">Error al cargar temporadas</option>');
+                        }
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>

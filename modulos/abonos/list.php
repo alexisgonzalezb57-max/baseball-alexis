@@ -403,6 +403,19 @@ if (!$datatp) {
         <div class="container">
             <div class="content-container">
                 <h1 class="page-title">💰 Abonos por Equipo</h1>
+
+                <!-- Filtros por Categoría -->
+                <div class="filter-buttons mb-4 justify-content-center">
+                    <a href="list.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=B" class="btn btn-sm filter-btn <?php echo ($cat == 'B') ? 'btn-primary active' : 'btn-outline-primary'; ?>">
+                        Categoría B
+                    </a>
+                    <a href="list.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=C" class="btn btn-sm filter-btn <?php echo ($cat == 'C') ? 'btn-primary active' : 'btn-outline-primary'; ?>">
+                        Categoría C
+                    </a>
+                    <a href="list.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=D" class="btn btn-sm filter-btn <?php echo ($cat == 'D') ? 'btn-primary active' : 'btn-outline-primary'; ?>">
+                        Categoría D
+                    </a>
+                </div>
                 
                 <div class="text-center mb-4">
                     <div class="info-badge mb-2">

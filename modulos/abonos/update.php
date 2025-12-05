@@ -1,8 +1,11 @@
-<?php  include("../../config/conexion.php");
+<?php  
+include("../../config/conexion.php");
 $con       = conectar();
+
 $categoria  = $_POST['categoria'];
 $temporada  = $_POST['temporada'];
 $ncantidad  = $_POST['ncantidad'];
+$activo     = $_POST['activo'];
 $prize_once   = $_POST['prize_once'];
 $cant_once    = $_POST['cant_once'];
 $prize_second = $_POST['prize_second'];
@@ -16,18 +19,21 @@ $id         = $_POST['id'];
 $guardar = "UPDATE abonos   SET id_temp      = '$temporada',
                                 categoria    = '$categoria',
                                 ncantidad    = '$ncantidad',
-                                  prize_four   = '$prize_four',
-                                  cant_four    = '$cant_four',
-                                  prize_once   = '$prize_once',
-                                  cant_once    = '$cant_once',
-                                  prize_second = '$prize_second',
-                                  cant_second  = '$cant_second',
-                                  prize_third  = '$prize_third',
-                                  cant_third   = '$cant_third'
+                                activo       = '$activo',
+                                prize_four   = '$prize_four',
+                                cant_four    = '$cant_four',
+                                prize_once   = '$prize_once',
+                                cant_once    = '$cant_once',
+                                prize_second = '$prize_second',
+                                cant_second  = '$cant_second',
+                                prize_third  = '$prize_third',
+                                cant_third   = '$cant_third'
                                 WHERE id_abn = '$id';";
 $resaves = mysqli_query($con, $guardar);
 
-
-Header("Location: ../abonos/");
-
+if ($resaves) {
+    Header("Location: ../abonos/");
+} else {
+    die("Error al actualizar el abono: " . mysqli_error($con));
+}
 ?>
