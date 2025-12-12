@@ -5,7 +5,11 @@ $id_team   = $_POST['id_team'];
 $id_tab    = $_POST['id_tab'];
 $cedula    = $_POST['cedula'];
 $id_js     = $_POST['id_js'];
+$temp      = $_POST['temp'];
+$cat       = $_POST['cat'];
 $nj        = $_POST['nj'];
+
+
 
 
 $vb      = $_POST['vb'];
@@ -34,12 +38,14 @@ echo $guardar = "UPDATE jugadores_stats SET vb = '$vb',
                                        a  = '$a',
                                        sf = '$fl',
                                        br = '$br',
-                                       gp = '$gp' 
-                                       WHERE id_js = '$id_js';";
+                                       gp = '$gp',
+                                      categoria  = '$cat',
+                                      id_temp  = '$temp' 
+                                      WHERE id_js = '$id_js';";
 $resaves = mysqli_query($con, $guardar);
 
 
-Header("Location: jgcalcular.php?id_tab=$id_tab&id_team=$id_team&id_player=$id_player&cedula=$cedula&nj=$nj");
+Header("Location: jgcalcular.php?id_tab=$id_tab&id_team=$id_team&id_player=$id_player&cedula=$cedula&nj=$nj&cat=$cat&temp=$temp");
 
 
 ?>

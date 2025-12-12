@@ -613,7 +613,7 @@ $id_juego = isset($dte['id_juego']) ? $dte['id_juego'] : 0;
                                 ?>
                                 <tr>
                                     <td class="alte"><?php echo $jg; ?></td>
-                                    <td class="alte"><a href="../stats/jg.php?id_js=<?php echo $player['id_js']; ?>&id_tab=<?php echo $player['id_tab']; ?>&nj=<?php echo $player['nj']; ?>" class="team-link"><?php echo htmlspecialchars($player['name_jugador']); ?></a></td>
+                                    <td class="alte"><a href="../stats/jg.php?id_js=<?php echo $player['id_js']; ?>&id_tab=<?php echo $player['id_tab']; ?>&nj=<?php echo $player['nj']; ?>&cat=<?php echo $cat ?>&temp=<?php echo $idtemp ?>" class="team-link"><?php echo htmlspecialchars($player['name_jugador']); ?></a></td>
                                     <td class="alte"><?php echo htmlspecialchars($player['vb']); ?></td>
                                     <td class="alte"><?php echo htmlspecialchars($player['h']); ?></td>
                                     <td class="alte"><?php echo htmlspecialchars($player['hr']); ?></td>

@@ -6,6 +6,8 @@ $id_tab    = $_REQUEST['id_tab'];
 $id_team   = $_REQUEST['id_team'];
 $id_player = $_REQUEST['id_player'];
 $cedula    = $_REQUEST['cedula'];
+$temp      = $_REQUEST['temp'];
+$cat       = $_REQUEST['cat'];
 $id_nj     = $_REQUEST['nj'];
 
 
@@ -94,11 +96,13 @@ $configurar = "UPDATE resumen_stats SET tnj = '$tnj',
                                         tvb = '$dtvb',
                                         th  = '$dth',
                                         avg = '$avg',
-                                        cb  = $cb 
-                                        WHERE id_tab    = $id_tab 
-                                        AND   id_team   = $id_team 
-                                        AND   id_player = $id_player 
-                                        AND   cedula    LIKE '%$cedula%'; ";
+                                        cb  = $cb, 
+                                        categoria  = '$cat',
+                                        id_temp  = '$temp' 
+                WHERE id_tab    = $id_tab 
+                AND   id_team   = $id_team 
+                AND   id_player = $id_player 
+                AND   cedula    LIKE '%$cedula%'; ";
 $resav = mysqli_query($con, $configurar);
 
 Header("Location: ../entradas/datos.php?id_tab=$id_tab&nj=$id_nj");

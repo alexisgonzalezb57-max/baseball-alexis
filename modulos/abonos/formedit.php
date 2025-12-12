@@ -32,12 +32,16 @@ $cat = isset($data['categoria']) ? $data['categoria'] : '';
 $temp = isset($data['id_temp']) ? $data['id_temp'] : 0;
 $four = isset($data['prize_four']) ? $data['prize_four'] : 0;
 $cfour = isset($data['cant_four']) ? $data['cant_four'] : 0;
+$mfour = isset($data['mond_four']) ? $data['mond_four'] : '$';
 $once = isset($data['prize_once']) ? $data['prize_once'] : 0;
 $conce = isset($data['cant_once']) ? $data['cant_once'] : 0;
+$monce = isset($data['mond_once']) ? $data['mond_once'] : '$';
 $second = isset($data['prize_second']) ? $data['prize_second'] : 0;
 $csecond = isset($data['cant_second']) ? $data['cant_second'] : 0;
+$msecond = isset($data['mond_second']) ? $data['mond_second'] : '$';
 $third = isset($data['prize_third']) ? $data['prize_third'] : 0;
 $cthird = isset($data['cant_third']) ? $data['cant_third'] : 0;
+$mthird = isset($data['mond_third']) ? $data['mond_third'] : '$';
 $activo = isset($data['activo']) ? $data['activo'] : 1;
 $ncantidad = isset($data['ncantidad']) ? $data['ncantidad'] : 0;
 
@@ -474,31 +478,13 @@ if ($temp > 0) {
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label required-field">Categoría</label>
-                                <select class="form-select" id="categoria" name="categoria" required>
-                                    <option value="">Seleccione una categoría...</option>
-                                    <?php 
-                                    $select = "SELECT * FROM categorias ORDER BY categoria"; 
-                                    $querye = mysqli_query($con, $select); 
-                                    if ($querye && mysqli_num_rows($querye) > 0) {
-                                        while ($det = mysqli_fetch_array($querye)) {
-                                            $selected = ($det['categoria'] == $cat) ? 'selected' : '';
-                                    ?>
-                                    <option value="<?php echo htmlspecialchars($det['categoria']); ?>" <?php echo $selected; ?>>
-                                        <?php echo htmlspecialchars($det['categoria']); ?>
-                                    </option>
-                                    <?php } 
-                                    } ?>
-                                </select>
+                                <input type="text" class="form-control" required readonly value="<?php echo $cat ?>" name="categoria">
                             </div>
                             
                             <div class="col-md-6 mb-3">
                                 <label class="form-label required-field">Temporada</label>
-                                <select class="form-select" id="tempo" name="temporada" required>
-                                    <option value="<?php echo $temp; ?>" selected>
-                                        <?php echo htmlspecialchars($nombre_temporada); ?> (Actual)
-                                    </option>
-                                </select>
-                                <input type="hidden" name="temporada" value="<?php echo $temp; ?>">
+                                <input type="text" class="form-control" required readonly name="temp" value="<?php echo $nombre_temporada; ?>">
+                                <input type="hidden" class="form-control" required readonly name="temporada" value="<?php echo $temp; ?>">
                             </div>
                             
                             <div class="col-md-6">
@@ -532,14 +518,23 @@ if ($temp > 0) {
                                 <i class="fas fa-trophy"></i> Primer Lugar
                             </div>
                             <div class="row align-items-center">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">¿Habilitar premio?</label>
                                     <select class="form-select" name="prize_once" required>
                                         <option value="1" <?php echo ($once == 1) ? 'selected' : ''; ?>>SI</option>
                                         <option value="0" <?php echo ($once == 0) ? 'selected' : ''; ?>>NO</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Tipo de Moneda</label>
+                                    <div class="input-group">
+                                    <select class="form-select" name="mond_once" required>
+                                        <option value="$" <?php echo ($monce == '$') ? 'selected' : ''; ?>>($) Dólares</option>
+                                        <option value="Bs" <?php echo ($monce == 'Bs') ? 'selected' : ''; ?>>(Bs) Bolívares</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">Cantidad ($)</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
@@ -554,14 +549,23 @@ if ($temp > 0) {
                                 <i class="fas fa-medal"></i> Segundo Lugar
                             </div>
                             <div class="row align-items-center">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">¿Habilitar premio?</label>
                                     <select class="form-select" name="prize_second" required>
                                         <option value="1" <?php echo ($second == 1) ? 'selected' : ''; ?>>SI</option>
                                         <option value="0" <?php echo ($second == 0) ? 'selected' : ''; ?>>NO</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Tipo de Moneda</label>
+                                    <div class="input-group">
+                                    <select class="form-select" name="mond_second" required>
+                                        <option value="$" <?php echo ($msecond == '$') ? 'selected' : ''; ?>>($) Dólares</option>
+                                        <option value="Bs" <?php echo ($msecond == 'Bs') ? 'selected' : ''; ?>>(Bs) Bolívares</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">Cantidad ($)</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
@@ -576,14 +580,23 @@ if ($temp > 0) {
                                 <i class="fas fa-award"></i> Tercer Lugar
                             </div>
                             <div class="row align-items-center">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">¿Habilitar premio?</label>
                                     <select class="form-select" name="prize_third" required>
                                         <option value="1" <?php echo ($third == 1) ? 'selected' : ''; ?>>SI</option>
                                         <option value="0" <?php echo ($third == 0) ? 'selected' : ''; ?>>NO</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Tipo de Moneda</label>
+                                    <div class="input-group">
+                                    <select class="form-select" name="mond_third" required>
+                                        <option value="$" <?php echo ($mthird == '$') ? 'selected' : ''; ?>>($) Dólares</option>
+                                        <option value="Bs" <?php echo ($mthird == 'Bs') ? 'selected' : ''; ?>>(Bs) Bolívares</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">Cantidad ($)</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
@@ -598,14 +611,23 @@ if ($temp > 0) {
                                 <i class="fas fa-star"></i> Cuarto Lugar
                             </div>
                             <div class="row align-items-center">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">¿Habilitar premio?</label>
                                     <select class="form-select" name="prize_four" required>
                                         <option value="1" <?php echo ($four == 1) ? 'selected' : ''; ?>>SI</option>
                                         <option value="0" <?php echo ($four == 0) ? 'selected' : ''; ?>>NO</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Tipo de Moneda</label>
+                                    <div class="input-group">
+                                    <select class="form-select" name="mond_four" required>
+                                        <option value="$" <?php echo ($mfour == '$') ? 'selected' : ''; ?>>($) Dólares</option>
+                                        <option value="Bs" <?php echo ($mfour == 'Bs') ? 'selected' : ''; ?>>(Bs) Bolívares</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">Cantidad ($)</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>

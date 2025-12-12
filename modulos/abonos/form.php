@@ -469,17 +469,28 @@ if (!$con) {
                                 <i class="fas fa-trophy"></i> Primer Lugar
                             </div>
                             <div class="row align-items-center">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">¿Habilitar premio?</label>
+                                    <div class="input-group">
                                     <select class="form-select" name="prize_once" required>
                                         <option value="1" selected>SI</option>
                                         <option value="0">NO</option>
                                     </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad ($)</label>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Tipo de Moneda</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    <select class="form-select" name="mond_once" required>
+                                        <option value="$" selected>($) Dólares</option>
+                                        <option value="Bs">(Bs) Bolívares</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Cantidad</label>
+                                    <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                         <input type="text" class="form-control" name="cant_once" value="0" required>
                                     </div>
                                 </div>
@@ -491,17 +502,28 @@ if (!$con) {
                                 <i class="fas fa-medal"></i> Segundo Lugar
                             </div>
                             <div class="row align-items-center">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">¿Habilitar premio?</label>
+                                    <div class="input-group">
                                     <select class="form-select" name="prize_second" required>
                                         <option value="1" selected>SI</option>
                                         <option value="0">NO</option>
                                     </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad ($)</label>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Tipo de Moneda</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    <select class="form-select" name="mond_second" required>
+                                        <option value="$" selected>($) Dólares</option>
+                                        <option value="Bs">(Bs) Bolívares</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Cantidad</label>
+                                    <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                         <input type="text" class="form-control" name="cant_second" value="0" required>
                                     </div>
                                 </div>
@@ -513,17 +535,28 @@ if (!$con) {
                                 <i class="fas fa-award"></i> Tercer Lugar
                             </div>
                             <div class="row align-items-center">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">¿Habilitar premio?</label>
+                                    <div class="input-group">
                                     <select class="form-select" name="prize_third" required>
                                         <option value="1" selected>SI</option>
                                         <option value="0">NO</option>
                                     </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad ($)</label>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Tipo de Moneda</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    <select class="form-select" name="mond_third" required>
+                                        <option value="$" selected>($) Dólares</option>
+                                        <option value="Bs">(Bs) Bolívares</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Cantidad</label>
+                                    <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                         <input type="text" class="form-control" name="cant_third" value="0" required>
                                     </div>
                                 </div>
@@ -535,17 +568,28 @@ if (!$con) {
                                 <i class="fas fa-star"></i> Cuarto Lugar
                             </div>
                             <div class="row align-items-center">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">¿Habilitar premio?</label>
+                                    <div class="input-group">
                                     <select class="form-select" name="prize_four" required>
                                         <option value="1">SI</option>
                                         <option value="0" selected>NO</option>
                                     </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cantidad ($)</label>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Tipo de Moneda</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    <select class="form-select" name="mond_four" required>
+                                        <option value="$" selected>($) Dólares</option>
+                                        <option value="Bs">(Bs) Bolívares</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Cantidad</label>
+                                    <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                         <input type="text" class="form-control" name="cant_four" value="0" required>
                                     </div>
                                 </div>

@@ -83,7 +83,7 @@ $defec = round($efec, 2);
 $constastar = "SELECT * FROM resumen_lanz WHERE id_player = $id_player";
 $confkj = mysqli_query($con, $constastar);
 $vjt = mysqli_num_rows($confkj);
-if ($vjt >= 1) {
+if ($vjt = 1) {
 
 
 $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
@@ -104,14 +104,14 @@ $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
                                         ile   = '$tbr', 
                                         categoria  = '$cat',
                                         id_temp  = '$temp'   
-                                        WHERE id_tab    = $id_tab 
-                                        AND   id_team   = $id_team 
-                                        AND   id_player = $id_player; ";
+                WHERE id_tab    = $id_tab 
+                AND   id_team   = $id_team 
+                AND   id_player = $id_player; ";
     
     $resav = mysqli_query($con, $configurar);
     Header("Location: ../entradas/datos.php?id_tab=$id_tab&nj=$id_nj");
 
-} elseif ($vjt < 1) {
+} else {
     
 $vb        = 0;
 $h         = 0;

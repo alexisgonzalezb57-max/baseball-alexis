@@ -11,6 +11,8 @@ if (!$con) {
 $id_js = filter_var($_REQUEST['id_js'] ?? 0, FILTER_SANITIZE_NUMBER_INT);
 $id_tab = filter_var($_REQUEST['id_tab'] ?? 0, FILTER_SANITIZE_NUMBER_INT);
 $nj = filter_var($_REQUEST['nj'] ?? 0, FILTER_SANITIZE_NUMBER_INT);
+$temp = $_REQUEST['temp'];
+$cat = $_REQUEST['cat'];
 
 // Consulta preparada para obtener datos de clasificación
 $revisar = "SELECT temporada.*, tab_clasf.* FROM temporada 
@@ -376,6 +378,8 @@ $id_team = $dteg['id_team'];
                     <input type="hidden" name="id_team" value="<?php echo $id_team; ?>">
                     <input type="hidden" name="id_tab" value="<?php echo $id_tab; ?>">
                     <input type="hidden" name="id_js" value="<?php echo $id_js; ?>">
+                    <input type="hidden" name="temp" value="<?php echo $temp; ?>">
+                    <input type="hidden" name="cat" value="<?php echo $cat; ?>">
                     <input type="hidden" name="nj" value="<?php echo $nj; ?>">
 
                     <div class="row mb-3">

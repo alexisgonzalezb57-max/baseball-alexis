@@ -7,23 +7,62 @@ if (!$con) {
     die("Error de conexión: " . mysqli_connect_error());
 }
 
-// VERIFICAR Y CREAR EL CAMPO 'activo' SI NO EXISTE
-$check_field_query = "SHOW COLUMNS FROM abonos LIKE 'activo'";
-$field_result = mysqli_query($con, $check_field_query);
+// ARRAY DE CAMPOS A VERIFICAR Y CREAR
+$campos = [
+    'activo' => "ENUM('0', '1') DEFAULT '1' AFTER cant_third",
+    'mond_once' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_once",
+    'mond_second' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_second",
+    'mond_third' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_third",
+    'mond_four' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_four"
+];
 
-if (mysqli_num_rows($field_result) == 0) {
-    // El campo 'activo' no existe, crearlo
-    $alter_query = "ALTER TABLE abonos ADD activo TINYINT(1) DEFAULT 1 AFTER cant_third";
+$campos_creados = 0;
+$error_ocurrido = false;
+
+// RECORRER TODOS LOS CAMPOS Y CREARLOS SI NO EXISTEN
+foreach ($campos as $campo_nombre => $definicion) {
+    $check_field_query = "SHOW COLUMNS FROM abonos LIKE '$campo_nombre'";
+    $field_result = mysqli_query($con, $check_field_query);
     
-    if (mysqli_query($con, $alter_query)) {
-        // Actualizar todos los registros existentes para que estén activos por defecto
-        $update_query = "UPDATE abonos SET activo = 1 WHERE activo IS NULL OR activo = ''";
-        mysqli_query($con, $update_query);
+    if (mysqli_num_rows($field_result) == 0) {
+        // El campo no existe, crearlo
+        $alter_query = "ALTER TABLE abonos ADD $campo_nombre $definicion";
         
-        // Mensaje de éxito
-        $field_created = true;
+        if (mysqli_query($con, $alter_query)) {
+            // Si es el campo 'activo', actualizar todos los registros existentes
+            if ($campo_nombre == 'activo') {
+                $update_query = "UPDATE abonos SET activo = '1'";
+                mysqli_query($con, $update_query);
+            }
+            // Para los campos mond_*, establecer valor por defecto '$'
+            if (strpos($campo_nombre, 'mond_') === 0) {
+                $update_mond_query = "UPDATE abonos SET $campo_nombre = '$'";
+                mysqli_query($con, $update_mond_query);
+            }
+            
+            $campos_creados++;
+        } else {
+            $error_ocurrido = true;
+            break; // Salir del bucle si hay error
+        }
     }
 }
+
+// MOSTRAR UN SOLO MENSAJE
+if ($error_ocurrido) {
+    echo '<div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>¡Error!</strong> Ocurrió un problema al crear algunos campos en la tabla.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+} elseif ($campos_creados > 0) {
+    echo '<div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>¡Éxito!</strong> Se crearon ' . $campos_creados . ' campos nuevos en la tabla de abonos.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+}
+// No mostrar mensaje si ya existen todos los campos
 
 // También verificar que el campo tenga valores por defecto (por si acaso)
 $fix_null_query = "UPDATE abonos SET activo = 1 WHERE activo IS NULL OR activo = ''";
@@ -45,6 +84,7 @@ mysqli_query($con, $fix_null_query);
     <!-- jQuery (necesario para la funcionalidad AJAX) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
+
     <!-- Estilos personalizados -->
     <style>
         :root {
@@ -513,13 +553,7 @@ mysqli_query($con, $fix_null_query);
     <main class="main-content">
         <div class="container">
             <div class="content-container">
-                <?php if(isset($field_created) && $field_created): ?>
-                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>
-                    <strong>¡Campo creado exitosamente!</strong> El campo <code>activo</code> ha sido agregado a la tabla <code>abonos</code> y todos los registros existentes han sido marcados como activos.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <?php endif; ?>
+                <!-- NOTA: Se eliminó la alerta condicional antigua basada en $field_created -->
                 
                 <h1 class="page-title">💰 Listado de Temporadas para Abonar</h1>
                 
@@ -560,7 +594,7 @@ mysqli_query($con, $fix_null_query);
                                     $obtener_activos = "SELECT temporada.*, abonos.* 
                                     FROM temporada 
                                     INNER JOIN abonos ON temporada.id_temp = abonos.id_temp 
-                                    WHERE abonos.activo = 1 
+                                    WHERE abonos.activo = '1' 
                                     ORDER BY abonos.categoria, temporada.name_temp";
                                     
                                     $query_activos = mysqli_query($con, $obtener_activos);
@@ -660,7 +694,7 @@ mysqli_query($con, $fix_null_query);
                                     $obtener_inactivos = "SELECT temporada.*, abonos.* 
                                     FROM temporada 
                                     INNER JOIN abonos ON temporada.id_temp = abonos.id_temp 
-                                    WHERE abonos.activo = 0 
+                                    WHERE abonos.activo = '0' 
                                     ORDER BY abonos.categoria, temporada.name_temp";
                                     
                                     $query_inactivos = mysqli_query($con, $obtener_inactivos);
