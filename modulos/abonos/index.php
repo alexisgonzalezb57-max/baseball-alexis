@@ -13,7 +13,8 @@ $campos = [
     'mond_once' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_once",
     'mond_second' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_second",
     'mond_third' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_third",
-    'mond_four' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_four"
+    'mond_four' => "ENUM('$', 'Bs') DEFAULT '$' AFTER cant_four",
+    'tipo_moneda' => "ENUM('$', 'Bs') DEFAULT '$' AFTER activo"
 ];
 
 $campos_creados = 0;

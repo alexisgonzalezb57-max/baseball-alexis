@@ -4,6 +4,60 @@ require('vendor/fpdf/fpdf.php');
 require('conexion.php');
 $con=conectar();
 
+// Función para determinar la moneda del abono (igual que en list.php)
+function determinarMonedaAbono($data_abono) {
+    // Si no hay datos, retornar $ por defecto
+    if (!$data_abono) {
+        return '$';
+    }
+    
+    // Primero, verificar si existe el campo tipo_moneda y tiene valor
+    if (isset($data_abono['tipo_moneda']) && !empty($data_abono['tipo_moneda'])) {
+        return $data_abono['tipo_moneda'] == 'Bs' ? 'Bs' : '$';
+    }
+    
+    // Si no existe tipo_moneda, usar la lógica anterior basada en mond_*
+    $monedas = array(
+        isset($data_abono['mond_once']) ? $data_abono['mond_once'] : '$',
+        isset($data_abono['mond_second']) ? $data_abono['mond_second'] : '$',
+        isset($data_abono['mond_third']) ? $data_abono['mond_third'] : '$',
+        isset($data_abono['mond_four']) ? $data_abono['mond_four'] : '$'
+    );
+    
+    $premios_activos = array(
+        isset($data_abono['prize_once']) ? $data_abono['prize_once'] : '0',
+        isset($data_abono['prize_second']) ? $data_abono['prize_second'] : '0',
+        isset($data_abono['prize_third']) ? $data_abono['prize_third'] : '0',
+        isset($data_abono['prize_four']) ? $data_abono['prize_four'] : '0'
+    );
+    
+    // 1. Buscar la moneda del primer premio activo
+    for ($i = 0; $i < 4; $i++) {
+        if ($premios_activos[$i] == '1') {
+            return $monedas[$i] == 'Bs' ? 'Bs' : '$';
+        }
+    }
+    
+    // 2. Si no hay premios activos, contar monedas
+    $count_dolares = 0;
+    $count_bolivares = 0;
+    
+    foreach ($monedas as $moneda) {
+        if ($moneda == 'Bs') {
+            $count_bolivares++;
+        } else {
+            $count_dolares++;
+        }
+    }
+    
+    // 3. Usar la mayoría, o $ si hay empate o todos están vacíos
+    if ($count_bolivares > 0 || $count_dolares > 0) {
+        return ($count_bolivares > $count_dolares) ? 'Bs' : '$';
+    }
+    
+    // 4. Si todo está vacío, usar $ por defecto
+    return '$';
+}
 
 $verificar = mysqli_query($con, "SELECT * FROM report");
 $vdta = mysqli_fetch_array($verificar);
@@ -69,6 +123,9 @@ function obtenerDatosAbono($con, $id_temp, $categoria) {
     if(mysqli_num_rows($query) > 0) {
         $data = mysqli_fetch_array($query);
         
+        // Determinar la moneda usando la función
+        $moneda_determinada = determinarMonedaAbono($data);
+        
         // Asignar valores por defecto si son NULL
         return array(
             'id_abn' => $data['id_abn'] ?? 0,
@@ -84,7 +141,8 @@ function obtenerDatosAbono($con, $id_temp, $categoria) {
             'mond_second' => $data['mond_second'] ?? '$',
             'prize_third' => $data['prize_third'] ?? '0',
             'cant_third' => $data['cant_third'] ?? 0,
-            'mond_third' => $data['mond_third'] ?? '$'
+            'mond_third' => $data['mond_third'] ?? '$',
+            'tipo_moneda' => $moneda_determinada // Agregar la moneda determinada
         );
     } else {
         // Devolver valores por defecto si no hay registro
@@ -102,7 +160,8 @@ function obtenerDatosAbono($con, $id_temp, $categoria) {
             'mond_second' => '$',
             'prize_third' => '0',
             'cant_third' => 0,
-            'mond_third' => '$'
+            'mond_third' => '$',
+            'tipo_moneda' => '$' // Moneda por defecto
         );
     }
 }
@@ -135,6 +194,7 @@ if($obtenerhod) {
     $thirdd = $datad['prize_third'];
     $cthirdd = $datad['cant_third'];
     $mond_thirdd = $datad['mond_third'];
+    $tipo_moneda_d = $datad['tipo_moneda']; // Obtener la moneda determinada
     
     $pdf->Cell(0,5,utf8_decode(strtoupper('CATEGORIA '. $catd)),0,1,'C');
     $pdf->Ln(4);
@@ -209,7 +269,8 @@ if($obtenerhod) {
         $tratad = mysqli_query($con, $totalmented);
         $datatold = mysqli_fetch_array($tratad);
         $vvvd = isset($datatold['total_final']) ? $datatold['total_final'] : 0;
-        $pdf->Cell(20,5,$vvvd.' $',1,1, 'C');
+        // MODIFICADO: Usar la moneda determinada en lugar de '$' fijo
+        $pdf->Cell(20,5,$vvvd.' '.$tipo_moneda_d,1,1, 'C');
         
         // Mostrar premiaciones con su moneda correspondiente
         if ($onced == '1' && $conced > 0) {
@@ -268,6 +329,7 @@ if($obtenerhoc) {
     $thirdc = $datac['prize_third'];
     $cthirdc = $datac['cant_third'];
     $mond_thirdc = $datac['mond_third'];
+    $tipo_moneda_c = $datac['tipo_moneda']; // Obtener la moneda determinada
     
     $pdf->Cell(0,5,utf8_decode(strtoupper('CATEGORIA '. $catc)),0,1,'C');
     $pdf->Ln(4);
@@ -342,7 +404,8 @@ if($obtenerhoc) {
         $tratac = mysqli_query($con, $totalmentec);
         $datatolc = mysqli_fetch_array($tratac);
         $vvvc = isset($datatolc['total_final']) ? $datatolc['total_final'] : 0;
-        $pdf->Cell(20,5,$vvvc.' $',1,1, 'C');
+        // MODIFICADO: Usar la moneda determinada en lugar de '$' fijo
+        $pdf->Cell(20,5,$vvvc.' '.$tipo_moneda_c,1,1, 'C');
         
         // Mostrar premiaciones con su moneda correspondiente
         if ($oncec == '1' && $concec > 0) {
@@ -400,6 +463,7 @@ if($obtenerho) {
     $third = $data['prize_third'];
     $cthird = $data['cant_third'];
     $mond_third = $data['mond_third'];
+    $tipo_moneda_b = $data['tipo_moneda']; // Obtener la moneda determinada
     
     $pdf->SetFont('Arial','B',14);
     $pdf->Cell(0,5,utf8_decode(strtoupper('CATEGORIA '. $cat)),0,1,'C');
@@ -475,7 +539,8 @@ if($obtenerho) {
         $trata = mysqli_query($con, $totalmente);
         $datatol = mysqli_fetch_array($trata);
         $vvv = isset($datatol['total_final']) ? $datatol['total_final'] : 0;
-        $pdf->Cell(20,5,$vvv.' $',1,1, 'C');
+        // MODIFICADO: Usar la moneda determinada en lugar de '$' fijo
+        $pdf->Cell(20,5,$vvv.' '.$tipo_moneda_b,1,1, 'C');
         
         // Mostrar premiaciones con su moneda correspondiente
         if ($once == '1' && $conce > 0) {

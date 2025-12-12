@@ -7,63 +7,68 @@ $id = $_POST['id'];
 $categoria = $_POST['categoria'];
 $temporada = $_POST['temporada'];
 $ncantidad = $_POST['ncantidad'];
-$activo = $_POST['activo']; // Esto será '0' o '1'
+$activo = isset($_POST['activo']) ? $_POST['activo'] : '1'; // Esto será '0' o '1'
 
-$prize_once = $_POST['prize_once'];
-$cant_once = $_POST['cant_once'];
-$prize_second = $_POST['prize_second'];
-$cant_second = $_POST['cant_second'];
-$prize_third = $_POST['prize_third'];
-$cant_third = $_POST['cant_third'];
-$prize_four = $_POST['prize_four'];
-$cant_four = $_POST['cant_four'];
-$mond_once    = $_POST['mond_once'];
-$mond_second  = $_POST['mond_second'];
-$mond_third   = $_POST['mond_third'];
-$mond_four    = $_POST['mond_four'];
+// Obtener datos de premios y monedas
+$prize_once   = isset($_POST['prize_once']) ? $_POST['prize_once'] : '0';
+$mond_once    = isset($_POST['mond_once']) ? $_POST['mond_once'] : '$';
+$cant_once    = isset($_POST['cant_once']) ? $_POST['cant_once'] : 0;
 
-// Verificar qué valores estamos recibiendo (para debugging)
-error_log("Valor de activo recibido: " . $activo);
-error_log("Tipo de activo: " . gettype($activo));
+$prize_second = isset($_POST['prize_second']) ? $_POST['prize_second'] : '0';
+$mond_second  = isset($_POST['mond_second']) ? $_POST['mond_second'] : '$';
+$cant_second  = isset($_POST['cant_second']) ? $_POST['cant_second'] : 0;
+
+$prize_third  = isset($_POST['prize_third']) ? $_POST['prize_third'] : '0';
+$mond_third   = isset($_POST['mond_third']) ? $_POST['mond_third'] : '$';
+$cant_third   = isset($_POST['cant_third']) ? $_POST['cant_third'] : 0;
+
+$prize_four   = isset($_POST['prize_four']) ? $_POST['prize_four'] : '0';
+$mond_four    = isset($_POST['mond_four']) ? $_POST['mond_four'] : '$';
+$cant_four    = isset($_POST['cant_four']) ? $_POST['cant_four'] : 0;
+
+// Validar valores de moneda
+$mond_once = ($mond_once == 'Bs') ? 'Bs' : '$';
+$mond_second = ($mond_second == 'Bs') ? 'Bs' : '$';
+$mond_third = ($mond_third == 'Bs') ? 'Bs' : '$';
+$mond_four = ($mond_four == 'Bs') ? 'Bs' : '$';
+
+// Determinar la moneda principal basada en la mayoría
+$monedas = array($mond_once, $mond_second, $mond_third, $mond_four);
+$count_dolares = array_count_values($monedas)['$'] ?? 0;
+$count_bolivares = array_count_values($monedas)['Bs'] ?? 0;
+
+// La moneda principal será la que más se repite (o $ por defecto)
+$moneda_principal = ($count_bolivares > $count_dolares) ? 'Bs' : '$';
 
 // Asegurarnos que activo sea '0' o '1'
 $activo = ($activo == '0') ? '0' : '1';
 
-// Actualizar el abono - IMPORTANTE: usar comillas simples para el ENUM
+// Actualizar el abono
 $guardar = "UPDATE abonos SET 
-    categoria    = '$categoria',
-    id_temp      = '$temporada',
-    ncantidad    = '$ncantidad',
-    activo       = '$activo',  
-    prize_once   = '$prize_once',
-    cant_once    = '$cant_once',
-    prize_second = '$prize_second',
-    cant_second  = '$cant_second',
-    prize_third  = '$prize_third',
-    cant_third   = '$cant_third',
-    prize_four   = '$prize_four',
-    cant_four    = '$cant_four',
-    mond_four    = '$mond_four',
-    mond_once    = '$mond_once',
-    mond_second  = '$mond_second',
-    mond_third   = '$mond_third'
-    WHERE id_abn = '$id'";
-
-// Verificar la consulta SQL (para debugging)
-error_log("Consulta SQL: " . $guardar);
+    categoria     = '$categoria',
+    id_temp       = '$temporada',
+    ncantidad     = '$ncantidad',
+    activo        = '$activo',  
+    prize_once    = '$prize_once',
+    cant_once     = '$cant_once',
+    mond_once     = '$mond_once',
+    prize_second  = '$prize_second',
+    cant_second   = '$cant_second',
+    mond_second   = '$mond_second',
+    prize_third   = '$prize_third',
+    cant_third    = '$cant_third',
+    mond_third    = '$mond_third',
+    prize_four    = '$prize_four',
+    cant_four     = '$cant_four',
+    mond_four     = '$mond_four',
+    tipo_moneda   = '$moneda_principal'
+    WHERE id_abn  = '$id'";
 
 $resaves = mysqli_query($con, $guardar);
 
 if ($resaves) {
-    // Verificar si realmente se actualizó
-    $check_query = "SELECT activo FROM abonos WHERE id_abn = '$id'";
-    $check_result = mysqli_query($con, $check_query);
-    $row = mysqli_fetch_assoc($check_result);
-    error_log("Valor de activo después de actualizar: " . $row['activo']);
-    
     Header("Location: ../abonos/");
 } else {
-    error_log("Error MySQL: " . mysqli_error($con));
     die("Error al actualizar el abono: " . mysqli_error($con));
 }
 ?>

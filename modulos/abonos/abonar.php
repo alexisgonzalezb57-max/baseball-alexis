@@ -28,6 +28,9 @@ if (!$data) {
 $nabono = $data['ncantidad'];
 $temp = $data['id_temp'];
 
+// Obtener la moneda del abono (por defecto $)
+$moneda_abono = isset($data['tipo_moneda']) && !empty($data['tipo_moneda']) ? $data['tipo_moneda'] : '$';
+
 // Consultar información de la temporada
 $revisar_temp = "SELECT * FROM temporada WHERE id_temp = $id";
 $ryque_temp = mysqli_query($con, $revisar_temp);
@@ -299,11 +302,24 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
             color: var(--dark-color);
         }
         
+        .btn-secondary {
+            background: linear-gradient(90deg, #6c757d 0%, #5a6268 100%);
+            border: none;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(90deg, #5a6268 0%, #484e53 100%);
+            transform: translateY(-2px);
+            color: white;
+        }
+        
         .btn-container {
             display: flex;
             gap: 1rem;
             justify-content: center;
             margin-top: 2rem;
+            flex-wrap: wrap;
         }
         
         .input-group {
@@ -359,6 +375,29 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
             color: white;
         }
         
+        .moneda-badge {
+            display: inline-block;
+            padding: 0.25em 0.5em;
+            font-size: 0.7em;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border-radius: 0.25rem;
+            background-color: #17a2b8;
+            color: white;
+            margin-left: 5px;
+        }
+        
+        .moneda-dolares {
+            background-color: #28a745 !important;
+        }
+        
+        .moneda-bolivares {
+            background-color: #dc3545 !important;
+        }
+        
         .abono-badge {
             display: inline-block;
             padding: 0.35em 0.65em;
@@ -377,6 +416,33 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
             display: none;
             text-align: center;
             padding: 20px;
+        }
+        
+        .monto-input-group {
+            position: relative;
+        }
+        
+        .simbolo-moneda {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: #495057;
+            z-index: 3;
+        }
+        
+        .monto-input {
+            padding-left: 30px !important;
+        }
+        
+        .team-status {
+            display: none;
+        }
+        
+        .team-status-badge {
+            font-size: 0.7em;
+            padding: 0.25em 0.5em;
         }
         
         @media (max-width: 768px) {
@@ -409,6 +475,15 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
             
             .form-section {
                 padding: 1rem;
+            }
+            
+            .simbolo-moneda {
+                left: 10px;
+                font-size: 0.9em;
+            }
+            
+            .monto-input {
+                padding-left: 25px !important;
             }
         }
     </style>
@@ -454,6 +529,10 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
                         Temporada: <?php echo htmlspecialchars($datatp['name_temp']); ?> 
                         | Categoría: <?php echo htmlspecialchars($cat); ?>
                         | Total de Abonos: <?php echo $nabono; ?>
+                        | Moneda: 
+                        <span class="moneda-badge <?php echo $moneda_abono == '$' ? 'moneda-dolares' : 'moneda-bolivares'; ?>">
+                            <?php echo $moneda_abono == '$' ? 'Dólares ($)' : 'Bolívares (Bs)'; ?>
+                        </span>
                     </div>
                 </div>
 
@@ -479,8 +558,8 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
                                             <option value="<?php echo $i; ?>" <?php echo $selected; ?>>Abono N° <?php echo $i; ?></option>
                                         <?php } ?>
                                     </select>
-                                    <button type="button" class="btn btn-warning" onclick="limpiarFormulario()">
-                                        <i class="fas fa-redo me-2"></i>Limpiar
+                                    <button type="button" class="btn btn-secondary" onclick="limpiarMontos()" id="btnLimpiar" disabled>
+                                        <i class="fas fa-eraser me-2"></i>Limpiar Montos
                                     </button>
                                 </div>
                                 <div class="form-text">Seleccione el número de abono que desea registrar o modificar</div>
@@ -504,10 +583,15 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
 
                     <!-- Sección de Equipos y Montos -->
                     <div class="form-section" id="seccionMontos">
-                        <h5 class="section-title"><i class="fas fa-users"></i> Montos por Equipo</h5>
+                        <h5 class="section-title">
+                            <i class="fas fa-users"></i> Montos por Equipo
+                            <span class="ms-2 moneda-badge <?php echo $moneda_abono == '$' ? 'moneda-dolares' : 'moneda-bolivares'; ?>">
+                                <?php echo $moneda_abono; ?>
+                            </span>
+                        </h5>
                         
                         <?php 
-                        $deftra = "SELECT * FROM tab_clasf WHERE id_temp = $id AND categoria LIKE '%$cat%'";
+                        $deftra = "SELECT * FROM tab_clasf WHERE id_temp = $id AND categoria LIKE '%$cat%' ORDER BY name_team ASC";
                         $ryque = mysqli_query($con, $deftra);
                         $nunum = mysqli_num_rows($ryque);
                         
@@ -519,8 +603,8 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
                                 <div>
                                     <i class="fas fa-baseball-ball"></i> Equipo: <?php echo htmlspecialchars($bdata['name_team']); ?>
                                 </div>
-                                <div class="team-status" id="status-<?php echo $bdata['id_team']; ?>" style="display: none;">
-                                    <span class="badge bg-success" id="badge-<?php echo $bdata['id_team']; ?>">
+                                <div class="team-status" id="status-<?php echo $bdata['id_team']; ?>">
+                                    <span class="badge bg-success team-status-badge" id="badge-<?php echo $bdata['id_team']; ?>">
                                         <i class="fas fa-check me-1"></i>Guardado
                                     </span>
                                 </div>
@@ -539,9 +623,9 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
                                 </div>
                                 
                                 <div class="col-md-6">
-                                    <label class="form-label required-field">Monto del Abono ($)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    <label class="form-label required-field">Monto del Abono</label>
+                                    <div class="monto-input-group">
+                                        <span class="simbolo-moneda"><?php echo $moneda_abono; ?></span>
                                         <input type="number" class="form-control monto-input" 
                                                name="monto[]" 
                                                id="monto-<?php echo $bdata['id_team']; ?>" 
@@ -572,6 +656,9 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
                         <a href="list.php?id=<?php echo $id; ?>&idn=<?php echo $idn; ?>&cat=<?php echo urlencode($cat); ?>" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Volver al listado de abonos">
                             <i class="fas fa-arrow-left me-2"></i>Volver al Listado
                         </a>
+                        <button type="button" class="btn btn-warning" onclick="limpiarMontos()" id="btnLimpiar2">
+                            <i class="fas fa-eraser me-2"></i>Limpiar Montos
+                        </button>
                     </div>
                 </form>
             </div>
@@ -621,6 +708,8 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
             const abonoSelect = document.getElementById('abono');
             const abonoNumero = abonoSelect.value;
             const btnGuardar = document.getElementById('btnGuardar');
+            const btnLimpiar = document.getElementById('btnLimpiar');
+            const btnLimpiar2 = document.getElementById('btnLimpiar2');
             const estadoAbono = document.getElementById('estadoAbono');
             const badgeEstado = document.getElementById('badgeEstado');
             const textoEstado = document.getElementById('textoEstado');
@@ -629,9 +718,15 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
             
             if (abonoNumero === '') {
                 estadoAbono.style.display = 'none';
-                limpiarFormulario();
+                btnLimpiar.disabled = true;
+                btnLimpiar2.disabled = true;
+                limpiarMontos();
                 return;
             }
+            
+            // Habilitar botones de limpiar
+            btnLimpiar.disabled = false;
+            btnLimpiar2.disabled = false;
             
             // Mostrar loading
             loadingSpinner.style.display = 'block';
@@ -666,7 +761,7 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
                         textoEstado.textContent = 'Abono ' + abonoNumero + ' - ' + 
                             (response.existe ? 'Modificando datos existentes' : 'Nuevo abono');
                         badgeEstado.className = response.existe ? 
-                            'abono-badge bg-warning text-dark' : 'abono-badge bg-primary';
+                            'abono-badge bg-warning' : 'abono-badge bg-primary';
                         
                         // Limpiar todos los campos primero
                         limpiarCamposMontos();
@@ -705,7 +800,7 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
                             '<i class="fas fa-save me-2"></i>Guardar Abonos';
                     } else {
                         alert('Error al cargar los montos: ' + (response.error || 'Error desconocido'));
-                        limpiarFormulario();
+                        limpiarMontos();
                     }
                 },
                 error: function() {
@@ -715,12 +810,12 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
                     btnGuardar.disabled = false;
                     
                     alert('Error de conexión al cargar los montos');
-                    limpiarFormulario();
+                    limpiarMontos();
                 }
             });
         }
         
-        // Función para limpiar todos los campos de montos
+        // Función para limpiar solo los campos de montos (NO afecta el select)
         function limpiarCamposMontos() {
             document.querySelectorAll('.monto-input').forEach(function(input) {
                 input.value = '0.00';
@@ -738,19 +833,30 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
             });
         }
         
-        // Función para limpiar todo el formulario
-        function limpiarFormulario() {
+        // Función para limpiar solo los montos (mantiene el select seleccionado)
+        function limpiarMontos() {
             const abonoSelect = document.getElementById('abono');
+            const abonoNumero = abonoSelect.value;
             const estadoAbono = document.getElementById('estadoAbono');
             const btnGuardar = document.getElementById('btnGuardar');
             
-            abonoSelect.value = '';
-            estadoAbono.style.display = 'none';
-            btnGuardar.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Abonos';
-            btnGuardar.disabled = false;
-            
-            limpiarCamposMontos();
-            montosCargados = false;
+            // Solo limpiar si hay un abono seleccionado
+            if (abonoNumero !== '') {
+                if (confirm('¿Está seguro de que desea limpiar todos los montos del abono ' + abonoNumero + '? Los datos no se perderán hasta que guarde los cambios.')) {
+                    limpiarCamposMontos();
+                    montosCargados = false;
+                    
+                    // Actualizar estado
+                    estadoAbono.style.display = 'block';
+                    document.getElementById('textoEstado').textContent = 'Abono ' + abonoNumero + ' - Montos limpiados';
+                    document.getElementById('badgeEstado').className = 'abono-badge bg-secondary';
+                    
+                    // Actualizar botón
+                    btnGuardar.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Abonos';
+                }
+            } else {
+                alert('Por favor, seleccione un abono primero');
+            }
         }
         
         // Función para validar el formulario
@@ -772,6 +878,21 @@ $abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
             }, 500);
         });
         <?php endif; ?>
+        
+        // Habilitar/deshabilitar botones de limpiar según si hay abono seleccionado
+        document.getElementById('abono').addEventListener('change', function() {
+            const btnLimpiar = document.getElementById('btnLimpiar');
+            const btnLimpiar2 = document.getElementById('btnLimpiar2');
+            const abonoNumero = this.value;
+            
+            if (abonoNumero === '') {
+                btnLimpiar.disabled = true;
+                btnLimpiar2.disabled = true;
+            } else {
+                btnLimpiar.disabled = false;
+                btnLimpiar2.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>
