@@ -232,6 +232,18 @@ if (!$datatp) {
             color: white;
         }
         
+        .btn-warning {
+            background: linear-gradient(90deg, var(--warning-color) 0%, #ffca2c 100%);
+            border: none;
+            color: var(--dark-color);
+        }
+        
+        .btn-warning:hover {
+            background: linear-gradient(90deg, #ffca2c 0%, #b08900 100%);
+            transform: translateY(-2px);
+            color: var(--dark-color);
+        }
+        
         .table-container {
             margin-top: 2rem;
             overflow: hidden;
@@ -312,6 +324,7 @@ if (!$datatp) {
             gap: 1rem;
             justify-content: center;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
         }
         
         .info-badge {
@@ -326,6 +339,40 @@ if (!$datatp) {
             border-radius: 0.5rem;
             background-color: var(--info-color);
             color: white;
+        }
+        
+        .abono-badge {
+            display: inline-block;
+            padding: 0.25em 0.5em;
+            font-size: 0.65em;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+            color: white;
+        }
+        
+        .abono-actions {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 3px;
+        }
+        
+        .edit-link {
+            color: var(--warning-color);
+            text-decoration: none;
+            font-size: 0.85em;
+            padding: 2px 5px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+        
+        .edit-link:hover {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #e0a800;
         }
         
         @media (max-width: 768px) {
@@ -349,6 +396,11 @@ if (!$datatp) {
             
             .action-buttons {
                 flex-direction: column;
+            }
+            
+            .abono-actions {
+                flex-direction: column;
+                gap: 2px;
             }
         }
         
@@ -404,19 +456,7 @@ if (!$datatp) {
             <div class="content-container">
                 <h1 class="page-title">💰 Abonos por Equipo</h1>
 
-                <!-- Filtros por Categoría -->
-                <div class="filter-buttons mb-4 justify-content-center">
-                    <a href="list.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=B" class="btn btn-sm filter-btn <?php echo ($cat == 'B') ? 'btn-primary active' : 'btn-outline-primary'; ?>">
-                        Categoría B
-                    </a>
-                    <a href="list.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=C" class="btn btn-sm filter-btn <?php echo ($cat == 'C') ? 'btn-primary active' : 'btn-outline-primary'; ?>">
-                        Categoría C
-                    </a>
-                    <a href="list.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=D" class="btn btn-sm filter-btn <?php echo ($cat == 'D') ? 'btn-primary active' : 'btn-outline-primary'; ?>">
-                        Categoría D
-                    </a>
-                </div>
-                
+                <!-- Información de la temporada -->
                 <div class="text-center mb-4">
                     <div class="info-badge mb-2">
                         <i class="fas fa-info-circle me-1"></i>
@@ -434,6 +474,10 @@ if (!$datatp) {
                     <a href="../abonos/" class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Volver al listado de abonos">
                         <i class="fas fa-arrow-left me-2"></i>Volver
                     </a>
+                    
+                    <button type="button" class="btn btn-warning" onclick="window.print()" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir esta tabla">
+                        <i class="fas fa-print me-2"></i>Imprimir
+                    </button>
                 </div>
 
                 <div class="table-container">
@@ -447,14 +491,30 @@ if (!$datatp) {
                                 <tr>
                                     <th>Equipo</th>
                                     <?php for ($i = 1; $i <= $nabono; $i++) { ?>
-                                        <th>AB-<?php echo $i; ?></th>
+                                        <th>
+                                            AB-<?php echo $i; ?>
+                                            <?php 
+                                            // Verificar si este abono tiene datos
+                                            $verificar_abono = "SELECT COUNT(*) as total FROM monto 
+                                                              WHERE id_abn = $idn 
+                                                              AND id_temp = $id 
+                                                              AND categoria LIKE '%$cat%'
+                                                              AND numero = $i
+                                                              AND monto > 0";
+                                            $result_abono = mysqli_query($con, $verificar_abono);
+                                            $row_abono = mysqli_fetch_assoc($result_abono);
+                                            if ($row_abono['total'] > 0) {
+                                                echo '<span class="abono-badge bg-success ms-1" style="font-size: 0.6em;">✓</span>';
+                                            }
+                                            ?>
+                                        </th>
                                     <?php } ?>
                                     <th class="total-cell">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php 
-                                $revisar = "SELECT * FROM tab_clasf WHERE id_temp = $id AND categoria LIKE '%$cat%'";
+                                $revisar = "SELECT * FROM tab_clasf WHERE id_temp = $id AND categoria LIKE '%$cat%' ORDER BY name_team ASC";
                                 $ryque = mysqli_query($con, $revisar);
                                 $nunum = mysqli_num_rows($ryque);
 
@@ -476,13 +536,40 @@ if (!$datatp) {
                                     ?>
                                     <td class="abono-cell">
                                         <?php if ($monto_actual > 0): ?>
-                                            <?php echo number_format($monto_actual, 2); ?>
+                                            <div class="monto-value">
+                                                <?php echo number_format($monto_actual, 2); ?>
+                                            </div>
+                                            <div class="abono-actions">
+                                                <a href="abonar.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=<?php echo urlencode($cat); ?>&abono=<?php echo $j; ?>" 
+                                                   class="edit-link" 
+                                                   title="Modificar este abono">
+                                                    <i class="fas fa-edit"></i> Editar
+                                                </a>
+                                            </div>
                                         <?php else: ?>
                                             <span class="empty-abono">-</span>
+                                            <div class="abono-actions">
+                                                <a href="abonar.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=<?php echo urlencode($cat); ?>&abono=<?php echo $j; ?>" 
+                                                   class="edit-link" 
+                                                   title="Agregar monto para este abono">
+                                                    <i class="fas fa-plus"></i> Agregar
+                                                </a>
+                                            </div>
                                         <?php endif; ?>
                                     </td>
                                     <?php } ?>
-                                    <td class="total-cell"><?php echo number_format($suma_montos, 2); ?></td>
+                                    <td class="total-cell">
+                                        <strong><?php echo number_format($suma_montos, 2); ?></strong>
+                                        <?php if ($suma_montos > 0): ?>
+                                            <div class="abono-actions">
+                                                <a href="abonar.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=<?php echo urlencode($cat); ?>" 
+                                                   class="edit-link" 
+                                                   title="Ver/Editar todos los abonos de este equipo">
+                                                    <i class="fas fa-list"></i> Ver todos
+                                                </a>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                                 <?php 
                                     }
@@ -510,7 +597,16 @@ if (!$datatp) {
                                             $total_columna += $monto_actual;
                                         }
                                     ?>
-                                    <td class="total-cell"><?php echo number_format($total_columna, 2); ?></td>
+                                    <td class="total-cell">
+                                        <strong><?php echo number_format($total_columna, 2); ?></strong>
+                                        <div class="abono-actions">
+                                            <a href="abonar.php?idn=<?php echo $idn; ?>&id=<?php echo $id; ?>&cat=<?php echo urlencode($cat); ?>&abono=<?php echo $j; ?>" 
+                                               class="edit-link" 
+                                               title="Editar todos los montos de este abono">
+                                                <i class="fas fa-edit"></i> Editar columna
+                                            </a>
+                                        </div>
+                                    </td>
                                     <?php } ?>
                                     
                                     <?php
@@ -521,10 +617,134 @@ if (!$datatp) {
                                     $datatol = mysqli_fetch_array($trata);
                                     $total_general = isset($datatol['total_final']) ? $datatol['total_final'] : 0;
                                     ?>
-                                    <td class="grand-total"><?php echo number_format($total_general, 2); ?></td>
+                                    <td class="grand-total">
+                                        <strong><?php echo number_format($total_general, 2); ?></strong>
+                                        <div class="abono-actions">
+                                            <span style="color: white; font-size: 0.8em;">
+                                                <i class="fas fa-chart-line"></i> Total general
+                                            </span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Resumen de abonos -->
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Resumen de Abonos</h6>
+                                </div>
+                                <div class="card-body">
+                                    <?php 
+                                    // Contar abonos con datos
+                                    $abonos_con_datos = 0;
+                                    $total_abonos = 0;
+                                    for ($j = 1; $j <= $nabono; $j++) {
+                                        $verificar_abono = "SELECT COUNT(*) as total FROM monto 
+                                                          WHERE id_abn = $idn 
+                                                          AND id_temp = $id 
+                                                          AND categoria LIKE '%$cat%'
+                                                          AND numero = $j
+                                                          AND monto > 0";
+                                        $result_abono = mysqli_query($con, $verificar_abono);
+                                        $row_abono = mysqli_fetch_assoc($result_abono);
+                                        if ($row_abono['total'] > 0) {
+                                            $abonos_con_datos++;
+                                        }
+                                        $total_abonos++;
+                                    }
+                                    
+                                    // Contar equipos con al menos un abono
+                                    $verificar_equipos = "SELECT COUNT(DISTINCT id_team) as total FROM monto 
+                                                        WHERE id_abn = $idn 
+                                                        AND id_temp = $id 
+                                                        AND categoria LIKE '%$cat%'
+                                                        AND monto > 0";
+                                    $result_equipos = mysqli_query($con, $verificar_equipos);
+                                    $row_equipos = mysqli_fetch_assoc($result_equipos);
+                                    $equipos_con_abono = $row_equipos['total'];
+                                    ?>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Abonos configurados
+                                            <span class="badge bg-primary rounded-pill"><?php echo $nabono; ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Abonos con datos
+                                            <span class="badge bg-success rounded-pill"><?php echo $abonos_con_datos; ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Abonos pendientes
+                                            <span class="badge bg-warning rounded-pill"><?php echo $nabono - $abonos_con_datos; ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Equipos con abono
+                                            <span class="badge bg-info rounded-pill"><?php echo $equipos_con_abono; ?> / <?php echo $nunum; ?></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0"><i class="fas fa-dollar-sign me-2"></i>Resumen Financiero</h6>
+                                </div>
+                                <div class="card-body">
+                                    <?php
+                                    // Obtener promedio por equipo
+                                    $promedio_equipo = $nunum > 0 ? $total_general / $nunum : 0;
+                                    
+                                    // Obtener promedio por abono
+                                    $promedio_abono = $nabono > 0 ? $total_general / $nabono : 0;
+                                    
+                                    // Obtener monto máximo y mínimo por equipo
+                                    $max_min_query = "SELECT 
+                                        MAX(total_equipo) as max_equipo,
+                                        MIN(total_equipo) as min_equipo
+                                        FROM (
+                                            SELECT id_team, SUM(monto) as total_equipo
+                                            FROM monto
+                                            WHERE id_abn = $idn 
+                                            AND id_temp = $id 
+                                            AND categoria LIKE '%$cat%'
+                                            GROUP BY id_team
+                                        ) as equipo_totals";
+                                    $result_max_min = mysqli_query($con, $max_min_query);
+                                    $row_max_min = mysqli_fetch_assoc($result_max_min);
+                                    $max_equipo = $row_max_min['max_equipo'] ?? 0;
+                                    $min_equipo = $row_max_min['min_equipo'] ?? 0;
+                                    ?>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Total recaudado
+                                            <span class="badge bg-success rounded-pill">$<?php echo number_format($total_general, 2); ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Promedio por equipo
+                                            <span class="badge bg-info rounded-pill">$<?php echo number_format($promedio_equipo, 2); ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Promedio por abono
+                                            <span class="badge bg-primary rounded-pill">$<?php echo number_format($promedio_abono, 2); ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Mayor aporte (equipo)
+                                            <span class="badge bg-warning rounded-pill">$<?php echo number_format($max_equipo, 2); ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Menor aporte (equipo)
+                                            <span class="badge bg-secondary rounded-pill">$<?php echo number_format($min_equipo, 2); ?></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -565,6 +785,44 @@ if (!$datatp) {
         // Inicializar tooltips de Bootstrap
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        
+        // Función para exportar a Excel
+        function exportToExcel() {
+            // Crear un elemento temporal para el formulario
+            const tempForm = document.createElement('form');
+            tempForm.method = 'POST';
+            tempForm.action = 'export_excel.php';
+            
+            // Agregar campos ocultos con los datos necesarios
+            const idnInput = document.createElement('input');
+            idnInput.type = 'hidden';
+            idnInput.name = 'idn';
+            idnInput.value = '<?php echo $idn; ?>';
+            tempForm.appendChild(idnInput);
+            
+            const idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'id';
+            idInput.value = '<?php echo $id; ?>';
+            tempForm.appendChild(idInput);
+            
+            const catInput = document.createElement('input');
+            catInput.type = 'hidden';
+            catInput.name = 'cat';
+            catInput.value = '<?php echo htmlspecialchars($cat); ?>';
+            tempForm.appendChild(catInput);
+            
+            // Agregar el formulario al DOM y enviarlo
+            document.body.appendChild(tempForm);
+            tempForm.submit();
+            document.body.removeChild(tempForm);
+        }
+        
+        // Agregar evento al botón de exportar si existe
+        const exportBtn = document.getElementById('exportExcel');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', exportToExcel);
+        }
     </script>
 </body>
 </html>

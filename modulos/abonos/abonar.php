@@ -36,6 +36,9 @@ $datatp = mysqli_fetch_array($ryque_temp);
 if (!$datatp) {
     die("Temporada no encontrada");
 }
+
+// Obtener el número de abono si viene por GET (para pre-seleccionar)
+$abono_seleccionado = isset($_GET['abono']) ? intval($_GET['abono']) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -284,6 +287,18 @@ if (!$datatp) {
             color: white;
         }
         
+        .btn-warning {
+            background: linear-gradient(90deg, var(--warning-color) 0%, #ffca2c 100%);
+            border: none;
+            color: var(--dark-color);
+        }
+        
+        .btn-warning:hover {
+            background: linear-gradient(90deg, #ffca2c 0%, #b08900 100%);
+            transform: translateY(-2px);
+            color: var(--dark-color);
+        }
+        
         .btn-container {
             display: flex;
             gap: 1rem;
@@ -322,6 +337,7 @@ if (!$datatp) {
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
         
         .team-header i {
@@ -341,6 +357,26 @@ if (!$datatp) {
             border-radius: 0.5rem;
             background-color: var(--info-color);
             color: white;
+        }
+        
+        .abono-badge {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.5rem;
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
         }
         
         @media (max-width: 768px) {
@@ -410,7 +446,7 @@ if (!$datatp) {
     <main class="main-content">
         <div class="container">
             <div class="content-container">
-                <h1 class="page-title">💰 Registrar Abonos</h1>
+                <h1 class="page-title">💰 Registrar / Modificar Abonos</h1>
                 
                 <div class="text-center mb-4">
                     <div class="info-badge mb-2">
@@ -421,7 +457,7 @@ if (!$datatp) {
                     </div>
                 </div>
 
-                <form method="POST" action="abnctr.php">
+                <form method="POST" action="abnctr.php" id="abonoForm">
                     <input type="hidden" name="id" value="<?php echo $idn; ?>">
                     <input type="hidden" name="cat" value="<?php echo htmlspecialchars($cat); ?>">
                     <input type="hidden" name="temp" value="<?php echo $temp; ?>">
@@ -432,23 +468,42 @@ if (!$datatp) {
                         
                         <div class="row">
                             <div class="col-md-8 mx-auto">
-                                <label class="form-label required-field">Seleccione el Abono a Registrar</label>
+                                <label class="form-label required-field">Seleccione el Abono a Registrar/Modificar</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                                    <select class="form-select" id="abono" name="abono" required>
+                                    <select class="form-select" id="abono" name="abono" required onchange="cargarMontosAbono()">
                                         <option value="">Seleccione un abono...</option>
-                                        <?php for ($i = 1; $i <= $nabono; $i++) { ?>
-                                            <option value="<?php echo $i; ?>">Abono N° <?php echo $i; ?></option>
+                                        <?php for ($i = 1; $i <= $nabono; $i++) { 
+                                            $selected = ($i == $abono_seleccionado) ? 'selected' : '';
+                                        ?>
+                                            <option value="<?php echo $i; ?>" <?php echo $selected; ?>>Abono N° <?php echo $i; ?></option>
                                         <?php } ?>
                                     </select>
+                                    <button type="button" class="btn btn-warning" onclick="limpiarFormulario()">
+                                        <i class="fas fa-redo me-2"></i>Limpiar
+                                    </button>
                                 </div>
-                                <div class="form-text">Seleccione el número de abono que desea registrar para todos los equipos</div>
+                                <div class="form-text">Seleccione el número de abono que desea registrar o modificar</div>
+                                <div id="estadoAbono" class="mt-2" style="display: none;">
+                                    <span class="abono-badge" id="badgeEstado">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        <span id="textoEstado">Cargando...</span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Loading Spinner -->
+                    <div id="loadingSpinner" class="loading-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Cargando montos del abono...</p>
+                    </div>
+
                     <!-- Sección de Equipos y Montos -->
-                    <div class="form-section">
+                    <div class="form-section" id="seccionMontos">
                         <h5 class="section-title"><i class="fas fa-users"></i> Montos por Equipo</h5>
                         
                         <?php 
@@ -459,9 +514,16 @@ if (!$datatp) {
                         if ($nunum >= 1) {
                             while ($bdata = mysqli_fetch_array($ryque)) { 
                         ?>
-                        <div class="team-row">
+                        <div class="team-row" id="team-<?php echo $bdata['id_team']; ?>">
                             <div class="team-header">
-                                <i class="fas fa-baseball-ball"></i> Equipo: <?php echo htmlspecialchars($bdata['name_team']); ?>
+                                <div>
+                                    <i class="fas fa-baseball-ball"></i> Equipo: <?php echo htmlspecialchars($bdata['name_team']); ?>
+                                </div>
+                                <div class="team-status" id="status-<?php echo $bdata['id_team']; ?>" style="display: none;">
+                                    <span class="badge bg-success" id="badge-<?php echo $bdata['id_team']; ?>">
+                                        <i class="fas fa-check me-1"></i>Guardado
+                                    </span>
+                                </div>
                             </div>
                             
                             <div class="row align-items-center">
@@ -480,7 +542,17 @@ if (!$datatp) {
                                     <label class="form-label required-field">Monto del Abono ($)</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                        <input type="number" class="form-control" name="monto[]" min="0" step="0.01" value="0.00" required>
+                                        <input type="number" class="form-control monto-input" 
+                                               name="monto[]" 
+                                               id="monto-<?php echo $bdata['id_team']; ?>" 
+                                               data-team="<?php echo $bdata['id_team']; ?>"
+                                               min="0" 
+                                               step="0.01" 
+                                               value="0.00" 
+                                               required>
+                                    </div>
+                                    <div class="form-text" id="info-<?php echo $bdata['id_team']; ?>">
+                                        Ingrese el monto para este equipo
                                     </div>
                                 </div>
                             </div>
@@ -494,11 +566,11 @@ if (!$datatp) {
                     </div>
 
                     <div class="btn-container">
-                        <button type="submit" class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar todos los abonos">
+                        <button type="submit" class="btn btn-success" id="btnGuardar" data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar todos los abonos">
                             <i class="fas fa-save me-2"></i>Guardar Abonos
                         </button>
                         <a href="list.php?id=<?php echo $id; ?>&idn=<?php echo $idn; ?>&cat=<?php echo urlencode($cat); ?>" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Volver al listado de abonos">
-                            <i class="fas fa-arrow-left me-2"></i>Volver
+                            <i class="fas fa-arrow-left me-2"></i>Volver al Listado
                         </a>
                     </div>
                 </form>
@@ -519,7 +591,7 @@ if (!$datatp) {
             
             // Convertir a formato 12 horas
             hours = hours % 12;
-            hours = hours ? hours : 12; // La hora '0' debe ser '12'
+            hours = hours ? hours : 12;
             
             // Añadir ceros iniciales si es necesario
             hours = hours.toString().padStart(2, '0');
@@ -541,8 +613,148 @@ if (!$datatp) {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
         
-        // Validación del formulario
-        document.querySelector('form').addEventListener('submit', function(e) {
+        // Variable para almacenar los montos cargados
+        let montosCargados = false;
+        
+        // Función para cargar los montos del abono seleccionado
+        function cargarMontosAbono() {
+            const abonoSelect = document.getElementById('abono');
+            const abonoNumero = abonoSelect.value;
+            const btnGuardar = document.getElementById('btnGuardar');
+            const estadoAbono = document.getElementById('estadoAbono');
+            const badgeEstado = document.getElementById('badgeEstado');
+            const textoEstado = document.getElementById('textoEstado');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const seccionMontos = document.getElementById('seccionMontos');
+            
+            if (abonoNumero === '') {
+                estadoAbono.style.display = 'none';
+                limpiarFormulario();
+                return;
+            }
+            
+            // Mostrar loading
+            loadingSpinner.style.display = 'block';
+            seccionMontos.style.opacity = '0.5';
+            btnGuardar.disabled = true;
+            
+            // Ocultar todos los estados previos
+            document.querySelectorAll('.team-status').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Configurar AJAX
+            $.ajax({
+                url: 'cargar_montos.php',
+                type: 'GET',
+                data: {
+                    id_abn: <?php echo $idn; ?>,
+                    id_temp: <?php echo $id; ?>,
+                    categoria: '<?php echo $cat; ?>',
+                    abono: abonoNumero
+                },
+                dataType: 'json',
+                success: function(response) {
+                    // Ocultar loading
+                    loadingSpinner.style.display = 'none';
+                    seccionMontos.style.opacity = '1';
+                    btnGuardar.disabled = false;
+                    
+                    if (response.success) {
+                        // Actualizar estado del abono
+                        estadoAbono.style.display = 'block';
+                        textoEstado.textContent = 'Abono ' + abonoNumero + ' - ' + 
+                            (response.existe ? 'Modificando datos existentes' : 'Nuevo abono');
+                        badgeEstado.className = response.existe ? 
+                            'abono-badge bg-warning text-dark' : 'abono-badge bg-primary';
+                        
+                        // Limpiar todos los campos primero
+                        limpiarCamposMontos();
+                        
+                        // Llenar los campos con los datos cargados
+                        if (response.existe && response.montos) {
+                            montosCargados = true;
+                            response.montos.forEach(function(monto) {
+                                const inputMonto = document.getElementById('monto-' + monto.id_team);
+                                const statusDiv = document.getElementById('status-' + monto.id_team);
+                                const infoDiv = document.getElementById('info-' + monto.id_team);
+                                
+                                if (inputMonto) {
+                                    inputMonto.value = parseFloat(monto.monto).toFixed(2);
+                                    
+                                    // Mostrar estado si ya tiene datos
+                                    if (parseFloat(monto.monto) > 0) {
+                                        statusDiv.style.display = 'block';
+                                        infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i>Valor previamente guardado';
+                                        infoDiv.className = 'form-text text-success';
+                                    } else {
+                                        infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i>Ingrese el monto para este equipo';
+                                        infoDiv.className = 'form-text';
+                                    }
+                                }
+                            });
+                        } else {
+                            montosCargados = false;
+                            textoEstado.textContent = 'Abono ' + abonoNumero + ' - Nuevo abono';
+                            badgeEstado.className = 'abono-badge bg-primary';
+                        }
+                        
+                        // Actualizar texto del botón
+                        btnGuardar.innerHTML = response.existe ? 
+                            '<i class="fas fa-sync-alt me-2"></i>Actualizar Abonos' : 
+                            '<i class="fas fa-save me-2"></i>Guardar Abonos';
+                    } else {
+                        alert('Error al cargar los montos: ' + (response.error || 'Error desconocido'));
+                        limpiarFormulario();
+                    }
+                },
+                error: function() {
+                    // Ocultar loading
+                    loadingSpinner.style.display = 'none';
+                    seccionMontos.style.opacity = '1';
+                    btnGuardar.disabled = false;
+                    
+                    alert('Error de conexión al cargar los montos');
+                    limpiarFormulario();
+                }
+            });
+        }
+        
+        // Función para limpiar todos los campos de montos
+        function limpiarCamposMontos() {
+            document.querySelectorAll('.monto-input').forEach(function(input) {
+                input.value = '0.00';
+                const teamId = input.getAttribute('data-team');
+                const infoDiv = document.getElementById('info-' + teamId);
+                const statusDiv = document.getElementById('status-' + teamId);
+                
+                if (infoDiv) {
+                    infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i>Ingrese el monto para este equipo';
+                    infoDiv.className = 'form-text';
+                }
+                if (statusDiv) {
+                    statusDiv.style.display = 'none';
+                }
+            });
+        }
+        
+        // Función para limpiar todo el formulario
+        function limpiarFormulario() {
+            const abonoSelect = document.getElementById('abono');
+            const estadoAbono = document.getElementById('estadoAbono');
+            const btnGuardar = document.getElementById('btnGuardar');
+            
+            abonoSelect.value = '';
+            estadoAbono.style.display = 'none';
+            btnGuardar.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Abonos';
+            btnGuardar.disabled = false;
+            
+            limpiarCamposMontos();
+            montosCargados = false;
+        }
+        
+        // Función para validar el formulario
+        document.getElementById('abonoForm').addEventListener('submit', function(e) {
             const abonoSelect = document.getElementById('abono');
             if (abonoSelect.value === '') {
                 e.preventDefault();
@@ -550,6 +762,16 @@ if (!$datatp) {
                 abonoSelect.focus();
             }
         });
+        
+        // Si hay un abono pre-seleccionado, cargarlo automáticamente
+        <?php if ($abono_seleccionado > 0): ?>
+        $(document).ready(function() {
+            // Esperar un momento para que la página cargue completamente
+            setTimeout(function() {
+                cargarMontosAbono();
+            }, 500);
+        });
+        <?php endif; ?>
     </script>
 </body>
 </html>
