@@ -379,12 +379,12 @@ $id_team = $dteg['id_team'];
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label text-end">JL</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control input-number" name="jl" min="0" max="1" value="<?php echo $dteg['jl']; ?>">
-                            </div>
+                                <input type="number" class="form-control input-number" name="jl" min="0" value="<?php echo $dteg['jl']; ?>">
+                            </div> <!-- estos pertenecen max="1" -->
                             <label class="col-sm-2 col-form-label text-end">JG</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control input-number" name="jg" min="0" max="1" value="<?php echo $dteg['jg']; ?>">
-                            </div>
+                                <input type="number" class="form-control input-number" name="jg" min="0" value="<?php echo $dteg['jg']; ?>">
+                            </div> <!-- estos pertenecen max="1" -->
                         </div>
 
                         <div class="row mb-3">
@@ -396,7 +396,7 @@ $id_team = $dteg['id_team'];
                                     $options = [];
                                     
                                     // Generar las opciones desde 0 hasta 10 con incrementos específicos
-                                    for ($i = 0; $i <= 10; $i++) {
+                                    for ($i = 0; $i <= 50; $i++) {
                                         // Para cada número entero, agregamos 3 opciones: el entero, entero+0.33, entero+0.66
                                         $options[] = $i;           // 0, 1, 2, etc.
                                         if ($i < 10) {
@@ -526,9 +526,9 @@ $id_team = $dteg['id_team'];
         $(document).ready(function(){
             $('input[name="jl"], input[name="jg"]').on('change', function() {
                 const value = $(this).val();
-                if (value > 1) {
-                    $(this).val(1);
-                    alert('El valor máximo para este campo es 1');
+                if (value > 100) {
+                    $(this).val(100);
+                    alert('El valor máximo para este campo es 100');
                 } else if (value < 0) {
                     $(this).val(0);
                     alert('El valor mínimo para este campo es 0');

@@ -7,7 +7,7 @@ $id_team   = $_REQUEST['id_team'];
 $id_player = $_REQUEST['id_player'];
 $cedula    = $_REQUEST['cedula'];
 $temp      = $_REQUEST['temp'];
-$cat       = $_REQUEST['cat'];
+echo $cat       = $_REQUEST['cat'];
 $id_nj     = $_REQUEST['nj'];
 
 
@@ -83,7 +83,7 @@ $defec = round($efec, 2);
 $constastar = "SELECT * FROM resumen_lanz WHERE id_player = $id_player";
 $confkj = mysqli_query($con, $constastar);
 $vjt = mysqli_num_rows($confkj);
-if ($vjt = 1) {
+if ($vjt >= 1) {
 
 
 $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
@@ -111,7 +111,7 @@ $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
     $resav = mysqli_query($con, $configurar);
     Header("Location: ../entradas/datos.php?id_tab=$id_tab&nj=$id_nj");
 
-} else {
+} elseif ($vjt < 1) {
     
 $vb        = 0;
 $h         = 0;
@@ -189,6 +189,7 @@ $configurar = "UPDATE resumen_lanz  SET tnj  = '$tnj',
                                         til  = '$til',
                                         tcpl = '$tcpl',
                                         efec = '$defec',
+                                        categoria    = '$cat',
                                         h    = '$th',
                                         2b   = '$t2b',
                                         3b   = '$t3b',
