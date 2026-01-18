@@ -541,4 +541,4 @@ $id_team = $dteg['id_team'];
         });
     </script>
 </body>
-</html>
+</html> 

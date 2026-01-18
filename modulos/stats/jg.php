@@ -1,4 +1,4 @@
-<?php
+<?php 
 include("../../config/conexion.php");
 $con = conectar();
 
