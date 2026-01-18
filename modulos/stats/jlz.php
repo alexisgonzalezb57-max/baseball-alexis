@@ -526,9 +526,9 @@ $id_team = $dteg['id_team'];
         $(document).ready(function(){
             $('input[name="jl"], input[name="jg"]').on('change', function() {
                 const value = $(this).val();
-                if (value > 100) {
-                    $(this).val(100);
-                    alert('El valor máximo para este campo es 100');
+                if (value > 1) {
+                    $(this).val(1);
+                    alert('El valor máximo para este campo es 1');
                 } else if (value < 0) {
                     $(this).val(0);
                     alert('El valor mínimo para este campo es 0');

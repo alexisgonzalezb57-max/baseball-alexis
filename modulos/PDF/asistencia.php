@@ -185,34 +185,34 @@ $pdf->Cell(75,6,utf8_decode(strtoupper('Equipo')),1,1,'C');
 
 
 if ($valorval > 0) {
-
-$covl = "SELECT rs.*, MAX(rs.a) as max_asistencias
-FROM resumen_stats rs
-JOIN (
-    SELECT id_team, SUM(a) AS total_asistencias
-    FROM resumen_stats
-    WHERE id_team = $equipo
-    GROUP BY id_team
-) AS t ON rs.id_team = t.id_team
-WHERE rs.id_team = $equipo
-  AND rs.a >= $valorval
-GROUP BY rs.name_jgstats
-ORDER BY max_asistencias DESC, rs.id_team DESC;";
-
+    $covl = "SELECT 
+                rs.id_team,
+                rs.name_jgstats,
+                rs.cedula,
+                MAX(rs.a) as max_asistencias,
+                rs.tnj,
+                rs.categoria
+            FROM resumen_stats rs
+            WHERE rs.id_team = $equipo
+              AND rs.id_temp = $temporada
+              AND rs.categoria = '$categoria'
+              AND rs.a >= $valorval
+            GROUP BY rs.cedula, rs.name_jgstats
+            ORDER BY max_asistencias DESC;";
 } else {
-
-$covl = "SELECT rs.*, MAX(rs.a) as max_asistencias
-FROM resumen_stats rs
-JOIN (
-    SELECT id_team, SUM(a) AS total_asistencias
-    FROM resumen_stats
-    WHERE id_team = $equipo
-    GROUP BY id_team
-) t ON rs.id_team = t.id_team
-WHERE rs.id_team = $equipo
-GROUP BY rs.name_jgstats
-ORDER BY max_asistencias DESC, rs.id_team DESC;";
-
+    $covl = "SELECT 
+                rs.id_team,
+                rs.name_jgstats,
+                rs.cedula,
+                MAX(rs.a) as max_asistencias,
+                rs.tnj,
+                rs.categoria
+            FROM resumen_stats rs
+            WHERE rs.id_team = $equipo
+              AND rs.id_temp = $temporada
+              AND rs.categoria = '$categoria'
+            GROUP BY rs.cedula, rs.name_jgstats
+            ORDER BY max_asistencias DESC;";
 }
 
 $vais = mysqli_query($con, $covl);

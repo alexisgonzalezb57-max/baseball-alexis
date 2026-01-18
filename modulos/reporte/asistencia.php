@@ -443,7 +443,7 @@ if (!$con) {
                             <div class="col-md-8 mx-auto">
                                 <label class="form-label required-field">Valor de la Asistencia (§)</label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    <span class="input-group-text">(§)</span>
                                     <input type="number" class="form-control" name="valorval" required min="0"  placeholder="0">
                                 </div>
                                 
@@ -621,7 +621,7 @@ if (!$con) {
         // Formatear input de valor monetario
         document.querySelector('input[name="valorval"]').addEventListener('blur', function(e) {
             if (this.value) {
-                this.value = parseFloat(this.value).toFixed(2);
+                this.value = parseFloat(this.value).toFixed(0);
             }
         });
     </script>
