@@ -4,11 +4,8 @@ require('vendor/fpdf/fpdf.php');
 require('conexion.php');
 $con=conectar();
 
-
 $id_tp = $_POST['temporada'];
 $id_tm = $_POST['equipo'];
-
-
 
 $verificar = mysqli_query($con, "SELECT * FROM report");
 $vdta = mysqli_fetch_array($verificar);
@@ -32,20 +29,20 @@ class PDF extends FPDF
 {
     // Cabecera de página
     function Header()
-        {
-            // Arial bold 15
-            $this->SetFont('Arial','B',15);
-        }
+    {
+        // Arial bold 15
+        $this->SetFont('Arial','B',15);
+    }
     // Pie de página
     function Footer()
-        {
-            // Posición: a 1,5 cm del final
-            $this->SetY(-15);
-            // Arial italic 8
-            $this->SetFont('Arial','I',8);
-            // Número de página
-            $this->Cell(0,10,utf8_decode('Page ').$this->PageNo().'/{nb}',0,0,'C');
-        }
+    {
+        // Posición: a 1,5 cm del final
+        $this->SetY(-15);
+        // Arial italic 8
+        $this->SetFont('Arial','I',8);
+        // Número de página
+        $this->Cell(0,10,utf8_decode('Page ').$this->PageNo().'/{nb}',0,0,'C');
+    }
 }
 
 // Creación del objeto de la clase heredada
@@ -54,12 +51,10 @@ $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetFont('Arial','B',14);
 
-
 // config document
 $pdf->SetTitle('RESUMEN - EQUIPO '.$data['name_team']);
 $pdf->SetAuthor('Arturo');
 $pdf->SetCreator('FPDF Maker');
-
 
 $pdf->Image('../../fondos/pulpo (2).png', 41, 4, 16);
 $pdf->Image('../../fondos/pulpov (2).png', 222, 4, 16);
@@ -67,9 +62,6 @@ $pdf->Cell(0,5,utf8_decode(strtoupper('LIGA RECREATIVA SOFTBALL EDUCADORES DEL E
 $pdf->Cell(0,5,utf8_decode(strtoupper('CATEGORIA " '.$cat.' " -  '.$data['name_team'])),0,1,'C');
 $pdf->SetFont('Arial','B',12);
 $pdf->Cell(0,5,'FECHA: '.$timeday,0,1,'L');
-
-
-
 
 $pdf->SetFont('Arial','B',11);
 
@@ -92,113 +84,172 @@ $pdf->Cell(12,4.5,utf8_decode(strtoupper('vb')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('th')),1,0,'C');
 $pdf->Cell(20,4.5,utf8_decode(strtoupper('avg')),1,1,'C');
 
-$cons = "SELECT * FROM resumen_stats WHERE id_team = $id_team AND id_tab =$id_tab AND id_temp = $id_tp AND categoria LIKE '%$cat%' ";
+// Consulta modificada: agrupar por cédula y nombre para evitar duplicados
+$cons = "SELECT 
+            cedula,
+            name_jgstats,
+            SUM(vb) AS vb,
+            SUM(h) AS h,
+            SUM(hr) AS hr,
+            SUM(`2b`) AS `2b`,
+            SUM(`3b`) AS `3b`,
+            SUM(ca) AS ca,
+            SUM(ci) AS ci,
+            SUM(k) AS k,
+            SUM(b) AS b,
+            SUM(a) AS a,
+            SUM(sf) AS sf,
+            SUM(br) AS br,
+            SUM(gp) AS gp,
+            SUM(tvb) AS tvb,
+            SUM(th) AS th,
+            AVG(avg) AS avg
+        FROM resumen_stats 
+        WHERE id_team = $id_team 
+          AND id_tab = $id_tab 
+          AND id_temp = $id_tp 
+          AND categoria = '$cat'
+        GROUP BY cedula, name_jgstats
+        ORDER BY name_jgstats ASC";
+
 $dteg = mysqli_query($con, $cons);
 $nums = mysqli_num_rows($dteg);
+
 if ($nums >= 1) {
-for ($jg=1; $jg <= $nums ; $jg++) { 
-$player = mysqli_fetch_array($dteg);
-
-$pdf->SetFont('Arial','',10);
-
-$pdf->Cell(5,4.5,utf8_decode(strtoupper($jg)),1,0,'C');
-$pdf->Cell(60,4.5,utf8_decode($player['name_jgstats']),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['vb'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['h'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['hr'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['2b'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['3b'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ca'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ci'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['k'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['b'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['a'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['sf'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['br'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tvb'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['th'])),1,0,'C');
-$pdf->Cell(20,4.5,utf8_decode(strtoupper($player['avg'])),1,1,'C');
-
+    $jg = 1;
+    while($player = mysqli_fetch_array($dteg)) {
+        $pdf->SetFont('Arial','',10);
+        
+        $pdf->Cell(5,4.5,utf8_decode(strtoupper($jg)),1,0,'C');
+        $pdf->Cell(60,4.5,utf8_decode($player['name_jgstats']),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['vb'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['h'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['hr'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['2b'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['3b'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ca'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ci'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['k'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['b'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['a'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['sf'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['br'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['gp'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tvb'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['th'] ?? 0)),1,0,'C');
+        $pdf->Cell(20,4.5,utf8_decode(strtoupper(round($player['avg'] ?? 0))),1,1,'C');
+        
+        $jg++;
     }
 }
 
+// Consulta para totales - también agrupa correctamente
 $ftor = "SELECT 
-SUM(vb)   AS tvb,
-SUM(h)    AS th,
-SUM(hr)   AS thr,
-SUM(2b)   AS t2b,
-SUM(3b)   AS t3b,
-SUM(ca)   AS tca,
-SUM(ci)   AS tci,
-SUM(k)    AS tk,
-SUM(b)    AS tb,
-SUM(a)    AS ta,
-SUM(sf)   AS tfl,
-SUM(br)   AS tbr,
-SUM(gp)   AS tgp,
-SUM(tvb)  AS ttvb,
-SUM(th)   AS tthh 
-FROM resumen_stats 
-WHERE id_team = $id_team AND id_tab =$id_tab AND categoria LIKE '%$cat%'  AND id_temp = $id_tp";
+            SUM(vb)   AS tvb,
+            SUM(h)    AS th,
+            SUM(hr)   AS thr,
+            SUM(`2b`) AS t2b,
+            SUM(`3b`) AS t3b,
+            SUM(ca)   AS tca,
+            SUM(ci)   AS tci,
+            SUM(k)    AS tk,
+            SUM(b)    AS tb,
+            SUM(a)    AS ta,
+            SUM(sf)   AS tfl,
+            SUM(br)   AS tbr,
+            SUM(gp)   AS tgp,
+            SUM(tvb)  AS ttvb,
+            SUM(th)   AS tthh 
+        FROM (
+            SELECT 
+                cedula,
+                name_jgstats,
+                SUM(vb) AS vb,
+                SUM(h) AS h,
+                SUM(hr) AS hr,
+                SUM(`2b`) AS `2b`,
+                SUM(`3b`) AS `3b`,
+                SUM(ca) AS ca,
+                SUM(ci) AS ci,
+                SUM(k) AS k,
+                SUM(b) AS b,
+                SUM(a) AS a,
+                SUM(sf) AS sf,
+                SUM(br) AS br,
+                SUM(gp) AS gp,
+                SUM(tvb) AS tvb,
+                SUM(th) AS th
+            FROM resumen_stats 
+            WHERE id_team = $id_team 
+              AND id_tab = $id_tab 
+              AND categoria = '$cat'
+              AND id_temp = $id_tp
+            GROUP BY cedula, name_jgstats
+        ) AS jugadores_agrupados";
+
 $vtvt = mysqli_query($con, $ftor);
 $dust = mysqli_num_rows($vtvt);
+
 if ($dust >= 1) {
-    for ($fr=1; $fr <= $dust ; $fr++) { 
     $gapa = mysqli_fetch_array($vtvt);
-
-    $on_tvb  = $gapa['tvb'];
-    $tw_ttvb = $gapa['ttvb'];
-
-if ($on_tvb = $tw_ttvb) {
-    $dtvb = $on_tvb;
-} else {
-    $dtvb = "1";
+    
+    $on_tvb  = $gapa['tvb'] ?? 0;
+    $tw_ttvb = $gapa['ttvb'] ?? 0;
+    
+    if ($on_tvb == $tw_ttvb) {
+        $dtvb = $on_tvb;
+    } else {
+        // Si hay discrepancia, usamos el total de vb
+        $dtvb = $on_tvb > 0 ? $on_tvb : 1;
+    }
+    
+    $th  = $gapa['th'] ?? 0;
+    $thr = $gapa['thr'] ?? 0;
+    $t2b = $gapa['t2b'] ?? 0;
+    $t3b = $gapa['t3b'] ?? 0;
+    $tth = $gapa['tthh'] ?? 0;
+    
+    $on_th = $th + $thr + $t2b + $t3b;
+    $tw_th = $tth;
+    
+    if ($on_th == $tw_th) {
+        $dth = $on_th;
+    } else {
+        $dth = $on_th > 0 ? $on_th : 1;
+    }
+    
+    // Calcular promedio (evitar división por cero)
+    if ($dtvb > 0) {
+        $avg = ($dth * 1000) / $dtvb;
+        $ravg = round($avg);
+    } else {
+        $ravg = 0;
+    }
+    
+    $pdf->SetFont('Arial','B',10);
+    
+    $pdf->Cell(65,4.5,utf8_decode(strtoupper('TOTAL')),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tvb'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['th'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['thr'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['t2b'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['t3b'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tca'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tci'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tk'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tb'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['ta'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tfl'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tbr'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tgp'] ?? 0)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($dtvb)),1,0,'C');
+    $pdf->Cell(12,4.5,utf8_decode(strtoupper($dth)),1,0,'C');
+    $pdf->Cell(20,4.5,utf8_decode(strtoupper($ravg)),1,1,'C');
 }
-
-$th  = $gapa['th'];
-$thr = $gapa['thr'];
-$t2b = $gapa['t2b'];
-$t3b = $gapa['t3b'];
-$tth = $gapa['tthh'];
-
-    $on_th       = $th + $thr + $t2b + $t3b;
-    $tw_th       = $tth;
-if ($on_th = $tw_th) {
-    $dth = $on_th;
-} else {
-    $dth = "1";
-}
-
-    $avg = ($dth * 1000) / $dtvb;
-    $ravg = round($avg);
-
-$pdf->SetFont('Arial','B',10);
-
-$pdf->Cell(65,4.5,utf8_decode(strtoupper('TOTAL')),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tvb'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['th'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['thr'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['t2b'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['t3b'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tca'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tci'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tk'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tb'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['ta'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tfl'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tbr'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($gapa['tgp'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($dtvb)),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($dth)),1,0,'C');
-$pdf->Cell(20,4.5,utf8_decode(strtoupper($ravg)),1,1,'C');
-
-} }
 
 $pdf->SetFont('Arial','B',12);
 $pdf->Ln(1);
 $pdf->Cell(0,5,utf8_decode(strtoupper('pichers')),0,1,'C');
-
 
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(5,4.5,utf8_decode(strtoupper('#')),1,0,'C');
@@ -219,35 +270,61 @@ $pdf->Cell(12,4.5,utf8_decode(strtoupper('k')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('gp')),1,0,'C');
 $pdf->Cell(12,4.5,utf8_decode(strtoupper('br')),1,1,'C');
 
-$cons = "SELECT * FROM resumen_lanz WHERE id_team = $id_team AND id_tab =$id_tab AND categoria LIKE '%$cat%'  AND id_temp = $id_tp";
+// Consulta para lanzadores - también agrupa por cédula y nombre
+$cons = "SELECT 
+            cedula,
+            name_jglz,
+            SUM(tjl) AS tjl,
+            SUM(tjg) AS tjg,
+            AVG(avg) AS avg,
+            SUM(va) AS va,
+            SUM(til) AS til,
+            SUM(tcpl) AS tcpl,
+            AVG(efec) AS efec,
+            SUM(h) AS h,
+            SUM(`2b`) AS `2b`,
+            SUM(`3b`) AS `3b`,
+            SUM(hr) AS hr,
+            SUM(b) AS b,
+            SUM(k) AS k,
+            SUM(gp) AS gp,
+            SUM(ile) AS ile
+        FROM resumen_lanz 
+        WHERE id_team = $id_team 
+          AND id_tab = $id_tab 
+          AND categoria = '$cat'
+          AND id_temp = $id_tp
+        GROUP BY cedula, name_jglz
+        ORDER BY name_jglz ASC";
+
 $dteg = mysqli_query($con, $cons);
 $nums = mysqli_num_rows($dteg);
+
 if ($nums >= 1) {
-for ($jg=1; $jg <= $nums ; $jg++) { 
-$player = mysqli_fetch_array($dteg);
-
-$pdf->SetFont('Arial','',9.5);
-$pdf->Cell(5,4.5,utf8_decode(strtoupper($jg)),1,0,'C');
-$pdf->Cell(60,4.5,utf8_decode($player['name_jglz']),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tjl'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tjg'])),1,0,'C');
-$pdf->Cell(15,4.5,utf8_decode(strtoupper($player['avg'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['va'])),1,0,'C');
-$pdf->Cell(15,4.5,utf8_decode(strtoupper($player['til'])),1,0,'C');
-$pdf->Cell(15,4.5,utf8_decode(strtoupper($player['tcpl'])),1,0,'C');
-$pdf->Cell(15,4.5,utf8_decode(strtoupper($player['efec'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['h'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['2b'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['3b'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['hr'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['b'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['k'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['gp'])),1,0,'C');
-$pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ile'])),1,1,'C');
-
+    $jg = 1;
+    while($player = mysqli_fetch_array($dteg)) {
+        $pdf->SetFont('Arial','',9.5);
+        $pdf->Cell(5,4.5,utf8_decode(strtoupper($jg)),1,0,'C');
+        $pdf->Cell(60,4.5,utf8_decode($player['name_jglz']),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tjl'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['tjg'] ?? 0)),1,0,'C');
+        $pdf->Cell(15,4.5,utf8_decode(strtoupper(round($player['avg'] ?? 0))),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['va'] ?? 0)),1,0,'C');
+        $pdf->Cell(15,4.5,utf8_decode(strtoupper($player['til'] ?? 0)),1,0,'C');
+        $pdf->Cell(15,4.5,utf8_decode(strtoupper($player['tcpl'] ?? 0)),1,0,'C');
+        $pdf->Cell(15,4.5,utf8_decode(strtoupper(round($player['efec'] ?? 0, 2))),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['h'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['2b'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['3b'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['hr'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['b'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['k'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['gp'] ?? 0)),1,0,'C');
+        $pdf->Cell(12,4.5,utf8_decode(strtoupper($player['ile'] ?? 0)),1,1,'C');
+        
+        $jg++;
     }
 }
-
 
 $pdf->Output();
 ?>
