@@ -76,6 +76,7 @@ if ($avg_multi === 0) {
 $constastar = "SELECT * FROM resumen_stats WHERE id_player = $id_player";
 $confkj = mysqli_query($con, $constastar);
 $vjt = mysqli_num_rows($confkj);
+/*$vjt = 0;*/
 if ($vjt >= 1) {
 
 

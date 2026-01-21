@@ -90,7 +90,7 @@ $pdf->Cell(20,6,utf8_decode(strtoupper('Picher')),1,1,'C');
 
 
     
-$covl = "SELECT * FROM jugadores WHERE id_team = $equipo AND categoria LIKE '%$categoria%'";
+$covl = "SELECT * FROM jugadores WHERE id_team = $equipo AND categoria LIKE '%$categoria%' ORDER BY nombre ASC";
 $vais = mysqli_query($con, $covl);
 $asnm = mysqli_num_rows($vais);
 
