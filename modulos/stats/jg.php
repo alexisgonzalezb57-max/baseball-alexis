@@ -441,7 +441,7 @@ $id_team = $dteg['id_team'];
                         </div>
                         <label class="col-sm-2 col-form-label text-end">AS</label>
                         <div class="col-sm-3">
-                            <input type="number" style="text-align: center;" class="form-control asistencia-input" min="0" max="100" name="a" value="<?php echo $dteg['a']; ?>" id="asistenciaInput">
+                            <input type="number" style="text-align: center;" class="form-control asistencia-input" min="0" max="1" name="a" value="<?php echo $dteg['a']; ?>" id="asistenciaInput">
                         </div>
                     </div>
 
@@ -597,8 +597,8 @@ $id_team = $dteg['id_team'];
             // Evento especial para el campo de asistencia
             asistenciaInput.on('input', function() {
                 // Validar que solo pueda ser 0 o 1
-                if ($(this).val() > 100) {
-                    $(this).val(100);
+                if ($(this).val() > 1) {
+                    $(this).val(1);
                     alert('El valor de asistencia no puede ser mayor a 1.');
                 } else if ($(this).val() < 0) {
                     $(this).val(0);
