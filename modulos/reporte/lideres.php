@@ -379,6 +379,55 @@ if (!$con) {
         .player-select .form-select {
             font-size: 0.9rem;
         }
+
+        /* Estilos para entrada manual */
+        .manual-input {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid var(--secondary-color);
+            display: none;
+        }
+        
+        .manual-input.active {
+            display: block;
+        }
+        
+        .manual-input .row {
+            margin-bottom: 8px;
+        }
+        
+        .toggle-manual {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .toggle-manual:checked + label {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .selection-type {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .selection-type label {
+            margin-left: 8px;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        
+        .badge-manual {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
         
         @media (max-width: 768px) {
             .navigation {
@@ -512,108 +561,107 @@ if (!$con) {
                         
                         <div class="info-card">
                             <h6><i class="fas fa-info-circle"></i> Información</h6>
-                            <p class="mb-0">Seleccione manualmente hasta 3 jugadores para cada categoría de líderes. Los datos se cargarán automáticamente según los filtros seleccionados.</p>
+                            <p class="mb-0">Puede seleccionar jugadores de la base de datos o ingresar datos manualmente usando el checkbox "Manual". Los datos manuales tendrán prioridad sobre la selección.</p>
                         </div>
 
-                        <!-- Líderes en Carreras Empujadas -->
+                        <?php
+                        $categorias = [
+                            'ci' => 'Carreras Empujadas (CI)',
+                            'avg' => 'Bateo (AVG)',
+                            'hr' => 'Jonrones (HR)',
+                            'picher' => 'Pichers Ganadores'
+                        ];
+                        
+                        $posiciones = ['1er', '2do', '3er'];
+                        
+                        foreach ($categorias as $key => $titulo):
+                            $icono = $key == 'ci' ? 'running' : ($key == 'avg' ? 'baseball-ball' : ($key == 'hr' ? 'bullseye' : 'baseball-ball'));
+                        ?>
+                        <!-- Líderes en <?php echo $titulo; ?> -->
                         <div class="leader-category">
-                            <h6><i class="fas fa-running"></i> Líderes en Carreras Empujadas (CI)</h6>
+                            <h6><i class="fas fa-<?php echo $icono; ?>"></i> Líderes en <?php echo $titulo; ?></h6>
                             <div class="row">
+                                <?php foreach ($posiciones as $index => $pos): $num = $index + 1; ?>
                                 <div class="col-md-4 player-select">
-                                    <label class="form-label">1er Lugar</label>
-                                    <select class="form-select" name="lider_ci_1" id="lider_ci_1">
+                                    <div class="selection-type">
+                                        <input type="checkbox" class="toggle-manual" id="manual_<?php echo $key; ?>_<?php echo $num; ?>" name="manual_<?php echo $key; ?>_<?php echo $num; ?>" value="1">
+                                        <label for="manual_<?php echo $key; ?>_<?php echo $num; ?>"><?php echo $pos; ?> Lugar <span class="badge-manual">Manual</span></label>
+                                    </div>
+                                    
+                                    <select class="form-select" name="lider_<?php echo $key; ?>_<?php echo $num; ?>" id="lider_<?php echo $key; ?>_<?php echo $num; ?>">
                                         <option value="">Seleccione un jugador...</option>
                                     </select>
+                                    
+                                    <!-- Campos para entrada manual -->
+                                    <div class="manual-input" id="manual_input_<?php echo $key; ?>_<?php echo $num; ?>">
+                                        <div class="row">
+                                            <div class="col-12 mb-2">
+                                                <input type="text" class="form-control form-control-sm" name="manual_nombre_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="Nombre del jugador">
+                                            </div>
+                                        </div>
+                                        
+                                        <?php if ($key == 'ci'): ?>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <input type="number" class="form-control form-control-sm" name="manual_ci_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="CI">
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="text" class="form-control form-control-sm" name="manual_equipo_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="Equipo">
+                                            </div>
+                                        </div>
+                                        <?php elseif ($key == 'avg'): ?>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm" name="manual_vb_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="VB">
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm" name="manual_h_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="H">
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="text" class="form-control form-control-sm" name="manual_avg_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="AVG">
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-12">
+                                                <input type="text" class="form-control form-control-sm" name="manual_equipo_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="Equipo">
+                                            </div>
+                                        </div>
+                                        <?php elseif ($key == 'hr'): ?>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <input type="number" class="form-control form-control-sm" name="manual_hr_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="HR">
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="text" class="form-control form-control-sm" name="manual_equipo_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="Equipo">
+                                            </div>
+                                        </div>
+                                        <?php elseif ($key == 'picher'): ?>
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <input type="number" class="form-control form-control-sm" name="manual_jl_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="JL">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" class="form-control form-control-sm" name="manual_jg_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="JG">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" class="form-control form-control-sm" name="manual_jp_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="JP">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="text" class="form-control form-control-sm" name="manual_ef_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="EF">
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-12">
+                                                <input type="text" class="form-control form-control-sm" name="manual_equipo_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="Equipo">
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">2do Lugar</label>
-                                    <select class="form-select" name="lider_ci_2" id="lider_ci_2">
-                                        <option value="">Seleccione un jugador...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">3er Lugar</label>
-                                    <select class="form-select" name="lider_ci_3" id="lider_ci_3">
-                                        <option value="">Seleccione un jugador...</option>
-                                    </select>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-
-                        <!-- Líderes en Bateo -->
-                        <div class="leader-category">
-                            <h6><i class="fas fa-baseball-ball"></i> Líderes en Bateo (AVG)</h6>
-                            <div class="row">
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">1er Lugar</label>
-                                    <select class="form-select" name="lider_avg_1" id="lider_avg_1">
-                                        <option value="">Seleccione un jugador...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">2do Lugar</label>
-                                    <select class="form-select" name="lider_avg_2" id="lider_avg_2">
-                                        <option value="">Seleccione un jugador...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">3er Lugar</label>
-                                    <select class="form-select" name="lider_avg_3" id="lider_avg_3">
-                                        <option value="">Seleccione un jugador...</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Líderes en Jonrones -->
-                        <div class="leader-category">
-                            <h6><i class="fas fa-bullseye"></i> Líderes en Jonrones (HR)</h6>
-                            <div class="row">
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">1er Lugar</label>
-                                    <select class="form-select" name="lider_hr_1" id="lider_hr_1">
-                                        <option value="">Seleccione un jugador...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">2do Lugar</label>
-                                    <select class="form-select" name="lider_hr_2" id="lider_hr_2">
-                                        <option value="">Seleccione un jugador...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">3er Lugar</label>
-                                    <select class="form-select" name="lider_hr_3" id="lider_hr_3">
-                                        <option value="">Seleccione un jugador...</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pichers Ganadores -->
-                        <div class="leader-category">
-                            <h6><i class="fas fa-baseball-ball"></i> Pichers Ganadores</h6>
-                            <div class="row">
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">1er Lugar</label>
-                                    <select class="form-select" name="lider_picher_1" id="lider_picher_1">
-                                        <option value="">Seleccione un pitcher...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">2do Lugar</label>
-                                    <select class="form-select" name="lider_picher_2" id="lider_picher_2">
-                                        <option value="">Seleccione un pitcher...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 player-select">
-                                    <label class="form-label">3er Lugar</label>
-                                    <select class="form-select" name="lider_picher_3" id="lider_picher_3">
-                                        <option value="">Seleccione un pitcher...</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
 
                     <div class="btn-container">
@@ -637,32 +685,40 @@ if (!$con) {
             let seconds = now.getSeconds();
             const ampm = hours >= 12 ? 'PM' : 'AM';
             
-            // Convertir a formato 12 horas
             hours = hours % 12;
-            hours = hours ? hours : 12; // La hora '0' debe ser '12'
+            hours = hours ? hours : 12;
             
-            // Añadir ceros iniciales si es necesario
             hours = hours.toString().padStart(2, '0');
             minutes = minutes.toString().padStart(2, '0');
             seconds = seconds.toString().padStart(2, '0');
             
-            // Actualizar el DOM
             document.getElementById('hour').textContent = hours;
             document.getElementById('minute').textContent = minutes;
             document.getElementById('seconds').textContent = seconds;
             document.getElementById('ampm').textContent = ampm;
         }
         
-        // Actualizar el reloj inmediatamente y luego cada segundo
         updateClock();
         setInterval(updateClock, 1000);
         
         $(document).ready(function() {
-            // Deshabilitar botones al inicio
             $('#btnCargar').prop('disabled', true);
             $('#btnEnviar').prop('disabled', true);
 
-            // Al cambiar categoría, cargar temporadas relacionadas
+            // Manejar checkboxes de entrada manual
+            $('.toggle-manual').change(function() {
+                const targetId = $(this).attr('id').replace('manual_', 'manual_input_');
+                const selectId = $(this).attr('id').replace('manual_', 'lider_');
+                
+                if ($(this).is(':checked')) {
+                    $('#' + targetId).addClass('active');
+                    $('#' + selectId).prop('disabled', true).val('');
+                } else {
+                    $('#' + targetId).removeClass('active');
+                    $('#' + selectId).prop('disabled', false);
+                }
+            });
+
             $('#categoria').change(function() {
                 let categoria = $(this).val();
                 $('#temporada').prop('disabled', true).html('<option>Cargando...</option>');
@@ -690,14 +746,12 @@ if (!$con) {
                 }
             });
 
-            // Al cambiar temporada, habilitar botón de cargar
             $('#temporada').change(function() {
                 $('#btnCargar').prop('disabled', !$(this).val());
                 $('#seccionLideres').hide();
                 $('#btnEnviar').prop('disabled', true);
             });
 
-            // Cargar jugadores para selección de líderes
             $('#btnCargar').click(function() {
                 let categoria = $('#categoria').val();
                 let temporada = $('#temporada').val();
@@ -707,6 +761,9 @@ if (!$con) {
                     return;
                 }
 
+                // Resetear checkboxes manuales
+                $('.toggle-manual').prop('checked', false).trigger('change');
+                
                 // Mostrar loading en todos los selects
                 $('select[name^="lider_"]').html('<option value="">Cargando jugadores...</option>');
                 $('#seccionLideres').show();
@@ -722,11 +779,9 @@ if (!$con) {
                         tipo: 'bateadores'
                     },
                     success: function(data) {
-                        // Cargar opciones en selects de bateadores
                         const options = '<option value="">Seleccione un jugador...</option>' + data;
                         $('#lider_ci_1, #lider_ci_2, #lider_ci_3, #lider_avg_1, #lider_avg_2, #lider_avg_3, #lider_hr_1, #lider_hr_2, #lider_hr_3').html(options);
                         
-                        // Cargar pitchers
                         cargarPitchers(categoria, temporada);
                     },
                     error: function() {
@@ -736,25 +791,6 @@ if (!$con) {
                 });
             });
 
-            // Validar envío del formulario
-            $('#formLideres').submit(function(e) {
-                let hasSelection = false;
-                
-                // Verificar si hay al menos un líder seleccionado en alguna categoría
-                $('select[name^="lider_"]').each(function() {
-                    if ($(this).val()) {
-                        hasSelection = true;
-                        return false; // break loop
-                    }
-                });
-
-                if (!hasSelection) {
-                    e.preventDefault();
-                    showAlert('Debe seleccionar al menos un líder en alguna categoría.', 'warning');
-                }
-            });
-
-            // Función para cargar pitchers
             function cargarPitchers(categoria, temporada) {
                 $.ajax({
                     url: 'get_jugadores_lideres.php',
@@ -775,10 +811,36 @@ if (!$con) {
                     }
                 });
             }
+
+            $('#formLideres').submit(function(e) {
+                let hasSelection = false;
+                
+                // Verificar selects no manuales
+                $('select[name^="lider_"]:not(:disabled)').each(function() {
+                    if ($(this).val()) {
+                        hasSelection = true;
+                        return false;
+                    }
+                });
+                
+                // Verificar campos manuales
+                $('.toggle-manual:checked').each(function() {
+                    const id = $(this).attr('id').replace('manual_', '');
+                    const nombreInput = $('input[name="manual_nombre_' + id + '"]');
+                    if (nombreInput.val() && nombreInput.val().trim() !== '') {
+                        hasSelection = true;
+                        return false;
+                    }
+                });
+
+                if (!hasSelection) {
+                    e.preventDefault();
+                    showAlert('Debe seleccionar al menos un líder (de base de datos o manual) en alguna categoría.', 'warning');
+                }
+            });
         });
 
         function showAlert(message, type) {
-            // Crear alerta temporal
             const alert = document.createElement('div');
             alert.className = `alert alert-${type} alert-dismissible fade show`;
             alert.style.position = 'fixed';
@@ -793,14 +855,12 @@ if (!$con) {
             
             document.body.appendChild(alert);
             
-            // Auto-eliminar después de 5 segundos
             setTimeout(() => {
                 if (alert.parentNode) {
                     alert.parentNode.removeChild(alert);
                 }
             }, 5000);
             
-            // Inicializar funcionalidad de Bootstrap
             new bootstrap.Alert(alert);
         }
     </script>
