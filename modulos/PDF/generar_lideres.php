@@ -39,7 +39,7 @@ function convertirTexto($texto) {
 
 // Función para obtener datos del jugador (prioriza datos manuales)
 function obtenerDatosJugador($con, $player_id, $tipo, $pos, $categoria_key) {
-    global $_POST;
+    global $_POST, $temporada;
     
     // Verificar si es manual - buscar el checkbox correcto
     $manual_check = false;
@@ -48,6 +48,8 @@ function obtenerDatosJugador($con, $player_id, $tipo, $pos, $categoria_key) {
     if (isset($_POST['manual_' . $categoria_key . '_' . $pos]) && $_POST['manual_' . $categoria_key . '_' . $pos] == '1') {
         $manual_check = true;
     } elseif (isset($_POST['manual_' . $pos]) && $categoria_key == 'ci' && $_POST['manual_' . $pos] == '1') {
+        $manual_check = true;
+    } elseif (isset($_POST['manual_' . $pos]) && $categoria_key == 'avg' && $_POST['manual_' . $pos] == '1') {
         $manual_check = true;
     } elseif (isset($_POST['manual_' . $pos]) && $categoria_key == 'hr' && $_POST['manual_' . $pos] == '1') {
         $manual_check = true;
@@ -102,23 +104,14 @@ function obtenerDatosJugador($con, $player_id, $tipo, $pos, $categoria_key) {
                 $avg = $_POST['manual_avg_' . $categoria_key . '_' . $pos];
             }
             
-            // Formatear AVG
-            if (is_numeric($avg)) {
-                if ($avg > 1) {
-                    $avg = number_format($avg / 1000, 3);
-                } else {
-                    $avg = number_format($avg, 3);
-                }
-            } elseif (strpos($avg, '.') !== 0 && $avg != '') {
-                $avg = '.' . str_pad($avg, 3, '0', STR_PAD_RIGHT);
-            }
-            
+            // SOLO DEVOLVER EL VALOR EXACTAMENTE COMO LO INGRESÓ EL USUARIO
+            // Sin ningún tipo de formato automático
             return [
                 'nombre' => $nombre ?: 'No especificado',
                 'equipo' => $equipo ?: 'Sin equipo',
                 'tvb' => $vb ?: '0',
                 'th' => $h ?: '0',
-                'avg' => $avg ?: '.000'
+                'avg' => $avg ?: '.000'  // Devuelve exactamente lo que el usuario escribió
             ];
         } elseif ($categoria_key == 'hr') {
             $hr = '';
@@ -152,27 +145,20 @@ function obtenerDatosJugador($con, $player_id, $tipo, $pos, $categoria_key) {
                 $ef = $_POST['manual_ef_' . $categoria_key . '_' . $pos];
             }
             
-            // Calcular JP si no se proporcionó
+            // Calcular JP si no se proporcionó (solo si ambos valores existen)
             if (empty($jp) && !empty($jl) && !empty($jg)) {
                 $jp = $jl - $jg;
             }
             
-            // Formatear efectividad
-            if (is_numeric($ef)) {
-                if ($ef > 1) {
-                    $ef = number_format($ef / 1000, 3);
-                } else {
-                    $ef = number_format($ef, 3);
-                }
-            }
-            
+            // SOLO DEVOLVER EL VALOR DE EFECTIVIDAD EXACTAMENTE COMO LO INGRESÓ EL USUARIO
+            // Sin ningún tipo de formato automático
             return [
                 'nombre' => $nombre ?: 'No especificado',
                 'equipo' => $equipo ?: 'Sin equipo',
                 'tjl' => $jl ?: '0',
                 'tjg' => $jg ?: '0',
                 'tjp' => $jp ?: '0',
-                'ef' => $ef ?: '0.000'
+                'ef' => $ef ?: '0.000'  // Devuelve exactamente lo que el usuario escribió
             ];
         }
     }
@@ -180,22 +166,38 @@ function obtenerDatosJugador($con, $player_id, $tipo, $pos, $categoria_key) {
     // Si no es manual y hay player_id, buscar en base de datos
     if (!empty($player_id) && $player_id !== 'null' && $player_id !== '0') {
         if ($tipo == 'bateador') {
+            // Incluir filtro por temporada
             $query = "SELECT rs.name_jgstats, rs.ci, rs.tvb, rs.th, rs.avg, rs.hr, tc.name_team 
                      FROM resumen_stats rs 
                      LEFT JOIN tab_clasf tc ON rs.id_team = tc.id_team 
                      WHERE rs.id_player = " . intval($player_id) . " 
+                     AND rs.id_temp = " . intval($temporada) . " 
                      LIMIT 1";
         } else {
+            // Incluir filtro por temporada para pitchers
             $query = "SELECT rl.name_jglz, rl.tjl, rl.tjg, (rl.tjl - rl.tjg) as tjp, rl.avg, tc.name_team 
                      FROM resumen_lanz rl 
                      LEFT JOIN tab_clasf tc ON rl.id_team = tc.id_team 
                      WHERE rl.id_player = " . intval($player_id) . " 
+                     AND rl.id_temp = " . intval($temporada) . " 
                      LIMIT 1";
         }
         
         $result = mysqli_query($con, $query);
         if ($result && mysqli_num_rows($result) > 0) {
-            return mysqli_fetch_assoc($result);
+            $datos = mysqli_fetch_assoc($result);
+            
+            // Para datos de BD, mantener el formato original
+            if ($tipo == 'bateador' && isset($datos['avg'])) {
+                // Si el AVG viene como número entero (ej: 345), lo dejamos como está
+                // La presentación en el PDF mostrará el valor exacto
+            }
+            if ($tipo == 'picher' && isset($datos['avg'])) {
+                // Para efectividad, mantener el valor original
+                $datos['ef'] = $datos['avg'];
+            }
+            
+            return $datos;
         }
     }
     
@@ -360,7 +362,7 @@ for ($pos = 1; $pos <= 3; $pos++) {
             $datos['nombre'] ?? $datos['name_jgstats'] ?? 'No seleccionado',
             $datos['tvb'] ?? '0',
             $datos['th'] ?? '0',
-            $datos['avg'] ?? '.000',
+            $datos['avg'] ?? '.000',  // Muestra exactamente lo que hay en los datos
             $datos['equipo'] ?? $datos['name_team'] ?? '-'
         ];
     } else {
@@ -429,7 +431,7 @@ for ($pos = 1; $pos <= 3; $pos++) {
             $datos['tjl'] ?? '0',
             $datos['tjg'] ?? '0',
             $datos['tjp'] ?? '0',
-            $datos['ef'] ?? '0.000',
+            $datos['ef'] ?? '0.000',  // Muestra exactamente lo que hay en los datos
             $datos['equipo'] ?? $datos['name_team'] ?? '-'
         ];
     } else {
@@ -447,7 +449,7 @@ for ($pos = 1; $pos <= 3; $pos++) {
 
 $pdf->TablaLideres(
     'PICHERS GANADORES',
-    ['POS', 'NOMBRE', 'JL', 'JG', 'JP', 'EF', 'EQUIPO'],
+    ['POS', 'NOMBRE', 'JL', 'JG', 'JP', 'AVG', 'EQUIPO'],
     $data_pichers,
     [10, 40, 10, 10, 10, 15, 35]
 );

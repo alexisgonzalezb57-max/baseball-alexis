@@ -647,7 +647,7 @@ if (!$con) {
                                                 <input type="number" class="form-control form-control-sm" name="manual_jp_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="JP">
                                             </div>
                                             <div class="col-3">
-                                                <input type="text" class="form-control form-control-sm" name="manual_ef_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="EF">
+                                                <input type="text" class="form-control form-control-sm" name="manual_ef_<?php echo $key; ?>_<?php echo $num; ?>" placeholder="AVG">
                                             </div>
                                         </div>
                                         <div class="row mt-2">
